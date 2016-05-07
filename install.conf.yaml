@@ -1,3 +1,12 @@
-- clean: []
-- link: {}
-- shell: []
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- clean: ['~', '~/.config']
+
+- link:
+    ~/.tmux.conf: tmux.conf
+
+- shell:
+  - ["git submodule update --init --recursive", "Installing submodules"]
