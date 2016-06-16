@@ -40,3 +40,6 @@ export AUTOFEATURE=true autotest
 
 # add any tools or scripts in home bin
 conditionally_prefix_path "${HOME}/bin"
+
+# vi for the command line
+set -o vi
