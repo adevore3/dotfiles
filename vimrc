@@ -9,4 +9,4 @@ call pathogen#infect()
 call pathogen#helptags()
 
 filetype plugin indent on " enable file type detection
-set autoindent
+set autoindent            " automatically indent new lines
