@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+function standup () {
+    days=${1-1}
+    user=${2-$(whoami)}
+    basedir="/site"
+    for dir in `find $basedir -name .git -type d -ctime -$days | grep -v vendor | awk -F"/" 'BEGIN { OFS="/" }{ $NF = ""; print }' | sort | uniq | sed 's/.$//'`; do
+      echo -e "\n$dir";
+      for commit_hash in $(cd $dir && git --no-pager log --all --since="$days day ago" --format="%H %ae %s" | grep "$user" | cut -d ' ' -f 1); do
+        (cd $dir && git --no-pager log -1 $commit_hash --format="%Cgreen%ci%Creset %s%Creset") || die "Failed to git log for $dir\n";
+      done
+      (cd $dir && git --no-pager log --all --grep=$user --since="$days day ago" --format="%Cgreen%ci%Creset %s%Creset") || die "Failed to git log for $dir";
+    done
+}
