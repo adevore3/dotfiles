@@ -1,4 +1,4 @@
-tunction extract () {
+function extract () {
   if [ $# -ne 1 ]
   then
     echo "Error: No file specified."
