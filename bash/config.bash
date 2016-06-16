@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+# When changing directory small typos can be ignored by bash
+# for example, cd /vr/lgo/apaache would find/var/log/apache
 shopt -s cdspell
 
 # colored grep
@@ -16,25 +18,25 @@ export LSCOLORS='Gxfxcxdxdxegedabagacad'
 # Load the theme
 source "${DOTFILES}/bash/prompt.bash"
 
-# append to bash_history if Terminal.app quits
+# append to bash_history file, don't overwrite it
 shopt -s histappend
 
-# history handling
-#
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+export HISTCONTROL=ignoreboth
+
 # Erase duplicates
-# Bash History
 export HISTCONTROL="ignoredups"
 export HISTCONTROL=erasedups
 
-# resize history size
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 export HISTSIZE=5000
+export HISTFILESIZE=2000
 
 export AUTOFEATURE=true autotest
 
-function rh {
-  history | awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
-}
-
+# make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+# add any tools or scripts in home bin
 conditionally_prefix_path "${HOME}/bin"

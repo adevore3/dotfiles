@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Print commits for all your repos under basedir (defaults to /site)
 function standup () {
     days=${1-1}
     user=${2-$(whoami)}

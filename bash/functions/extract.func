@@ -1,3 +1,4 @@
+# Extract any file extension
 function extract () {
   if [ $# -ne 1 ]
   then
