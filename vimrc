@@ -1,8 +1,8 @@
 set nocompatible " not vi compatible
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Pathogen Initialization
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
@@ -11,9 +11,9 @@ call pathogen#helptags()
 filetype plugin indent on " enable file type detection
 set autoindent            " automatically indent new lines
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 let mapleader=","
 
@@ -25,6 +25,7 @@ set formatoptions=qrn1          " when wrapping paragraphs, don't end lines with
 set gcr=a:blinkon0              " disable cursor blink
 set history=1000                " store lots of :cmdline history
 set mouse=a                     " enable using the mouse if terminal emulator supports it
+set nojoinspaces                " suppress inserting two spaces between sentences
 set nrformats=                  " make <C-a> and <C-x> play well with zero padded numbers (i.e. don't consider them octal or hex)
 set number                      " line numbers are good
 set pastetoggle=<F2>            " press <F2> in any mode to toggle paste
@@ -34,31 +35,21 @@ set showmatch                   " set show matching parenthesis
 set showmode                    " show current mode down the bottom
 set smartcase                   " ignore case if search pattern is all lowercase, case-sensitive otherwise
 
-" Toggle show/hide invisible chars
+" toggle show/hide invisible chars
 nnoremap <leader>i :set list!<cr>
 
-" Toggle line numbers
+" toggle line numbers
 nnoremap <leader>N :setlocal number!<cr>
 
-" Speed up scrolling of the viewport slightly
+" speed up scrolling of the viewport slightly
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
-" Disable use of arrow keys in both normal and insert mode
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
-
-" 'Movement by file line instead of screen line'
+" movement by file line instead of screen line
 nnoremap j gj
 nnoremap k gk
 
-" Use of zz, which centers your current line, made easier
+" use of zz, which centers your current line, made easier
 nmap <space> zz
 nmap n nzz
 nmap N Nzz
@@ -68,28 +59,28 @@ inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
-" Write all files when focus of Vim is lost
+" write all files when focus of Vim is lost
 au FocusLost * :wa
 
-" Quickly strip all trailing whitespace in the current file
+" quickly strip all trailing whitespace in the current file
 nnoremap <leader>rw :%s/\s\+$//<cr>:let @/=''<CR>
 
-" Quickly replace all tabs with spaces
+" quickly replace all tabs with spaces
 nnoremap <leader>rt :%s/\t/  /g<Enter>
 
-" Search and replace selected text
+" search and replace selected text
 vnoremap <C-r> "hy:%s/<C-r>h//g<left><left>
 
-" Quickly escape from insert mode
+" quickly escape from insert mode
 inoremap jj <ESC>
 
 " reselect the text that was just pasted
 nnoremap <leader>v V`]
 
-" Sudo write a file when inside it
+" sudo write a file when inside it
 cmap w!! w !sudo tee % > /dev/null %
 
-" This makes vim act like all other editors, buffers can
+" this makes vim act like all other editors, buffers can
 " exist in the background without being in a window.
 " http://items.sjbach.com/319/configuring-vim-right
 set hidden
@@ -97,7 +88,7 @@ set hidden
 " do not redraw while running macros (much faster) (LazyRedraw)
 set lazyredraw
 
-" Quickly edit/reload the vimrc file
+" quickly edit/reload the vimrc file
 nmap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
@@ -108,9 +99,19 @@ autocmd BufRead,BufNewFile *.psgi set filetype=perl syntax=perl
 autocmd BufRead,BufNewFile *.ddl set filetype=sql  syntax=sql
 autocmd BufRead,BufNewFile *.func set filetype=sh  syntax=sh
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Editing/Navigation
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
+
+" disable use of arrow keys in both normal and insert mode
+nnoremap <Left> :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up> :echoe "Use k"<CR>
+nnoremap <Down> :echoe "Use j"<CR>
+inoremap <Left> :echoe "Use h"<CR>
+inoremap <Right> :echoe "Use l"<CR>
+inoremap <Up> :echoe "Use k"<CR>
+inoremap <Down> :echoe "Use j"<CR>
 
 " inserting a new-line w/o entering insert mode
 map <C-Enter> i<Enter><Up><ESC>$
@@ -123,15 +124,19 @@ map <C-K> <C-W>k
 map <C-H> <C-W>h
 map <C-L> <C-W>l
 
+" open new split panes to right and bottom, which feels more natural
+set splitbelow
+set splitright
+
 " split vertically/horizontally and switch over
 " not sure what a good mapping is
 "nmap <C-i> <C-w>v<C-l>:e .<CR>
 "nmap <C-o> <C-w>s<C-j>:e .<CR>
 
-" Open split screen and switch over
+" open split screen and switch over
 nnoremap <leader>w <C-w>v<C-w>l
 
-" Handles swapping one window with another
+" handles swapping one window with another
 function! MarkWindowSwap()
   let g:markedWinNum = winnr()
 endfunction
@@ -154,11 +159,11 @@ endfunction
 nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Theme/Colors
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
-" Have syntax highligting in terminals which can display colors:
+" have syntax highligting in terminals which can display colors:
 if has('syntax') && (&t_Co > 2)
   syntax on
 endif
@@ -169,23 +174,23 @@ colorscheme desert
 
 autocmd FileType perl colorscheme ansi_blows
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Folding
 "
 " Enable folding, but by default make it act like folding is off, because
 " folding is annoying in anything but a few rare cases
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 " Map toggle folding Space key.
 " noremap <space> :call ToggleFold()<CR>
 
-" Turn on folding
+" turn on folding
 set foldenable
 
-" Make folding indent sensitive
+" make folding indent sensitive
 set foldmethod=indent
 
-" Don't autofold anything (but I can still fold manually)
+" don't autofold anything (but I can still fold manually)
 set foldlevel=100
 
 " don't open folds when you search into them
@@ -201,7 +206,7 @@ fun! FoldBraces()
   set foldtext=getline(v:foldstart)
 endfun
 
-" Fold on braces instead of indentation
+" fold on braces instead of indentation
 autocmd BufRead *.php* call FoldBraces()
 autocmd BufRead *.php call FoldBraces()
 autocmd BufRead *.inc call FoldBraces()
@@ -223,9 +228,9 @@ autocmd BufRead *.xsd set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 autocmd BufRead *.xml set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 autocmd BufRead *.sls set iskeyword-=$
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Search Settings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 set ignorecase        " ignore case when searching
 set incsearch         " find the next match as we type the search
@@ -233,7 +238,7 @@ set hlsearch          " highlight searches by default
 set viminfo='100,f1   " save up to 100 marks, enable capital marks
 set matchpairs+=<:>   " allow % to bounce between angles too
 
-" Search for selected text, forwards or backwards.
+" search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
   \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
   \gvy/<C-R><C-R>=substitute(
@@ -245,18 +250,18 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Turn Off Swap Files
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 set nobackup
 set noswapfile
 set nowb
 set nowritebackup
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Indentation
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 set autoindent    " always set autoindenting on
 set copyindent    " copy the previous indentation on autoindenting
@@ -275,33 +280,33 @@ autocmd FileType java setlocal sw=4 ts=2 sts=2
 autocmd FileType javascript setlocal sw=4 ts=2 sts=2
 autocmd FileType perl setlocal sw=4 ts=2 sts=2
 
-"Display tabs and trailing spaces visually
+" display tabs and trailing spaces visually
 set list listchars=tab:>-,trail:•,extends:#,nbsp:.
 
 "set nowrap     "Don't wrap lines
 set linebreak  "Wrap lines at convenient points
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Completion
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 set wildmode=list:longest
 set wildmenu                                          "enable ctrl-n and ctrl-p to scroll thru matches
 set wildignore=*.o,*.obj,*~,*.swp,*.bak,*.pyc,*.class "stuff to ignore when tab completing
 set wildignore+=*vim/backups*
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Scrolling
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 set scrolloff=8     "Start scrolling when we're 8 lines away from margins
 "set sidescrolloff=15
 set sidescroll=4
 set virtualedit=all " allow the cursor to go into invalid places
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 " Highlighting
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"------------------------------------------------------------------------------
 
 hi CursorLine cterm=underline
 hi CursorColumn cterm=NONE ctermbg=cyan ctermfg=white guibg=darkred guifg=white
@@ -310,4 +315,14 @@ nnoremap <leader>c :set cursorcolumn! <CR>
 nnoremap <leader><space> :noh<cr>
 
 set cursorline
+
+"------------------------------------------------------------------------------
+" Local customizations
+"------------------------------------------------------------------------------
+
+" local customizations in ~/.vimrc_local
+let $LOCALFILE=expand("~/.vimrc_local")
+if filereadable($LOCALFILE)
+    source $LOCALFILE
+endif
 
