@@ -8,8 +8,45 @@ runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 call pathogen#helptags()
 
+"------------------------------------------------------------------------------
+" Theme/Colors
+"------------------------------------------------------------------------------
+
+syntax on
+
+" vim can autodetect this based on $TERM (e.g. 'xterm-256color')
+" but it can be set to force 256 colors
+" set t_Co=256
+if &t_Co < 256
+    colorscheme desert
+    set nocursorline " looks bad in this mode
+else
+    set background=dark
+    let g:solarized_termcolors=256 " instead of 16 color with mapping in terminal
+    colorscheme solarized
+
+    "" customized colors
+    "highlight SignColumn ctermbg=234
+    "highlight StatusLine cterm=bold ctermfg=245 ctermbg=235
+    "highlight StatusLineNC cterm=bold ctermfg=245 ctermbg=235
+    "let g:NeatStatusLine_color_normal='ctermfg=64 ctermbg=235 cterm=bold'
+    "let g:NeatStatusLine_color_insert='ctermfg=136 ctermbg=235 cterm=bold'
+    "let g:NeatStatusLine_color_replace='ctermfg=160 ctermbg=235 cterm=bold'
+    "let g:NeatStatusLine_color_visual='ctermfg=33 ctermbg=235 cterm=bold'
+    "let g:NeatStatusLine_color_position='ctermfg=245 ctermbg=235 cterm=bold'
+    "let g:NeatStatusLine_color_modified='ctermfg=166 ctermbg=235 cterm=bold'
+    "let g:NeatStatusLine_color_line='ctermfg=61 ctermbg=235 cterm=bold'
+    "let g:NeatStatusLine_color_filetype='ctermfg=37 ctermbg=235 cterm=bold'
+endif
+
 filetype plugin indent on " enable file type detection
-set autoindent            " automatically indent new lines
+
+" set filetype and syntax of certain file extensions
+autocmd BufRead,BufNewFile *.xpl set filetype=perl syntax=perl
+autocmd BufRead,BufNewFile *.tap set filetype=perl syntax=perl
+autocmd BufRead,BufNewFile *.psgi set filetype=perl syntax=perl
+autocmd BufRead,BufNewFile *.ddl set filetype=sql  syntax=sql
+autocmd BufRead,BufNewFile *.func set filetype=sh  syntax=sh
 
 "------------------------------------------------------------------------------
 " General
@@ -92,13 +129,6 @@ set lazyredraw
 nmap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-" set filetype and syntax of certain file extensions
-autocmd BufRead,BufNewFile *.xpl set filetype=perl syntax=perl
-autocmd BufRead,BufNewFile *.tap set filetype=perl syntax=perl
-autocmd BufRead,BufNewFile *.psgi set filetype=perl syntax=perl
-autocmd BufRead,BufNewFile *.ddl set filetype=sql  syntax=sql
-autocmd BufRead,BufNewFile *.func set filetype=sh  syntax=sh
-
 "------------------------------------------------------------------------------
 " Editing/Navigation
 "------------------------------------------------------------------------------
@@ -158,21 +188,6 @@ endfunction
 
 nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
-
-"------------------------------------------------------------------------------
-" Theme/Colors
-"------------------------------------------------------------------------------
-
-" have syntax highligting in terminals which can display colors:
-if has('syntax') && (&t_Co > 2)
-  syntax on
-endif
-
-colorscheme desert
-"colorscheme molokai
-"colorscheme jellybeans
-
-autocmd FileType perl colorscheme ansi_blows
 
 "------------------------------------------------------------------------------
 " Folding
