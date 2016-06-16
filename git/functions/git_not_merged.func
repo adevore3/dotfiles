@@ -1,0 +1,25 @@
+# Print out which branches are not merged
+function git_not_merged() {
+    for branch in $(git branch -r --no-merged origin/master | sed $sed_flags "s/^[[:space:]]*//" | grep "\<origin/$filter" | egrep -v '\<origin/master\>')
+    do
+        printf "\n"
+        if [[ -z $(git log --no-merges origin/master..$branch) ]]; then
+            printf "$(tput setaf 2)"
+            printf "$branch\n"
+            printf "    only merge commits\n"
+            printf "    git log -p origin/master..$branch\n"
+          elif [[ -z $(git log --no-merges --format="%s" origin/master..$branch | egrep -v "Created branch") ]]; then
+            printf "$(tput setaf 4)"
+            printf "$branch\n"
+            printf "    only merge commits and create branch commits\n"
+            printf "    git log -p origin/master..$branch\n"
+        else
+            printf "$(tput setaf 1)"
+            printf "$branch\n"
+            printf "    branch has potential work on it\n"
+            printf "    git log -p origin/master..$branch\n"
+        fi
+
+        printf "$(tput sgr 0)" # Reset text format to the terminal's default
+    done
+}
