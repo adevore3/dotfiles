@@ -8,6 +8,8 @@ runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 call pathogen#helptags()
 
+filetype plugin indent on " enable file type detection
+
 "------------------------------------------------------------------------------
 " Theme/Colors
 "------------------------------------------------------------------------------
@@ -38,8 +40,6 @@ else
     "let g:NeatStatusLine_color_line='ctermfg=61 ctermbg=235 cterm=bold'
     "let g:NeatStatusLine_color_filetype='ctermfg=37 ctermbg=235 cterm=bold'
 endif
-
-filetype plugin indent on " enable file type detection
 
 " set filetype and syntax of certain file extensions
 autocmd BufRead,BufNewFile *.xpl set filetype=perl syntax=perl
