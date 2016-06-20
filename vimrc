@@ -54,16 +54,16 @@ autocmd BufRead,BufNewFile *.func set filetype=sh  syntax=sh
 
 let mapleader=","
 
-set autoread                    " reload files changed outside vim
-set backspace=indent,eol,start  " allow backspace over everything in insert mode
-set enc=utf8                    " set character encoding to utf8
+"set autoread                    " reload files changed outside vim
+"set backspace=indent,eol,start  " allow backspace over everything in insert mode
+"set enc=utf8                    " set character encoding to utf8
 set fileformats="unix,dos,mac"  " what is this?
 set formatoptions=qrn1          " when wrapping paragraphs, don't end lines with 1-letter words (not sure about qrn)
 set gcr=a:blinkon0              " disable cursor blink
-set history=1000                " store lots of :cmdline history
+"set history=1000                " store lots of :cmdline history
 set mouse=a                     " enable using the mouse if terminal emulator supports it
 set nojoinspaces                " suppress inserting two spaces between sentences
-set nrformats=                  " make <C-a> and <C-x> play well with zero padded numbers (i.e. don't consider them octal or hex)
+"set nrformats=                  " make <C-a> and <C-x> play well with zero padded numbers (i.e. don't consider them octal or hex)
 set number                      " line numbers are good
 set pastetoggle=<F2>            " press <F2> in any mode to toggle paste
 set shortmess+=I                " hide the launch screen
@@ -248,7 +248,7 @@ autocmd BufRead *.sls set iskeyword-=$
 "------------------------------------------------------------------------------
 
 set ignorecase        " ignore case when searching
-set incsearch         " find the next match as we type the search
+"set incsearch         " find the next match as we type the search
 set hlsearch          " highlight searches by default
 set viminfo='100,f1   " save up to 100 marks, enable capital marks
 set matchpairs+=<:>   " allow % to bounce between angles too
@@ -306,7 +306,7 @@ set linebreak  "Wrap lines at convenient points
 "------------------------------------------------------------------------------
 
 set wildmode=list:longest
-set wildmenu                                          "enable ctrl-n and ctrl-p to scroll thru matches
+"set wildmenu                                          "enable ctrl-n and ctrl-p to scroll thru matches
 set wildignore=*.o,*.obj,*~,*.swp,*.bak,*.pyc,*.class "stuff to ignore when tab completing
 set wildignore+=*vim/backups*
 
