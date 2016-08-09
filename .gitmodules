@@ -19,9 +19,6 @@
 [submodule "vim/bundle/gitgutter"]
 	path = vim/bundle/gitgutter
 	url = https://github.com/airblade/vim-gitgutter.git
-[submodule "vim/bundle/neatstatus"]
-	path = vim/bundle/neatstatus
-	url = https://github.com/maciakl/vim-neatstatus
 [submodule "vim/bundle/sensible"]
 	path = vim/bundle/sensible
 	url = https://github.com/tpope/vim-sensible.git
