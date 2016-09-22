@@ -25,6 +25,3 @@
 [submodule "vim/bundle/tmux-navigator"]
 	path = vim/bundle/tmux-navigator
 	url = https://github.com/christoomey/vim-tmux-navigator.git
-[submodule "vim/bundle/confgen"]
-	path = vim/bundle/confgen
-	url = https://github.marchex.com/archive/vim-confgen.git
