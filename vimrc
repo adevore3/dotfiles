@@ -60,6 +60,7 @@ nmap ga <Plug>(EasyAlign)
 
 let g:easy_align_delimiters = {
 \ '>': { 'pattern': '>>\|=>\|>\|->' },
+\ '<': { 'pattern': '<<\|<=\|<-\|<' },
 \ '/': {
 \     'pattern':         '//\+\|/\*\|\*/',
 \     'delimiter_align': 'l',
