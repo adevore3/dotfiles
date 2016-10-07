@@ -49,6 +49,24 @@ autocmd BufRead,BufNewFile *.ddl set filetype=sql  syntax=sql
 autocmd BufRead,BufNewFile *.func set filetype=sh  syntax=sh
 
 "------------------------------------------------------------------------------
+" Easy Align Plugin
+"------------------------------------------------------------------------------
+"
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+let g:easy_align_delimiters = {
+\ '>': { 'pattern': '>>\|=>\|>\|->' },
+\ '/': {
+\     'pattern':         '//\+\|/\*\|\*/',
+\     'delimiter_align': 'l',
+\     'ignore_groups':   ['!Comment'] }
+\ }
+
+"------------------------------------------------------------------------------
 " General
 "------------------------------------------------------------------------------
 
