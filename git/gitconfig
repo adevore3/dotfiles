@@ -26,6 +26,7 @@
   lgd = !git lg --decorate
   lgdp = !git lgd -p
   llog = log --date=local
+  lp = log -p
   me = config user.name
   new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
   newp = !sh -c 'git log -p $1@{1}..$1@{0} "$@"'
