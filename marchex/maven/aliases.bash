@@ -1,0 +1,7 @@
+alias mci='mvn clean install'
+alias mcv='mvn clean verify'
+alias mcio='mvn clean install --offline'
+alias mcit='mvn clean install -DskipTests=true'
+alias mcito='mvn clean install -DskipTests=true --offline'
+alias muci='mvn -U clean install'
+alias mvo='mvn verify --offline'
