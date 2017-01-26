@@ -43,3 +43,11 @@ conditionally_prefix_path "${HOME}/bin"
 
 # vi for the command line
 set -o vi
+
+# Set default editor
+export VISUAL=vim
+export EDITOR="$VISUAL"
+
+# Set default cheat path
+export DEFAULT_CHEAT_DIR="${DOTFILES}/cheat"
+
