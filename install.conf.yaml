@@ -17,4 +17,4 @@
 - shell:
   - ["git submodule update --init --recursive", "Installing submodules"]
   - ["wget https://raw.githubusercontent.com/kaosf/ubuntu-setup/master/tmux-setup.sh; chmod u+x tmux-setup.sh; sudo ./tmux-setup.sh; rm tmux-setup.sh", "Installing tmux"]
-  - ["pip install cheat", "Installing cheat"]
+  - ["sudo pip install cheat", "Installing cheat"]
