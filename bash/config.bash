@@ -48,3 +48,6 @@ set -o vi
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
+# Set up for autojump
+[[ -s /home/adevore/.autojump/etc/profile.d/autojump.sh ]] && source /home/adevore/.autojump/etc/profile.d/autojump.sh
+
