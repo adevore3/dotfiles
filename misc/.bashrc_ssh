@@ -1,0 +1,22 @@
+alias ..='cd ..'
+alias ...='cd ../..'
+alias e='exit'
+alias dirs='dirs -v'
+alias ll='ls -al'
+alias psg='ps fauxwww | grep -v grep | grep'
+alias vi=$( which vim )
+
+# Enable vi-mode for command line interface
+set -o vi
+
+# Make bash append rather than overwrite the history on disk
+shopt -s histappend
+
+# When changing directory small typos can be ignored by bash
+# for example, cd /vr/lgo/apaache would find/var/log/apache
+shopt -s cdspell
+
+# colored grep
+export GREP_OPTIONS='--color=auto'
+export GREP_COLOR='1;33'
+
