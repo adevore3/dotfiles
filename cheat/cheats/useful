@@ -100,3 +100,4 @@ echo y | sudo bin/nuke.rb && bin/bootstrap.sh && bin/create-and-provision-db.sh 
 ls -ld .?* | grep "\->"
 grep "NumberReaperTask" numberManager.log | grep UOW | jq .[1].uow.duration | awk '{print $1/60000}'
 grep "NumberReaperTask" numberManager.log | grep UOW | jq '.[1].uow | {duration: .duration, started: .start}' -c
+grep 66f066d6-fad8-4f4f-9716-49e96cd29534 listing-management-service.log.2017-02-08.* | cut -c 46- | jq .
