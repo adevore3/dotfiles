@@ -2,32 +2,32 @@
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
 [submodule "vim/bundle/pathogen"]
-	path = vim/bundle/pathogen
+	path = vim/vim/bundle/pathogen
 	url = https://github.com/tpope/vim-pathogen.git
 [submodule "vim/bundle/fugitive"]
-	path = vim/bundle/fugitive
+	path = vim/vim/bundle/fugitive
 	url = http://github.com/tpope/vim-fugitive.git
 [submodule "vim/bundle/colors-solarized"]
-	path = vim/bundle/colors-solarized
+	path = vim/vim/bundle/colors-solarized
 	url = https://github.com/altercation/vim-colors-solarized.git
 [submodule "vim/bundle/scala"]
-	path = vim/bundle/scala
+	path = vim/vim/bundle/scala
 	url = https://github.com/derekwyatt/vim-scala.git
 [submodule "vim/bundle/tmux"]
-	path = vim/bundle/tmux
+	path = vim/vim/bundle/tmux
 	url = https://github.com/tmux-plugins/vim-tmux.git
 [submodule "vim/bundle/gitgutter"]
-	path = vim/bundle/gitgutter
+	path = vim/vim/bundle/gitgutter
 	url = https://github.com/airblade/vim-gitgutter.git
 [submodule "vim/bundle/sensible"]
-	path = vim/bundle/sensible
+	path = vim/vim/bundle/sensible
 	url = https://github.com/tpope/vim-sensible.git
 [submodule "vim/bundle/tmux-navigator"]
-	path = vim/bundle/tmux-navigator
+	path = vim/vim/bundle/tmux-navigator
 	url = https://github.com/christoomey/vim-tmux-navigator.git
 [submodule "vim/bundle/easy-align"]
-	path = vim/bundle/easy-align
+	path = vim/vim/bundle/easy-align
 	url = https://github.com/junegunn/vim-easy-align.git
 [submodule "vim/bundle/json"]
-	path = vim/bundle/json
+	path = vim/vim/bundle/json
 	url = https://github.com/elzr/vim-json
