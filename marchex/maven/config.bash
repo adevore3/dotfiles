@@ -1,8 +1,8 @@
-export M2_HOME="/opt/maven"
-export M2="$M2_HOME/bin"
+export M3_HOME="/opt/maven"
+export M3="$M3_HOME/bin"
 
 if [ -z "$PATH" ]; then
-  export PATH=$M2
+  export PATH=$M3
 else
-  export PATH="$PATH:$M2"
+  export PATH="$PATH:$M3"
 fi
