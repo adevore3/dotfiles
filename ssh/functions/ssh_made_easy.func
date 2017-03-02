@@ -1,0 +1,18 @@
+# Install ssh key on specified host
+function ssh_made_easy () {
+  if [ $# -ne 1 ]
+  then
+    echo "Error: No host specified."
+    return 1
+  fi
+
+  local host=$1
+  local local_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+  ping -c 1 $host
+  if [ "$?" = 0 ] ; then
+    ssh-copy-id $host
+    scp $local_dir/../vimrc $host:~/.vimrc
+    scp $local_dir/../bashrc $host:~/.bashrc
+  fi
+}
