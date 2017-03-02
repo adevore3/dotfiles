@@ -31,3 +31,6 @@
 [submodule "vim/bundle/json"]
 	path = vim/vim/bundle/json
 	url = https://github.com/elzr/vim-json
+[submodule "autojump"]
+	path = autojump
+	url = https://github.com/wting/autojump.git
