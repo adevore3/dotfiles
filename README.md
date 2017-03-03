@@ -2,6 +2,12 @@
 
 adevore3's dotfiles
 
+Includes:
+* Vim settings
+* Tmux settings
+* Autojump
+* Cheat
+
 ##Inspiration
 
 This was inspired by anishathalye's [article][managing_your_dotfiles] on how
