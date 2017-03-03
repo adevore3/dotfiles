@@ -1,0 +1,10 @@
+# Compact print
+jq -c
+
+# Create new json from existing json
+cat package.json | jq '. | {dep: .dependencies, devDep: .devDependencies}' | egrep -v "\{|\}" | sort
+
+# Slice & Dice
+jq '.[2:4]'
+jq '.[:3]'
+jq '.[-2:]'

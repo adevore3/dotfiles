@@ -1,0 +1,3 @@
+# Log in with all the requirements except password
+psql -h arcdb.sea1 -d arc -U adevore -p 5432
+

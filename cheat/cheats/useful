@@ -1,38 +1,5 @@
-find -not \( -path "./node_modules/*" -prune \) -not \( -path "./docs/*" -prune \) -name readme.md
-
-siege -H 'Content-Type: application/json' -c 4 -t 1M 'http://qa-vsac1.sad.marchex.com:3000/kwlt/retrieve POST {"account":"QrOXxEE9-fATtgAD","campaign":"CtjSZVMqJtNOVACe","keyword":"clownfish"}'
-
-sed -n 85064,85064p cron-jsrw-v2-sync.log
-
-NODE_PATH=/site/mca-jsrw/ node_modules/.bin/mocha --harmony -g "" test/unit/lib/match/
-
-gg "['\"]co['\"]" lib test | grep require
-cat package.json | jq '. | {dep: .dependencies, devDep: .devDependencies}' | egrep -v "\{|\}" | sort
-
-diff <(cat package.json | jq '. | .dependencies' | egrep -v "{|}" | cut -d : -f 1 | sed 's/"//g' | sed 's/ //g' | sort) <(sed -n 18,57p conf/pulley/common.rsync-includes | grep -v "\*\*" | cut -d '/' -f 3)
-
-cat conf/uow_metrics.conf | jq '.[] | .metric.filter' | grep ':' | cut -d : -f 1 | cut -d / -f 2 | sed 's/"//g' | sort | uniq
-
-grep UOW jsrw.log | jq '.[0][9]' | sort | uniq
-
-grep "parent trace not found" jsrw.log
-
-ssh-copy-id -i /home/adevore/.ssh/id_dsa.pub vswww11.devint
-
-git log --format=%H | head -1
-
-history | awk '{a[]++}END{for(i in a){print a[i]   i}}' | sort -rn | head
-
 tidy -i -m -w 160 -ashtml -utf8 adtrack/documentation/html/table.html
 
-psql -h vsdb1.qa3 -d adtrack -U at
-psql -h vspool-virt.phl -d adtrack_ro -U adevore -p 6432
-psql -h vspool-virt.sad -d adtrack_ro -U adevore -p 5432
-#time redis-cli -h vscache1.qa3 keys "*" | egrep -v "kwlt\.numpool\.limit" | cut -d " " -f 2 | cut -d : -f 1 | sed 's/"//g' | sort | uniq
-
-git grep -hE "images\/.*\.(png|gif)" | egrep -o "images\/.*\.(css|db|gif|html|jpg|JPG|js|png|psd|swf)" | sort | uniq > ,files
-mvn --offline -Dtest=GeoIvrTest test
-mvn dependency:tree -Dverbose > ,dependency_tree
 some_command | tidy -xml -i - > ,some_file
 curl --user mcmkwapi@marchex.com:keyw0rdc0mpl1ance -H 'Content-Type: text/xml' -d '<methodCall><methodName>number.list</methodName><params><value><string>CtjSf1Zva1hD_QDe</string></value></params></methodCall>' api.voicestar.com/api/xmlrpc/1 | tidy -xml -i - > ,number_list
 
@@ -40,34 +7,12 @@ Rich's number: 2062650058
 Artem's number: 4252896698
 sudo fuser -n tcp 8871
 
-mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=/site/dcm/batch_processor/lib/jar/dcmShared.jar -DgroupId=batchProcessor -DartifactId=dcmShared -Dversion=1.0.0 -Dpackaging=jar -DlocalRepositoryPath=`pwd`/repo/
-dpkg --get-selections | grep postgres
-zcat *.gz | wc -l
-gzip -l *.gz
-svn+ssh://svn.marchex.com/src/svn/httpd/trunk/x86_64-deb5.0/httpd-2.2.14-1
-mvn --offline -Dtest=PercolationStatsTest test
-cat ,tmp | sed 's/\s+(?=([^"]*"[^"]*")*[^"]*$)//g'
-mvn -Dmaven.test.skip=true install
-mvn versions:resolve-ranges versions:set -DnewVersion=2.0.50 -DgenerateBackupPoms=false
-mvn deploy --batch-mode -DskipTests
-mvn replacer:replace -f $1
-mvn release:prepare -DdryRun=true -DignoreSnapshots --batch-mode
-mvn -Pscala-2.10 replacer:replace versions:resolve-ranges versions:set -DnewVersion=2.0.50 -DgenerateBackupPoms=false
-
-grep "App.loadAll" compliance-feed-puller.log | tail -n28 | jq '. | {time: .[0][0], written: .[1].uow.metrics.written.total, total: .[1].uow.metrics.total.total, success: .[1].uow.metrics.feedPullComplete.count}'
-rename 's/^mcm-//' mcm-*
-ls -l `find /site -maxdepth 1 -type l -print` # list all symlinks
 clear; for i in {1..30}; do tput cup 0 0; curl wttr.in/moon@2016-09-$i; done
 
-sudo apt-get install ffmpeg
-ffmpeg -i the_original_file.wav -ar 8000 -ac 1 fixed.wav
-
 alias avi="vi -u /home/adevore/.vimrc --cmd 'set rtp^=/home/adevore/.vim'"
-aws --profile hackdays s3 ls s3://mchx.wav2mp3.output/java/ | cut -d . -f1 | awk '{print $4}' | sort > ,output
 diff --side-by-side --suppress-common-lines ,input ,output
 
 tail -f call-stack-data-service.log | egrep "17129|41a8564c-e593-4601-8ad2-b668953edc42"
-watch -n 30 -d "wc -l cmrs.log"
 
 curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=created"   | jq . | tee ,created
 curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=waiting"   | jq . | tee ,waiting
@@ -78,26 +23,12 @@ curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submi
 curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=succeeded" | jq . | tee ,succeeded
 curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=poison"    | jq . | tee ,poison
 
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-06T18%3A08%3A19&submittedEnd=2016-11-07T18%3A08%3A19&step=CallExperience&status=created"   | jq . | tee ,created
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-06T18%3A08%3A19&submittedEnd=2016-11-07T18%3A08%3A19&step=CallExperience&status=waiting"   | jq . | tee ,waiting
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-06T18%3A08%3A19&submittedEnd=2016-11-07T18%3A08%3A19&step=CallExperience&status=pending"   | jq . | tee ,pending
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-06T18%3A08%3A19&submittedEnd=2016-11-07T18%3A08%3A19&step=CallExperience&status=working"   | jq . | tee ,working
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-06T18%3A08%3A19&submittedEnd=2016-11-07T18%3A08%3A19&step=CallExperience&status=retrying"  | jq . | tee ,retrying
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-06T18%3A08%3A19&submittedEnd=2016-11-07T18%3A08%3A19&step=CallExperience&status=failed"    | jq . | tee ,failed
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-06T18%3A08%3A19&submittedEnd=2016-11-07T18%3A08%3A19&step=CallExperience&status=succeeded" | jq . | tee ,succeeded
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-06T18%3A08%3A19&submittedEnd=2016-11-07T18%3A08%3A19&step=CallExperience&status=poison"    | jq . | tee ,poison
-
 curl -X POST  -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary8MA4YWxkTrZu0gW"  -F "partnerId=fe2ytj4x"  -F "externalId=ee15dda6-e3eb-4355-a35b-67e6a692e87b"  -F "zip=98101" -F "needPlayfile=true" "http://mascsds1.sea1:24091/api/v1/zipIvr"
 
 {"product":"CallExperience","product_id":"replace_me"}
 
 ssh -X arcee.sea
 
-git push --delete origin refs/tags/postgres
-git tag -d postgres
-mvn liquibase:rollback -Dliquibase.rollbackTag=migrations-completed
 echo y | sudo bin/nuke.rb && bin/bootstrap.sh && bin/create-and-provision-db.sh && update
 ls -ld .?* | grep "\->"
-grep "NumberReaperTask" numberManager.log | grep UOW | jq .[1].uow.duration | awk '{print $1/60000}'
-grep "NumberReaperTask" numberManager.log | grep UOW | jq '.[1].uow | {duration: .duration, started: .start}' -c
 grep 66f066d6-fad8-4f4f-9716-49e96cd29534 listing-management-service.log.2017-02-08.* | cut -c 46- | jq .

@@ -1,0 +1,18 @@
+# Print dependency tree verbose
+mvn dependency:tree -Dverbose > ,dependency_tree
+
+# Run specific test
+mvn --offline -Dtest=GeoIvrTest test
+
+# Skip running and compiling tests
+mvn -Dmaven.test.skip=true install
+
+# * Use profile scala-2.10
+# * Replace certain variables using replacer plugin
+# * Resolve ranges to highest patch
+# * Set new version
+mvn -Pscala-2.10 replacer:replace versions:resolve-ranges versions:set -DnewVersion=2.0.50 -DgenerateBackupPoms=false
+
+# Liquibase rollback to specific tag
+mvn liquibase:rollback -Dliquibase.rollbackTag=migrations-completed
+
