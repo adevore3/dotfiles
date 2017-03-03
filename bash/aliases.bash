@@ -32,6 +32,7 @@ alias psg='ps fauxwww | grep -v grep | grep'
 alias rd='rmdir'
 alias reload!='. ~/.bashrc'
 alias vd='vi `git diff --name-only`'
+alias watch='watch -c '
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
