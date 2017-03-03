@@ -119,6 +119,9 @@ git reset --hard origin/master
 # Update all your submodules
 git submodule update --init --recursive
 
+# Add a submodule
+git submodule add git@mygithost:billboard lib/billboard
+
 # Perform a shallow clone to only get latest commits
 # (helps save data when cloning large repos)
 git clone --depth 1 <remote-url>
