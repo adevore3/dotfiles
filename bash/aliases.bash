@@ -25,7 +25,6 @@ alias h='history'
 alias hg='history | grep '
 alias hist='history | awk '"'"'{print $2}'"'"' | sort | uniq -c | sort -rn | head'
 alias jq='jq -C'
-alias less='less -R'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias md='mkdir -p'
 alias path='echo $PATH'

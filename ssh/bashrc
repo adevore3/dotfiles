@@ -4,7 +4,6 @@ alias ...='cd ../..'
 alias dirs='dirs -v'
 alias e='exit'
 alias jq='jq -C'
-alias less='less -R'
 alias ll='ls -al'
 alias psg='ps fauxwww | grep -v grep | grep'
 alias vi=$( which vim )
@@ -23,4 +22,7 @@ shopt -s cdspell
 # colored grep
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;33'
+
+# less respects color output
+export LESS='-R'
 
