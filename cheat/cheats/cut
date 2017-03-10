@@ -1,0 +1,6 @@
+# To cut out the third field of text or stdoutput that is delimited by a #:
+cut -d# -f3
+
+# To cut out the first 46 characters of a string
+cut -c 46-
+

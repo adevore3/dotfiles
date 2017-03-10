@@ -5,7 +5,7 @@ mvn dependency:tree -Dverbose > ,dependency_tree
 mvn --offline -Dtest=GeoIvrTest test
 
 # Skip running and compiling tests
-mvn -Dmaven.test.skip=true install
+mvn -Dmaven.test.skip=true package
 
 # * Use profile scala-2.10
 # * Replace certain variables using replacer plugin
