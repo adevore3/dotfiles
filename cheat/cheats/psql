@@ -1,3 +1,6 @@
 # Log in with all the requirements except password
 psql -h arcdb.sea1 -d arc -U adevore -p 5432
 
+# Run a query from the command line (assuming you have pgpass set up)
+psql -h arcdb.sea1 -d arc -c 'select count(ctns.id) from dcm_placement.ctns where ctns.wind_down_expiry is not null and ctns.wind_down_expiry < current_timestamp'
+

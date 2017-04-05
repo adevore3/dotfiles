@@ -1,0 +1,3 @@
+# Repeat a command every 30 seconds
+while sleep 30; do echo "Hi"; done
+

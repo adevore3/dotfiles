@@ -1,6 +1,9 @@
 # To print a subset of lines from a file
 sed -n 50,100p file.txt
 
+# To print 1st line from output
+sed -n '1p'
+
 # To replace all occurrences of "day" with "night" and write to stdout:
 sed 's/day/night/g' file.txt
 
