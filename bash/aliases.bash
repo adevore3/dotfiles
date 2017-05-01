@@ -20,8 +20,9 @@ alias dirs='dirs -v'
 # monitor setup
 alias dualL='xrandr --output DVI-I-1 --left-of DP-1 --output DP-1 --mode 2560x1440'
 alias dualR='xrandr --output DVI-I-1 --right-of DP-1 --output DP-1 --mode 2560x1440'
-alias mirrored='xrandr --output DVI-I-1 --mode 2560x1440 --output DP-1 --mode 2560x1440 --same-as DVI-I-1'
-alias single='xrandr --output DP-1 --off'
+alias mirror='xrandr --output DVI-I-1 --mode 2560x1440 --output DP-1 --mode 2560x1440 --same-as DVI-I-1'
+alias leftoff='xrandr --output DP-1 --off'
+alias lefton="xrandr --output DP-1 --auto"
 alias xq='xrandr -q' # Display monitor info
 
 # misc
