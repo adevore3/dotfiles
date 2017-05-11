@@ -1,9 +1,10 @@
 alias mci='mvn clean install'
-alias mcv='mvn clean verify'
 alias mcio='mvn clean install --offline'
 alias mcit='mvn clean install -DskipTests=true'
 alias mcito='mvn clean install -DskipTests=true --offline'
+alias mcv='mvn clean verify'
 alias muci='mvn -U clean install'
+alias mucv='mvn -U clean verify'
 alias mvo='mvn verify --offline'
 
 # Liquibase commands
