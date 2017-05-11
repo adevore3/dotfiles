@@ -1,4 +1,4 @@
-#Dotfiles
+# Dotfiles
 
 adevore3's dotfiles
 
@@ -8,13 +8,13 @@ Includes:
 * Autojump
 * Cheat
 
-##Inspiration
+## Inspiration
 
 This was inspired by anishathalye's [article][managing_your_dotfiles] on how
 to manage your own dotfiles using his [dotfiles template][anishathalye_dotfiles_templates]
 and [dotbot][dotbot].
 
-##License
+## License
 
 This software is hereby released into the public domain. That means you can do
 whatever you want with it without restriction. See `LICENSE.md` for details.
