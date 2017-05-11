@@ -1,0 +1,1 @@
+export IDEA_JDK=${JAVA_HOME}
