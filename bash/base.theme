@@ -88,11 +88,6 @@ function rbenv_version_prompt {
   fi
 }
 
-function ruby_version_prompt {
-  echo -e "$(rbenv_version_prompt)"
-}
-
-
 # backwards-compatibility
 function git_prompt_info {
   git_prompt_vars

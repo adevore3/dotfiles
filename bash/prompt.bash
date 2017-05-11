@@ -12,7 +12,6 @@ function git_short_sha() {
 
 function prompt() {
     local return_status=""
-    local ruby="${red}$(ruby_version_prompt)${reset_color}"
     local user_host="${green}\h${reset_color}"
     local current_path="\w"
     local n_commands="\!"
@@ -22,7 +21,7 @@ function prompt() {
     local close=')'
     local prompt_char=' \$ '
 
-    PS1="\n${n_commands} ${user_host} ${prompt_symbol} ${ruby} ${open}${current_path}${git_branch}${close}${return_status}\n${prompt_char}"
+    PS1="\n${n_commands} ${user_host} ${prompt_symbol} ${open}${current_path}${git_branch}${close}${return_status}\n${prompt_char}"
 }
 
 PROMPT_COMMAND=prompt
