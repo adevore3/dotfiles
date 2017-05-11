@@ -6,6 +6,7 @@
 - clean: ['~', '~/.config']
 
 - link:
+    /etc/apt/apt.conf.d/90assumeyes: bash/90assumeyes
     ~/.bashrc: bash/bashrc
     ~/.gitconfig: git/gitconfig
     ~/.gitignore: git/gitignore
