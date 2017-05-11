@@ -55,7 +55,7 @@ export EDITOR="$VISUAL"
 export LESS='-R'
 export LESSOPEN='|~/.lessfilter %s'
 
-# Set up custom command not found handle
+# Set up custom command_not_found handle
 command_not_found_handle () {
     if [ -x "$(command -v figlet)" ] && [ -x "$(command -v fortune)" ] && [ -x "$(command -v cowsay)" ]; then
         { echo NOPE | figlet; fortune; } | cowsay -n
