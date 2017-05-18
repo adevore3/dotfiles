@@ -36,6 +36,7 @@ alias jq='jq -C'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias md='mkdir -p'
 alias path='echo $PATH'
+alias pathg='echo $PATH | grep'
 alias pathl='path | tr : "\n" | sort'
 alias psg='ps fauxwww | grep -v grep | grep'
 alias rd='rmdir'
