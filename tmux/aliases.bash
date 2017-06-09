@@ -4,3 +4,5 @@ alias tkp='tmux kill-pane -a'
 alias tks='tmux kill-session -t'
 alias tmux="`which tmux` -2"
 alias tn='tmux new -s'
+
+alias cw='create_window_with_n_panes'
