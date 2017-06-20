@@ -16,7 +16,7 @@ function create_window_with_n_panes () {
     tmux select-layout tiled
     for ((i=0;i<$1;i++))
     {
-      tmux send-keys -t $i C-z "echo Pane $1" C-m
+      tmux send-keys -t $i C-z "echo Pane $(expr $i + 1)" C-m
     }
   else
     echo "'$1' is not a valid number"
