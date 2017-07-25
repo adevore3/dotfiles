@@ -14,5 +14,6 @@ function ssh_made_easy () {
     ssh-copy-id $host
     scp $local_dir/../vimrc $host:~/.vimrc
     scp $local_dir/../bashrc $host:~/.bashrc
+    ssh $host
   fi
 }
