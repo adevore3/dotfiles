@@ -21,3 +21,4 @@
   - ["wget https://raw.githubusercontent.com/kaosf/ubuntu-setup/master/tmux-setup.sh; chmod u+x tmux-setup.sh; sudo ./tmux-setup.sh; rm tmux-setup.sh", "Installing tmux"]
   - ["sudo python $HOME/dotfiles/cheat/get-pip.py; sudo pip install cheat", "Installing cheat"]
   - ["cd $HOME/dotfiles/autojump; ./install.py", "Installing autojump"]
+  - ["tmux new -d -s test; $DOTFILES/tmux/plugins/tpm/bindings/install_plugins; tmux kill-session -t test", "Installing tmux plugins"]
