@@ -1,4 +1,5 @@
 alias ta='tmux a -t'
+alias taw='tmux a -t work'
 alias tda='tmux detach -a'
 alias tkp='tmux kill-pane -a'
 alias tks='tmux kill-session -t'
