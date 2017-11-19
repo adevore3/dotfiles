@@ -10,6 +10,7 @@
     ~/.bashrc: bash/bashrc
     ~/.gitconfig: git/gitconfig
     ~/.gitignore: git/gitignore
+    ~/.inputrc: bash/inputrc
     ~/.lessfilter: bash/lessfilter
     ~/.profile: profile
     ~/.tmux.conf: tmux/tmux.conf
