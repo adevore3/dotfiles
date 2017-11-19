@@ -27,7 +27,5 @@ curl -X POST  -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoun
 
 {"product":"CallExperience","product_id":"replace_me"}
 
-ssh -X arcee.sea
-
 echo y | sudo bin/nuke.rb && bin/bootstrap.sh && bin/create-and-provision-db.sh && update
 ls -ld .?* | grep "\->"

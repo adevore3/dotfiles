@@ -39,6 +39,7 @@ find . -type l --user=username -ls
 
 # To search for and delete empty directories
 find . -type d -empty -exec rmdir {} \;
+find . -type d -empty -delete
 
 # To search for directories named build at a max depth of 2 directories
 find . -maxdepth 2 -name build -type d
