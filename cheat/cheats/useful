@@ -1,31 +1,30 @@
+# Format xml (requires tidy)
 tidy -i -m -w 160 -ashtml -utf8 adtrack/documentation/html/table.html
-
 some_command | tidy -xml -i - > ,some_file
+
 curl --user mcmkwapi@marchex.com:keyw0rdc0mpl1ance -H 'Content-Type: text/xml' -d '<methodCall><methodName>number.list</methodName><params><value><string>CtjSf1Zva1hD_QDe</string></value></params></methodCall>' api.voicestar.com/api/xmlrpc/1 | tidy -xml -i - > ,number_list
 
+# Numbers
 Rich's number: 2062650058
 Artem's number: 4252896698
+
+# Check user on port?
 sudo fuser -n tcp 8871
 
+# Cool output
 clear; for i in {1..30}; do tput cup 0 0; curl wttr.in/moon@2016-09-$i; done
 
 alias avi="vi -u /home/adevore/.vimrc --cmd 'set rtp^=/home/adevore/.vim'"
 diff --side-by-side --suppress-common-lines ,input ,output
 
-tail -f call-stack-data-service.log | egrep "17129|41a8564c-e593-4601-8ad2-b668953edc42"
-
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=created"   | jq . | tee ,created
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=waiting"   | jq . | tee ,waiting
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=pending"   | jq . | tee ,pending
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=working"   | jq . | tee ,working
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=retrying"  | jq . | tee ,retrying
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=failed"    | jq . | tee ,failed
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=succeeded" | jq . | tee ,succeeded
-curl "http://cdrshepsvc1.qa:26080/pipeline/MCM-Notification/workItemReport?submittedStart=2016-11-03T18%3A08%3A19&submittedEnd=2016-11-04T18%3A08%3A19&step=CallStackDataService&status=poison"    | jq . | tee ,poison
-
 curl -X POST  -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary8MA4YWxkTrZu0gW"  -F "partnerId=fe2ytj4x"  -F "externalId=ee15dda6-e3eb-4355-a35b-67e6a692e87b"  -F "zip=98101" -F "needPlayfile=true" "http://mascsds1.sea1:24091/api/v1/zipIvr"
 
 {"product":"CallExperience","product_id":"replace_me"}
 
-echo y | sudo bin/nuke.rb && bin/bootstrap.sh && bin/create-and-provision-db.sh && update
 ls -ld .?* | grep "\->"
+
+# Average list of numbers using awk
+awk '{a+=$1} END{print a/NR}' ,durations
+
+# Send kill signal to user
+skill -KILL -u adevore
