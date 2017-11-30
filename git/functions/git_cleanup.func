@@ -22,7 +22,7 @@ function git_cleanup() {
 
     for branch in $(git branch -r --merged origin/master | sed $sed_flags "s/^[[:space:]]*//" | grep "\<origin/$filter" | egrep -v '\<origin/master\>')
     do
-        if [[ -z $(git rev-list $branch --since '1 year' -n 1) ]]; then
+        if [[ -z $(git rev-list $branch --since '1 month' -n 1) ]]; then
             local name=$(echo $branch | sed 's/^origin\///')
             if [[ $force == "yes" ]]; then
                 git push --delete origin "$name"

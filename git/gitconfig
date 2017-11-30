@@ -40,7 +40,7 @@
   today = !git log --since=midnight --author=\"$(git config user.name)\" --oneline
   undo = checkout --
   unstage = reset HEAD --
-  up = pull --rebase
+  up = pull --rebase --autostash
   week = !git log --all --author=\"$(git config user.name)\" --since=\"1 sunday ago\" --until=today --format=\"%Cgreen%ci%Creset %s%Creset\" --no-merges
   whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
   who = shortlog -s --
