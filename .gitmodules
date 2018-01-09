@@ -37,3 +37,6 @@
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "vim/vim/bundle/multiple-cursors"]
+	path = vim/vim/bundle/multiple-cursors
+	url = https://github.com/terryma/vim-multiple-cursors
