@@ -28,3 +28,12 @@ awk '{a+=$1} END{print a/NR}' ,durations
 
 # Send kill signal to user
 skill -KILL -u adevore
+
+# Potentially speeds up greps but not sure why?
+# One possible explanation:
+#   The main factor is the case insensitive search. Case insensitivity in
+#   locales other than C is hard (é == É, and so forth).
+# Found a good explanation: http://www.inmotionhosting.com/support/website/ssh/speed-up-grep-searches-with-lc-all
+# Also try using fgrep
+time LANG=C grep -ri e . > /dev/null
+
