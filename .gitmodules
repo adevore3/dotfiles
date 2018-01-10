@@ -40,3 +40,6 @@
 [submodule "vim/vim/bundle/multiple-cursors"]
 	path = vim/vim/bundle/multiple-cursors
 	url = https://github.com/terryma/vim-multiple-cursors
+[submodule "vim/vim/bundle/expand-region"]
+	path = vim/vim/bundle/expand-region
+	url = https://github.com/terryma/vim-expand-region
