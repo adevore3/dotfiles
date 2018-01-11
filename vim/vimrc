@@ -199,8 +199,8 @@ map <C-L> <C-W>l
 set splitbelow
 set splitright
 
+" TODO: not sure what a good mapping is
 " split vertically/horizontally and switch over
-" not sure what a good mapping is
 "nmap <C-i> <C-w>v<C-l>:e .<CR>
 "nmap <C-o> <C-w>s<C-j>:e .<CR>
 
@@ -339,23 +339,23 @@ autocmd FileType perl setlocal sw=4 ts=2 sts=2
 " display tabs and trailing spaces visually
 set list listchars=tab:>-,trail:•,extends:#,nbsp:.
 
-"set nowrap     "Don't wrap lines
-set linebreak  "Wrap lines at convenient points
+"set nowrap     " don't wrap lines
+set linebreak  " wrap lines at convenient points
 
 "------------------------------------------------------------------------------
 " Completion
 "------------------------------------------------------------------------------
 
 set wildmode=list:longest
-"set wildmenu                                          "enable ctrl-n and ctrl-p to scroll thru matches
-set wildignore=*.o,*.obj,*~,*.swp,*.bak,*.pyc,*.class "stuff to ignore when tab completing
+"set wildmenu                                          " enable ctrl-n and ctrl-p to scroll thru matches (seems to be enabled by default)
+set wildignore=*.o,*.obj,*~,*.swp,*.bak,*.pyc,*.class " stuff to ignore when tab completing
 set wildignore+=*vim/backups*
 
 "------------------------------------------------------------------------------
 " Scrolling
 "------------------------------------------------------------------------------
 
-set scrolloff=8     "Start scrolling when we're 8 lines away from margins
+set scrolloff=8     " start scrolling when we're 8 lines away from margins
 "set sidescrolloff=15
 set sidescroll=4
 set virtualedit=all " allow the cursor to go into invalid places
