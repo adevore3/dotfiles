@@ -8,6 +8,8 @@
 - link:
     /etc/apt/apt.conf.d/90assumeyes: bash/90assumeyes
     ~/.bashrc: bash/bashrc
+    ~/.config/i3: i3
+    ~/.config/i3status: i3status
     ~/.gitconfig: git/gitconfig
     ~/.gitignore: git/gitignore
     ~/.inputrc: bash/inputrc
