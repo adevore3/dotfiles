@@ -176,17 +176,16 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 "------------------------------------------------------------------------------
 
 " disable use of arrow keys in both normal and insert mode
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
-inoremap <Left> :echoe "Use h"<CR>
-inoremap <Right> :echoe "Use l"<CR>
-inoremap <Up> :echoe "Use k"<CR>
-inoremap <Down> :echoe "Use j"<CR>
+nnoremap <Left>  :echoerr "USE H TO GO LEFT"<CR>
+nnoremap <Right> :echoerr "USE L TO GO RIGHT"<CR>
+nnoremap <Up>    :echoerr "USE K TO GO UP"<CR>
+nnoremap <Down>  :echoerr "USE J TO GO DOWN"<CR>
+inoremap <Left>  <ESC>:echoerr "USE H TO GO LEFT"<CR>
+inoremap <Right> <ESC>:echoerr "USE L TO GO RIGHT"<CR>
+inoremap <Up>    <ESC>:echoerr "USE K TO GO UP"<CR>
+inoremap <Down>  <ESC>:echoerr "USE J TO GO DOWN"<CR>
 
 " inserting a new-line w/o entering insert mode
-map <C-Enter> i<Enter><Up><ESC>$
 map <S-Enter> O<ESC>
 map <Enter> o<ESC>
 
