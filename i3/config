@@ -175,7 +175,7 @@ bindsym $mod+Escape exec "pkill i3-nagbar"
 
 bindsym $mod+Prior workspace prev
 bindsym $mod+Next workspace next
-bindsym $mod+Tab workspace next
+bindsym $mod+Tab workspace back_and_forth
 
 exec "xscreensaver &"
 bindsym $mod+ctrl+l exec "xscreensaver-command -lock"
