@@ -1,0 +1,7 @@
+No Machine for Remote
+
+Dropwizard for Java Framework
+
+Logback vs Log4j
+
+IntelliJ configurations
