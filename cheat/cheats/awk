@@ -16,6 +16,9 @@ seq 9 | sed 'H;g' | awk -v RS='' '{for(i=1;i<=NF;i++)printf("%dx%d=%d%s", i, NR,
 # Specify output separator character
 printf '1 2 3' | awk 'BEGIN {OFS=":"}; {print $1,$2,$3}'
 
-# Average a list of numbers
+# Average list of numbers using awk
+awk '{a+=$1} END{print a/NR}' ,durations
+
+# Average a list of numbers piping to awk
 grep addAdSNSPublisherActor mcm-ad-puller.log | head | \jq .[1].uow.duration | awk '{a+=$1} END{print a/NR}'
 

@@ -2,38 +2,25 @@
 tidy -i -m -w 160 -ashtml -utf8 adtrack/documentation/html/table.html
 some_command | tidy -xml -i - > ,some_file
 
-curl --user mcmkwapi@marchex.com:keyw0rdc0mpl1ance -H 'Content-Type: text/xml' -d '<methodCall><methodName>number.list</methodName><params><value><string>CtjSf1Zva1hD_QDe</string></value></params></methodCall>' api.voicestar.com/api/xmlrpc/1 | tidy -xml -i - > ,number_list
-
-# Numbers
-Rich's number: 2062650058
-Artem's number: 4252896698
-
-# Check user on port?
+# Check user on port
 sudo fuser -n tcp 8871
 
 # Cool output
 clear; for i in {1..30}; do tput cup 0 0; curl wttr.in/moon@2016-09-$i; done
 
+# Alias for using my own vimrc and vim directories from other people boxes
 alias avi="vi -u /home/adevore/.vimrc --cmd 'set rtp^=/home/adevore/.vim'"
-diff --side-by-side --suppress-common-lines ,input ,output
-
-curl -X POST  -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary8MA4YWxkTrZu0gW"  -F "partnerId=fe2ytj4x"  -F "externalId=ee15dda6-e3eb-4355-a35b-67e6a692e87b"  -F "zip=98101" -F "needPlayfile=true" "http://mascsds1.sea1:24091/api/v1/zipIvr"
-
-{"product":"CallExperience","product_id":"replace_me"}
-
-ls -ld .?* | grep "\->"
-
-# Average list of numbers using awk
-awk '{a+=$1} END{print a/NR}' ,durations
 
 # Send kill signal to user
 skill -KILL -u adevore
 
-# Potentially speeds up greps but not sure why?
-# One possible explanation:
+# Speeds up greps
 #   The main factor is the case insensitive search. Case insensitivity in
 #   locales other than C is hard (é == É, and so forth).
 # Found a good explanation: http://www.inmotionhosting.com/support/website/ssh/speed-up-grep-searches-with-lc-all
-# Also try using fgrep
-time LANG=C grep -ri e . > /dev/null
+# fgrep is much faster when searching for fixed strings. no regular expressions or special characters
+# LANG is general language set up. LC_ALL overwrites all other LC_* variables
+time LANG=C fgrep <string> <file> -c
+time LC_ALL=C fgrep <string> <file> -c
+
 
