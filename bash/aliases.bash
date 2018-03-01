@@ -19,8 +19,8 @@ alias dirs='dirs -v'
 
 # monitor setup
 alias mirror='xrandr --output DP-1 --output DP-2 --same-as DP-1'
-alias rightoff='xrandr --output DP-1 --off'
-alias righton="xrandr --output DP-1 --auto"
+alias rightoff='xrandr --output DP-2 --off'
+alias righton="xrandr --output DP-2 --auto"
 alias xq='xrandr -q' # Display monitor info
 
 # misc
