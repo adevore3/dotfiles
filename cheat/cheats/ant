@@ -1,0 +1,9 @@
+# List possible ant commands (doesn't always list all of them ie findbugs)
+ant -p
+
+# Run tests
+ant clean test
+
+# Run FindBugs
+ant findbugs
+
