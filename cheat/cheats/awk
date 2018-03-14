@@ -20,5 +20,8 @@ printf '1 2 3' | awk 'BEGIN {OFS=":"}; {print $1,$2,$3}'
 awk '{a+=$1} END{print a/NR}' ,durations
 
 # Average a list of numbers piping to awk
-grep addAdSNSPublisherActor mcm-ad-puller.log | head | \jq .[1].uow.duration | awk '{a+=$1} END{print a/NR}'
+grep search_string file_of_json | head | \jq .[1].uow.duration | awk '{a+=$1} END{print a/NR}'
+
+# Add line to file after specified text
+awk '/search text, escape special characters/ { print; print "new line"; next }1' input_file > ,tmp && cat ,tmp > input_file && rm ,tmp
 
