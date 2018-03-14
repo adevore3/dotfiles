@@ -1,7 +1,15 @@
-No Machine for Remote
+misc
+* No Machine for Remote
+* Dropwizard or Spring Boot
+* Logback vs Log4j
 
-Dropwizard for Java Framework
+Dependencies not found:
+* vim
+* wget (for mac)
+* tree
+* jq
 
-Logback vs Log4j
-
-IntelliJ configurations
+todo:
+* rm i3 related stuff
+* improve install scripts for my dotfiles
+* tattoo
