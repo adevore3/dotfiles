@@ -1,0 +1,1 @@
+alias hp='hobo ps'
