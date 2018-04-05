@@ -1,5 +1,7 @@
--Xms6144m
--Xmx6144m
+# custom IntelliJ IDEA VM options
+
+-Xms4G
+-Xmx8G
 -Xss4096k
 -XX:ReservedCodeCacheSize=240m
 -XX:+UseConcMarkSweepGC
