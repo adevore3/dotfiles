@@ -1,6 +1,7 @@
 alias ach='ant clean hobo'
 alias achd='ant clean hobo-deploy'
 alias achda='ant clean hobo-deploy-all'
+alias acp='ant clippy-project'
 alias act='ant clean test'
 alias ah='ant hobo'
 alias ahd='ant hobo-deploy'
