@@ -56,3 +56,6 @@ find . -type f -exec chmod 644 {} \;
 # To find a specific file excluding certain directories from being searched
 find -not \( -path "./node_modules/*" -prune \) -not \( -path "./docs/*" -prune \) -name readme.md
 
+# Delete everything except <file>
+find . ! -name <file> -delete
+
