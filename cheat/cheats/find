@@ -59,3 +59,6 @@ find -not \( -path "./node_modules/*" -prune \) -not \( -path "./docs/*" -prune 
 # Delete everything except <file>
 find . ! -name <file> -delete
 
+# To find files with a certain path (ie .idea)
+find . -path "*/.idea/*" -type f
+
