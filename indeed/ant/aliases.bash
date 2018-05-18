@@ -1,3 +1,5 @@
+alias acc='ant clean compile'
+alias acct='ant clean compile test'
 alias ach='ant clean hobo'
 alias achd='ant clean hobo-deploy'
 alias achda='ant clean hobo-deploy-all'
