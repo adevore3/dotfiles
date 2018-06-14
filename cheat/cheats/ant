@@ -7,3 +7,6 @@ ant clean test
 # Run FindBugs
 ant findbugs
 
+# Run pmd
+ ant pmd
+

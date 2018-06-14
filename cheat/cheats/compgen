@@ -1,0 +1,21 @@
+# Will list all the commands you could run.
+compgen -c
+
+# Will list all the aliases you could run.
+compgen -a
+
+# Will list all the built-ins you could run.
+compgen -b
+
+# Will list all the keywords you could run.
+compgen -k
+
+# Will list all the functions you could run.
+compgen -A function
+
+# Will list all the above in one go.
+compgen -A function -abck
+
+# Will grep through available aliases and commands
+compgen -ac | grep searchstr
+

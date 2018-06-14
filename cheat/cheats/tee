@@ -1,0 +1,9 @@
+# To tee stdout to a file:
+ls | tee outfile.txt
+
+# To tee stdout and append to a file:
+ls | tee -a outfile.txt
+
+# Tee to a file without escaped color output
+ant pmd | tee -a >(sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' > ,pmd_output)
+

@@ -29,3 +29,11 @@ find . -path "*/.idea/*" -type f | xargs grep -i upsource | cut -d : -f 1 | uniq
 # All intellij projects that don't have upsource connection set (assumes that it is in workspace.xml; also don't care about node_modules)
 find . -path "*/.idea/*" -type f | grep workspace.xml | grep -v node_modules | xargs grep -vi upsource | cut -d : -f 1 | uniq | less
 
+# Useful annotations
+@FieldsAreNonnullByDefault
+@ParametersAreNonnullByDefault
+@ReturnValuesAreNonnullByDefault
+
+# Repeated in CRs often
+Same comment about `@Nonnull`s
+

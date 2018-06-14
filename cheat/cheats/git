@@ -29,6 +29,12 @@ git stash pop
 # from the stash list
 git stash apply stash@{6}
 
+# To stash only unstaged files (doesn't stash newly created or non-added files)
+git stash -k
+
+# To stash unstaged files including newly created and non-added files
+git stash -k -u
+
 # To commit staged changes
 git commit -m "Your commit message"
 
@@ -90,7 +96,7 @@ git log                                                 # Show all the commits
 git status                                              # Show the changes from last commit
 
 # Commit history of a set of files
-git log --pretty=email --patch-with-stat --reverse --full-index -- Admin\*.py > Sripts.patch
+git log --pretty=email --patch-with-stat --reverse --full-index -- Admin\*.py > Scripts.patch
 
 # Import commits from another repo
 git --git-dir=../some_other_repo/.git format-patch -k -1 --stdout <commit SHA> | git am -3 -k
@@ -152,7 +158,7 @@ git checkout -p HEAD^ -- /path/to/file
 # Revert a commit and keep the history of the reverted change as a separate revert commit
 git revert <commit SHA>
 
-# Pich a commit from a branch to current branch. This is different than merge as
+# Pick a commit from a branch to current branch. This is different than merge as
 # this just applies a single commit from a branch to current branch
 git cherry-pick <commit SHA1>
 
