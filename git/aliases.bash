@@ -27,6 +27,7 @@ alias grm="git status | grep deleted | awk '{print \$2}' | xargs git rm"
 alias grt='cd $(git rev-parse --show-cdup)'
 alias gs='git status'
 alias gsfp='git stash show -p | git apply && git stash drop'
+alias gsp='git stash pop'
 alias gspm='git stash push -m'
 alias gss='git status -s'
 alias gup='git pull --rebase'
