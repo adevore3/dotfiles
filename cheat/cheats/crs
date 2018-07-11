@@ -1,0 +1,14 @@
+# Repeated in CRs often
+## Removing @Nonnulls
+nit: Same for all files
+```
+@FieldsAreNonnullByDefault
+@ParametersAreNonnullByDefault
+@ReturnValuesAreNonnullByDefault
+```
+
+Replace `@Nullable`s with `@CheckForNull`s
+
+## Repeating the above comment
+Same comment about `@Nonnull`s
+

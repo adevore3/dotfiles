@@ -62,3 +62,6 @@ find . ! -name <file> -delete
 # To find files with a certain path (ie .idea)
 find . -path "*/.idea/*" -type f
 
+# To find files and print only the file name
+find src/java/ -type f -printf "%f\n"
+
