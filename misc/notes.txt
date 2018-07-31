@@ -3,18 +3,20 @@ misc
 * Dropwizard or Spring Boot
 * Logback vs Log4j
 
-Dependencies not found:
+Dependencies not found: (need to verify these 4)
 * vim
 * wget (for mac)
 * tree
 * jq
 
 todo:
-* rm i3 related stuff
 * improve install scripts for my dotfiles
+** figlet, fortune, cowsay
 * tattoo
+* look into @Value potentially returning null
+* tmux start up script w/ windows created and named
 
 
-
+# Should be moved to cheat crs
 One general comment, I believe we should use any() or any`<type`>() when setting up expectations ie when(mock.call(anyString(), any())).thenReturn("world")
 Then we in the verify you explicitly state what values you expected ie verify(mock).call("hello", psr);
