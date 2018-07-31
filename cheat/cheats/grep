@@ -28,6 +28,9 @@ ps aux | grep '[h]ttpd'
 # Colour in red {bash} and keep all other lines
 ps aux | grep -E --color 'bash|$'
 
+# Another example of highlighting specific words and not filtering out other lines
+tail -f log_file | egrep -i 'error|exception|failed|failed to load translations|$'
+
 # Find lines not starting with a certain pattern (in this example 'alias')
 git grep alias | grep -P '^(?:(?!alias).)*$'
 

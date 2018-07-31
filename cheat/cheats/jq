@@ -8,3 +8,7 @@ cat package.json | jq '. | {dep: .dependencies, devDep: .devDependencies}' | egr
 jq '.[2:4]'
 jq '.[:3]'
 jq '.[-2:]'
+
+# Count length (either number of records in a hash or in an array
+ jq '. | length'
+
