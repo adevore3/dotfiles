@@ -6,7 +6,8 @@ some_command | tidy -xml -i - > ,some_file
 sudo fuser -n tcp 8871
 
 # Cool output
-clear; for i in {1..30}; do tput cup 0 0; curl wttr.in/moon@2016-09-$i; done
+clear; for i in {1..30}; do tput cup 0 0; curl wttr.in/moon@2016-09-$i; sleep 2; done
+curl wttr.in/Seattle
 
 # Alias for using my own vimrc and vim directories from other people boxes
 alias avi="vi -u /home/adevore/.vimrc --cmd 'set rtp^=/home/adevore/.vim'"

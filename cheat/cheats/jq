@@ -1,14 +1,20 @@
-# Compact print
-jq -c
+# Compact print & sorted
+jq -cS .
+
+# Original jq since mine is aliased w/ color
+\jq .
 
 # Create new json from existing json
 cat package.json | jq '. | {dep: .dependencies, devDep: .devDependencies}' | egrep -v "\{|\}" | sort
+
+# Count length (either number of records in a hash or in an array
+jq '. | length'
+
+# Filter on field in object
+time cat <some_file> |  \jq -cS '. | select(.originLogType == "sourcetInviteToApply")' > ,sourcetInviteToApply
 
 # Slice & Dice
 jq '.[2:4]'
 jq '.[:3]'
 jq '.[-2:]'
-
-# Count length (either number of records in a hash or in an array
- jq '. | length'
 
