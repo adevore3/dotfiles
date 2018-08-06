@@ -1,0 +1,15 @@
+# show a stash by index
+function git_stashdrop() {
+  if [ $# -ne 1 ]
+  then
+    echo "ERROR: Stash index not specified."
+    return 1
+  fi
+  re='^[0-9]+$'
+  if [[ $1 =~ $re ]] ; then
+    git stash drop stash@{$1}
+  else
+    echo "'$1' is not a valid number"
+    return 1
+  fi
+}
