@@ -43,3 +43,4 @@
 [submodule "vim/vim/bundle/expand-region"]
 	path = vim/vim/bundle/expand-region
 	url = https://github.com/terryma/vim-expand-region
+  ignore = dirty
