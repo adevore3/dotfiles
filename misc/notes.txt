@@ -15,6 +15,7 @@ todo:
 * tattoo
 * look into @Value potentially returning null
 * tmux start up script w/ windows created and named
+* cheat search w/ context
 
 
 # Should be moved to cheat crs
