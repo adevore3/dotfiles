@@ -4,7 +4,7 @@ export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-# If not running interactively, don't do anything
+# if not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
 # shortcut to dotfiles
@@ -13,20 +13,20 @@ export DOTFILES="${HOME}/dotfiles"
 source "${DOTFILES}/bash/colors.theme"
 source "${DOTFILES}/bash/base.theme"
 
-# source our functions
+# source our functions (must go before configs because conditionally_prefix_path is required for some configs)
 for config_file in $(find ${DOTFILES} -type f -name *.func)
-do
-  source $config_file
-done
-
-# source our aliases
-for config_file in $(find ${DOTFILES} -type f -name aliases.bash)
 do
   source $config_file
 done
 
 # source our configurations
 for config_file in $(find ${DOTFILES} -type f -name config.bash)
+do
+  source $config_file
+done
+
+# source our aliases
+for config_file in $(find ${DOTFILES} -type f -name aliases.bash)
 do
   source $config_file
 done
