@@ -26,6 +26,7 @@ alias xq='xrandr -q' # Display monitor info
 # misc
 alias _='sudo'
 alias ag='alias | grep'
+alias diff='diff -W $(tput cols)'
 alias dirs='dirs -v'
 alias e='exit'
 alias h='history'
