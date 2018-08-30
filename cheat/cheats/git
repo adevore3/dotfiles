@@ -148,8 +148,11 @@ git remote prune origin
 # The following can be used to prune all remotes at once
 git remote prune $(git remote | tr '\n' ' ')
 
+# Fetch pruned branches so you can delete them locally
+git fetch -p
+
 # Remove local branches that have been pruned assuming they are tracking remote branches
-git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -d
+git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D
 
 # Revisions can also be identified with :/text
 # So, this will show the first commit that has "cool" in their message body
