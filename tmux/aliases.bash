@@ -7,5 +7,7 @@ alias tksw='tmux kill-session -t work'
 alias tmux="`which tmux` -2"
 alias tn='tmux new -s'
 alias tnw='tmux new -s work'
+alias trw='tmux rename-window'
+alias trwd='tmux rename-window $(basename "$PWD")'
 
 alias cw='create_window_with_n_panes'
