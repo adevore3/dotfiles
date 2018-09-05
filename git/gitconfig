@@ -8,9 +8,9 @@
   changes = diff --name-status -r
   ci = commit
   cleanup = !git remote prune origin && git gc && git clean -dfx && git stash clear
-  cm = checkout master
+  cm = commit -m
   co = checkout
-  cp = checkout pre_release
+  com = checkout master
   db = diff -b
   dc = diff --cached
   df = diff
@@ -30,7 +30,6 @@
   me = config user.name
   new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
   newp = !sh -c 'git log -p $1@{1}..$1@{0} "$@"'
-  rgrep = !git grep
   sb = !ls .git/refs/remotes/*/$(git cb) | cut -d/ -f4,5 | xargs git show-branch $(git cb)
   showtool = "!sh -c 'if [ -z $1 ]; then REVISION=HEAD; else REVISION=$1; fi; git difftool $REVISION~ $REVISION' -"
   sortdiff = !sh -c 'git diff "$@" | grep "^[+-]" | sort --key=1.2 | uniq -u -s1'
@@ -71,14 +70,6 @@
 [merge]
   summary = true
   tool = vimdiff
-[mergetool "vd4"]
-  cmd = vim -d +:M $MERGED $LOCAL $BASE $REMOTE
-[mergetool "vd3"]
-  cmd = vim -d +:M $MERGED $LOCAL $REMOTE
-[mergetool "gvd4"]
-  cmd = gvim -d +:M $MERGED $LOCAL $BASE $REMOTE
-[mergetool "gvd3"]
-  cmd = gvim -d +:M $MERGED $LOCAL $REMOTE
 [push]
   default = current
 [reviewboard]
