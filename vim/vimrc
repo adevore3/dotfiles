@@ -329,12 +329,9 @@ set smarttab      " insert tabs on the start of a line according to shiftwidth, 
 set softtabstop=2 " when hitting <BS>, pretend like a tab is removed, even if spaces
 set tabstop=2     " tabs are n spaces
 
-autocmd FileType *.psgi setlocal sw=4 ts=4 sts=4
-autocmd FileType *.tap setlocal sw=4 ts=2 sts=2
-autocmd FileType *.xpl setlocal sw=4 ts=2 sts=2
-autocmd FileType java setlocal sw=4 ts=2 sts=2
-autocmd FileType javascript setlocal sw=4 ts=2 sts=2
-autocmd FileType perl setlocal sw=4 ts=2 sts=2
+autocmd BufRead,BufNewFile *.xml setlocal sw=4 ts=4 sts=4 expandtab
+autocmd BufRead,BufNewFile *.java setlocal sw=4 ts=4 sts=4 expandtab
+autocmd BufRead,BufNewFile *.js setlocal sw=4 ts=4 sts=4 expandtab
 
 " display tabs and trailing spaces visually
 set list listchars=tab:>-,trail:•,extends:#,nbsp:.
