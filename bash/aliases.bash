@@ -25,6 +25,7 @@ alias xq='xrandr -q' # Display monitor info
 # misc
 alias _='sudo'
 alias ag='alias | grep'
+alias apt-get="sudo apt-get"
 alias diff='diff -W $(tput cols)'
 alias dirs='dirs -v'
 alias e='exit'
@@ -38,10 +39,13 @@ alias md='mkdir -p'
 alias path='echo $PATH'
 alias pathg='echo $PATH | grep'
 alias pathl='path | tr : "\n" | sort'
+alias ports='netstat -tulanp'
 alias psg='ps fauxwww | grep -v grep | grep'
 alias rd='rmdir'
 alias reload!='. ~/.bashrc'
 alias t1='tail -n1'
+alias update='sudo apt-get update && sudo apt-get upgrade'
+alias updatey="sudo apt-get --yes"
 alias vd='vi `git diff --name-only`'
 alias watch='watch -c '
 
