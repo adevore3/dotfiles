@@ -20,4 +20,4 @@ todo:
 
 # Should be moved to cheat crs
 One general comment, I believe we should use any() or any`<type`>() when setting up expectations ie when(mock.call(anyString(), any())).thenReturn("world")
-Then we in the verify you explicitly state what values you expected ie verify(mock).call("hello", psr);
+Then in the verify you explicitly state what values you expected ie verify(mock).call("hello", psr);
