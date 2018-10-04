@@ -10,3 +10,5 @@ ant findbugs
 # Run pmd
  ant pmd
 
+# Ignore time bombs
+ant clean test -Ddetect.timebomb=false
