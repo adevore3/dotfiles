@@ -6,6 +6,6 @@ alias jira='f(){ DISPLAY=:0 firefox -new-tab -url https://bugs.indeed.com/browse
 alias og='DISPLAY=:0 firefox -new-tab -url https://code.corp.indeed.com/$(basename $(dirname "$PWD"))/$(basename "$PWD")'
 alias ogb='DISPLAY=:0 firefox -new-tab -url https://code.corp.indeed.com/$(basename $(dirname "$PWD"))/$(basename "$PWD")/tree/$(git symbolic-ref --short HEAD)'
 alias ogmr='DISPLAY=:0 firefox -new-tab -url https://code.corp.indeed.com/$(basename $(dirname "$PWD"))/$(basename "$PWD")/merge_requests'
-alias oog='f(){ DISPLAY=:0 firefox -new-tab -url "https://opengrok.dev.indeed.net/source/search?project=%21all%21&q=%22$1%22&defs=&refs=&path=&hist=&type="; unset -f f; }; f'
-alias proc='f(){ DISPLAY=:0 firefox -new-tab -url https://proctor.sandbox.indeed.net/proctor/definition/$1; unset -f f; }; f'
+alias oog='f(){ DISPLAY=:0 firefox -new-tab -url "https://opengrok.dev.indeed.net/source/search?project=%21all%21&q=%22$1%22&defs=&refs=&path=$2&hist=&type="; unset -f f; }; f'
+alias proc='f(){ DISPLAY=:0 firefox -new-tab -url https://proctor.sandbox.indeed.net/proctor/definition/$(echo $1 | tr "[:upper:]" "[:lower:]"); unset -f f; }; f'
 alias umr='update-managed-repos'
