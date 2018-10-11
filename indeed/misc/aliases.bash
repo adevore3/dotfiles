@@ -2,7 +2,7 @@ alias ahdhlf='ant hobo-deploy && hobo logs -f $(basename "$PWD")'
 alias gci='f(){ git clone git@code.corp.indeed.com:$(basename "$PWD")/$1.git; unset -f f; }; f'
 alias gciacp='f(){ git clone git@code.corp.indeed.com:$(basename "$PWD")/$1.git; cd $1; ant clippy-project; unset -f f; }; f'
 alias glogj='glogf --json'
-alias jira='f(){ DISPLAY=:0 firefox -new-tab -url $JIRA_BASE_URL/browse/$1; unset -f f; }; f'
+alias jira="f(){ DISPLAY=:0 firefox -new-tab -url $JIRA_BASE_URL/browse/${1:-$(git symbolic-ref --short HEAD | awk -F/ '{print $NF}')}; unset -f f; }; f"
 alias jproj='f(){ DISPLAY=:0 firefox -new-tab -url $JIRA_BASE_URL/projects/$(grep jira repo.cfg | cut -d= -f2)/issues; unset -f f; }; f'
 alias og='DISPLAY=:0 firefox -new-tab -url $GITLAB_BASE_URL/$(basename $(dirname "$PWD"))/$(basename "$PWD")'
 alias ogb='DISPLAY=:0 firefox -new-tab -url $GITLAB_BASE_URL/$(basename $(dirname "$PWD"))/$(basename "$PWD")/tree/$(git symbolic-ref --short HEAD)'
