@@ -3,15 +3,11 @@ misc
 * Dropwizard or Spring Boot
 * Logback vs Log4j
 
-Dependencies not found: (need to verify these 4)
-* vim
-* wget (for mac)
-* tree
-* jq
+Dependencies not found for dotfiles:
 
 todo:
-* improve install scripts for my dotfiles
-** figlet, fortune, cowsay
+* Improve env-setup:
+** Don't always run git submodule or tmux plugins
 * tattoo
 * look into @Value potentially returning null
 * tmux start up script w/ windows created and named
