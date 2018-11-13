@@ -44,3 +44,6 @@ SLAVE_THESE_ITEMS="$(cat `find src -name rad-artifacts.json` | \jq .requires[].n
 
 # Rsync directories from desktop to laptop
 rsync -azP --exclude=',*' adevore.seaoff.indeed.net:/home/adevore/indeed/skynet skynet
+
+# Where to get UTF-8 string constant
+StandardCharsets.UTF_8.name();
