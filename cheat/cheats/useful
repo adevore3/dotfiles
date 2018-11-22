@@ -47,3 +47,7 @@ rsync -azP --exclude=',*' adevore.seaoff.indeed.net:/home/adevore/indeed/skynet 
 
 # Where to get UTF-8 string constant
 StandardCharsets.UTF_8.name();
+
+# Git diff side-by-side
+git difftool --tool=vimdiff
+
