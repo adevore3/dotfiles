@@ -43,7 +43,7 @@ setsid unity
 SLAVE_THESE_ITEMS="$(cat `find src -name rad-artifacts.json` | \jq .requires[].name | sed 's/"//g' | sed 's/^/INDEED-qa\//' | tr '\n' ' ')" update-slave-rad
 
 # Rsync directories from desktop to laptop
-rsync -azP --exclude=',*' adevore.seaoff.indeed.net:/home/adevore/indeed/skynet skynet
+rsync -azP --exclude=',*' adevore.seaoff.indeed.net:/home/adevore/indeed/skynet /home/adevore/indeed/
 
 # Where to get UTF-8 string constant
 StandardCharsets.UTF_8.name();
