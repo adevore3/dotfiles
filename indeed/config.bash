@@ -1,5 +1,6 @@
 # Enable auto-completion for logvis-tail
-source <(logvis-tail --completion-bash)
+# Currently causes errors when shell starts
+#source <(logvis-tail --completion-bash)
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
