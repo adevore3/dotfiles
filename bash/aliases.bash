@@ -34,6 +34,7 @@ alias h='history'
 alias hg='history | grep '
 alias hist='history | awk '"'"'{print $2}'"'"' | sort | uniq -c | sort -rn | head'
 alias jq='jq -C'
+alias kp='f(){ kill $(ps aux | grep -v grep | grep $1 | awk '"'"'{print $2}'"'"'); unset -f f; }; f'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias md='mkdir -p'
 alias path='echo $PATH'
