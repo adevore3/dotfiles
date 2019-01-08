@@ -10,7 +10,7 @@ alias og='DISPLAY=:0 firefox -new-tab -url $GITLAB_BASE_URL/$(basename $(dirname
 alias ogb='DISPLAY=:0 firefox -new-tab -url $GITLAB_BASE_URL/$(basename $(dirname "$PWD"))/$(basename "$PWD")/tree/$(git symbolic-ref --short HEAD)'
 alias ogmr='DISPLAY=:0 firefox -new-tab -url $GITLAB_BASE_URL/$(basename $(dirname "$PWD"))/$(basename "$PWD")/merge_requests'
 alias ognmr='DISPLAY=:0 firefox -new-tab -url "$GITLAB_BASE_URL/$(basename $(dirname "$PWD"))/$(basename "$PWD")/merge_requests/new?utf8=%E2%9C%93&merge_request[source_branch]=$(git symbolic-ref --short HEAD)&merge_request[target_branch]=master&merge_request[title]=$(basename $(git symbolic-ref --short HEAD)): DESCRIPTION"'
-alias oog='f(){ DISPLAY=:0 firefox -new-tab -url "$OPENGROK_BASE_URL/source/search?project=%21all%21&q=%22$1%22&defs=&refs=&path=$2&hist=&type="; unset -f f; }; f'
+alias oog='f(){ DISPLAY=:0 firefox -new-tab -url "$OPENGROK_BASE_URL/source/search?project=%21all%21&q=%22$1%22&defs=&refs=&path=&hist=&type=$2"; unset -f f; }; f'
 alias osg='f(){ DISPLAY=:0 firefox -new-tab -url "http://sourcegraph.qa.indeed.net/search?q=$1"; unset -f f; }; f'
 alias proc='f(){ DISPLAY=:0 firefox -new-tab -url $PROCTOR_BASE_URL/proctor/definition/$(echo $1 | tr "[:upper:]" "[:lower:]")?branch=${2:-trunk}; unset -f f; }; f'
 alias prod='DISPLAY=:0 firefox -new-tab -url https://$(basename "$PWD").sandbox.indeed.net'
