@@ -50,7 +50,7 @@
 [core]
   autocrlf = input
   editor = vim -f
-  excludesfile = ~/.gitignore
+  excludesfile = /home/adevore/env/etc/git/gitignore_global
   pager = less -FRSX
   whitespace = fix, -trailing-space, -space-before-tab, -indent-with-non-tab, cr-at-eol
 [color]
@@ -81,3 +81,10 @@
 [user]
   name = Anton DeVore
   email = adevore@indeed.com
+[include]
+  path = /home/adevore/env/etc/git/aliases
+  path = /home/adevore/env/etc/git/general-config
+  path = /home/adevore/env/etc//git/aliases
+  path = /home/adevore/env/etc//git/general-config
+[init]
+  templatedir = ~/.git-templates
