@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# `eg` is a shorthand for `egrep` with the option to pass in multiple
+# words to search for
+function eg() {
+  local y;
+  y="$@";
+  local words="($(echo -n $y | sed 's/ /|/g'))"
+  while read data; do
+    echo -n $data | egrep -i $words;
+  done
+}
