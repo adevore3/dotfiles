@@ -53,6 +53,7 @@
   excludesfile = /home/adevore/env/etc/git/gitignore_global
   pager = less -FRSX
   whitespace = fix, -trailing-space, -space-before-tab, -indent-with-non-tab, cr-at-eol
+  hooksPath = /home/adevore/dotfiles/git/hooks
 [color]
   branch = auto
   diff = auto
