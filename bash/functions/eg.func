@@ -2,6 +2,10 @@
 
 # `eg` is a shorthand for `egrep` with the option to pass in multiple
 # words to search for
+#
+# usage:
+#
+#   `cat src/resources/config/SourceCandidatePipelineDaemon-common-config.properties | egf port host throttle`
 function eg() {
   local y;
   y="$@";
