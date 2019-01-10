@@ -5,12 +5,7 @@
 #
 # usage:
 #
-#   `cat src/resources/config/SourceCandidatePipelineDaemon-common-config.properties | egf port host throttle`
+#   `cat src/resources/config/SourceCandidatePipelineDaemon-common-config.properties | eg port host throttle`
 function eg() {
-  local y;
-  y="$@";
-  local words="($(echo -n $y | sed 's/ /|/g'))"
-  while read data; do
-    echo -n $data | egrep -i $words;
-  done
+  egrep -in "$(IFS=\| ; echo "$*")"
 }
