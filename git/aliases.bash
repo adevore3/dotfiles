@@ -27,6 +27,7 @@ alias gmu='git fetch origin -v; git fetch upstream -v; git merge upstream/master
 alias gp='git push'
 alias gpo='git push origin'
 alias grm="git status | grep deleted | awk '{print \$2}' | xargs git rm"
+alias gruf=$'f(){ git status | grep -v ":" | grep "${1:-src}" | awk \'{print $1}\' | xargs rm -rf; unset -f f; }; f'
 alias grt='cd $(git rev-parse --show-cdup)'
 alias gsd='git_stashdrop'
 alias gsfp='git stash show -p | git apply && git stash drop'
