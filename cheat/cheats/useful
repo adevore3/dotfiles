@@ -48,9 +48,3 @@ StandardCharsets.UTF_8.name();
 # Git diff side-by-side
 git difftool --tool=vimdiff
 
-# Remove files that are not tracked
-git status | grep src | awk '{print $1}' | xargs rm -rf
-
-# Search for pid and kill
-psg firefox | h1 | awk '{print $2}'
-
