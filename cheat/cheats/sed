@@ -19,6 +19,12 @@ sed -i -r 's/^\s+//g' file.txt
 # To remove empty lines and print results to stdout:
 sed '/^$/d' file.txt
 
+# To remove lines with a match in place
+sed -i '/matchesPattern/d' file.txt
+
+# Remove all empty lines at the end of a file
+find src -type f -name '*.java' -exec sed --in-place -e :a -e '/^\n*$/{$d;N;};/\n$/ba' {} \;
+
 # To replace newlines in multiple lines
 sed ':a;N;$!ba;s/\n//g'  file.txt
 
