@@ -89,3 +89,8 @@
   path = /home/adevore/env/etc//git/general-config
 [init]
   templatedir = ~/.git-templates
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  process = git-lfs filter-process
+  required = true
+  smudge = git-lfs smudge -- %f
