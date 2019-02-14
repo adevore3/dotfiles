@@ -174,3 +174,8 @@ git tag -d postgres
 # Delete a tag explicitly (useful if tag clashes with a branch name)
 git push --delete origin refs/tags/postgres
 
+# A simple way to squash commits
+git reset --soft HEAD~N &&
+git commit
+git push -f
+
