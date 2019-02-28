@@ -21,4 +21,4 @@ alias upb='DISPLAY=:0 firefox -new-tab -url $UPSOURCE_BASE_URL/$(basename $(dirn
 alias upba='DISPLAY=:0 firefox -new-tab -url $UPSOURCE_BASE_URL/$(basename $(dirname "$PWD"))--$(basename "$PWD")/branches'
 alias uph='DISPLAY=:0 firefox -new-tab -url $JETBRAINS_BASE_URL/hub'
 alias upp='DISPLAY=:0 firefox -new-tab -url $UPSOURCE_BASE_URL/~vcs/$(basename $(dirname "$PWD"))--$(basename "$PWD")'
-alias usrq='SLAVE_THESE_ITEMS="$(cat `find src -name rad-artifacts.json` | \jq .requires[].name | sed "s/\"//g" | sed "s/^/INDEED-qa\//" | tr "\n" " ")" update-slave-rad'
+alias uraq='GET_THESE_ITEMS="$(cat `find src -name rad-artifacts.json` | \jq .requires[].name | sed "s/\"//g" | sed "s/^/INDEED-qa\//" | tr "\n" " ")" update-rad-artifacts'
