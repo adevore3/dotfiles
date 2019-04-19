@@ -13,6 +13,8 @@ alias ognmr='DISPLAY=:0 firefox -new-tab -url "$GITLAB_BASE_URL/$(basename $(dir
 alias oog='f(){ DISPLAY=:0 firefox -new-tab -url "$OPENGROK_BASE_URL/source/search?project=%21all%21&q=%22$1%22&defs=&refs=&path=&hist=&type=$2"; unset -f f; }; f'
 alias osg='f(){ DISPLAY=:0 firefox -new-tab -url "https://sourcegraph.qa.indeed.net/search?q=$1"; unset -f f; }; f'
 alias olv=$'f(){ DISPLAY=:0 firefox -new-tab -url "https://squall.indeed.com/logviewer?type=$1&source=prod&checked=detailedUID&date=$(($(date --date \'-1 hour\' +%s%N)/1000000))&numRequested=10"; unset -f f; }; f'
+alias pipet='f(){ DISPLAY=:0 firefox -new-tab -url https://pipet.sandbox.indeed.net/proctor/matrix/definition/$(echo $1 | tr "[:upper:]" "[:lower:]"); unset -f f; }; f'
+alias pipetq='f(){ DISPLAY=:0 firefox -new-tab -url https://pipet.sandbox.qa.indeed.net/proctor/matrix/definition/$(echo $1 | tr "[:upper:]" "[:lower:]"); unset -f f; }; f'
 alias proc='f(){ DISPLAY=:0 firefox -new-tab -url $PROCTOR_BASE_URL/proctor/definition/$(echo $1 | tr "[:upper:]" "[:lower:]")?branch=${2:-trunk}; unset -f f; }; f'
 alias prod='DISPLAY=:0 firefox -new-tab -url https://$(basename "$PWD").sandbox.indeed.net'
 alias qa='DISPLAY=:0 firefox -new-tab -url https://$(basename "$PWD").sandbox.qa.indeed.net'
