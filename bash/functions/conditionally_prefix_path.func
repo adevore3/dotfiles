@@ -1,6 +1,6 @@
 # Prefix a directory to path
-function conditionally_prefix_path () {
-  local dir=$1;
+function conditionally_prefix_path() {
+  local dir=$1
   if [ -d $dir ]; then
     PATH="$dir:${PATH}"
   fi

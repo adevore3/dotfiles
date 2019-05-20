@@ -2,9 +2,9 @@
 
 # Print commits for all your repos under basedir (defaults to /site)
 function standup () {
-    days=${1-1}
-    user=${2-$(whoami)}
-    basedir="/site"
+    local days=${1-1}
+    local user=${2-$(whoami)}
+    local basedir="/site"
     for dir in `find $basedir -name .git -type d -ctime -$days | grep -v vendor | awk -F"/" 'BEGIN { OFS="/" }{ $NF = ""; print }' | sort | uniq | sed 's/.$//'`; do
       echo -e "\n$dir";
       for commit_hash in $(cd $dir && git --no-pager log --all --since="$days day ago" --format="%H %ae %s" | grep "$user" | cut -d ' ' -f 1); do
