@@ -1,0 +1,9 @@
+# Connect to a mongo rw instance in quartermaster
+function quartermongo() {
+  local replSet=$1
+  local dbName=$2
+  local dbUser=$3
+  local productGroup=source;
+  mongo --ssl $dbName --sslAllowInvalidCertificates -u $dbUser -p $(echo "cat /var/local/product_groups/${productGroup}/product_group_auto.properties" | ssh tst-mexec1 "sudo su - ${productGroup}" | grep qm.mongo.${replSet}.users.${dbUser}Pwd | sed 's/.*=//g') --host ${replSet}/$(curl --basic --user $USER https://provisioning.sandbox.qa.indeed.net/api/v1/mongo/replicaSets/${replSet}/config | python -m json.tool | grep '"host"' | sed -r 's/^.*"(.+)",$/\1/' | tr '\n' ',' | sed -r 's/,$//')
+}
+
