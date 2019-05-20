@@ -6,6 +6,6 @@
 # usage:
 #
 #   `cat src/resources/config/SourceCandidatePipelineDaemon-common-config.properties | eg port host throttle`
-function eg() {
+function eg () {
   egrep -in "$(IFS=\| ; echo "$*")"
 }

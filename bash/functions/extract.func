@@ -1,5 +1,5 @@
 # Extract any file extension
-function extract() {
+function extract () {
   if [ $# -ne 1 ]
   then
     echo "Error: No file specified."
