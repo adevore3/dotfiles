@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function git_info() {
   if [ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]; then
     # print informations
@@ -31,3 +33,4 @@ function git_info() {
 
   fi
 }
+

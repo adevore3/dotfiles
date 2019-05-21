@@ -1,33 +1,35 @@
+#!/bin/bash
+
 # shows branches not merged that are over 2 years old
 function git_cleanup_not_merged() {
-    if [[ -z $(sed --version 2>/dev/null) ]] ; then
-        local sed_flags='-E'
-    else
-        local sed_flags=
-    fi
+  if [[ -z $(sed --version 2>/dev/null) ]]; then
+    local sed_flags='-E'
+  else
+    local sed_flags=
+  fi
 
-    if [[ $1 != "-f" ]]; then
-        echo "### Dry-run mode, specify -f to actually perform deletes."
-        local force="no"
-    else
-        local force="yes"
-        shift
-    fi
-    if [[ -n "$1" ]]; then
-        local filter=$1
-    else
-        local filter=
-    fi
+  if [[ $1 != "-f" ]]; then
+    echo "### Dry-run mode, specify -f to actually perform deletes."
+    local force="no"
+  else
+    local force="yes"
+    shift
+  fi
+  if [[ -n "$1" ]]; then
+    local filter=$1
+  else
+    local filter=
+  fi
 
-    for branch in $(git branch -r --no-merged origin/master | sed $sed_flags "s/^[[:space:]]*//" | grep "\<origin/$filter" | egrep -v '\<origin/master\>')
-    do
-        if [[ -z $(git rev-list $branch --since '2 year' -n 1) ]]; then
-            local name=$(echo $branch | sed 's/^origin\///')
-            if [[ $force == "yes" ]]; then
-                git push --delete origin "$name"
-            else
-                echo git push --delete origin "$name"
-            fi
-        fi
-    done
+  for branch in $(git branch -r --no-merged origin/master | sed $sed_flags "s/^[[:space:]]*//" | grep "\<origin/$filter" | egrep -v '\<origin/master\>'); do
+    if [[ -z $(git rev-list $branch --since '2 year' -n 1) ]]; then
+      local name=$(echo $branch | sed 's/^origin\///')
+      if [[ $force == "yes" ]]; then
+        git push --delete origin "$name"
+      else
+        echo git push --delete origin "$name"
+      fi
+    fi
+  done
 }
+

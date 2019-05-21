@@ -1,7 +1,8 @@
+#!/bin/bash
+
 # Print out which branches are not merged
 function git_not_merged() {
-    for branch in $(git branch -r --no-merged origin/master | sed $sed_flags "s/^[[:space:]]*//" | grep "\<origin/$filter" | egrep -v '\<origin/master\>')
-    do
+    for branch in $(git branch -r --no-merged origin/master | sed $sed_flags "s/^[[:space:]]*//" | grep "\<origin/$filter" | egrep -v '\<origin/master\>'); do
         printf "\n"
         if [[ -z $(git log --no-merges origin/master..$branch) ]]; then
             printf "$(tput setaf 2)"
@@ -23,3 +24,4 @@ function git_not_merged() {
         printf "$(tput sgr 0)" # Reset text format to the terminal's default
     done
 }
+
