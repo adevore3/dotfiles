@@ -1,3 +1,6 @@
-function lsgrep () {
+#!/bin/bash
+
+function lsgrep() {
   ls | grep "$*"
 }
+

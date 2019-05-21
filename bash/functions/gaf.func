@@ -1,10 +1,13 @@
+#!/bin/bash
+
 # Git add files that match a grep expression
-function gaf () {
+function gaf() {
   if [ $# -ne 1 ]
   then
     echo "Error: Must provide a pattern that grep will recognize"
     return 1
   fi
+
   git diff --name-only | grep $1 | xargs git add
 }
 

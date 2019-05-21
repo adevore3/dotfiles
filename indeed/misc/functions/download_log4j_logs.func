@@ -1,10 +1,15 @@
 #!/bin/bash
 
 # Connect to a mongo rw instance in quartermaster
-function download_log4j_logs () {
+function download_log4j_logs() {
   local repoFile="repo.cfg"
   if [ ! -f $repoFile ]; then
     echo "$repoFile does NOT exists, exiting..."
+    return 1
+  fi
+
+  if [ $# -ne 3 ]; then
+    echo "Need to specify 3 arguments: env, logLevels & numHoursBack."
     return 1
   fi
 

@@ -1,4 +1,7 @@
-function mkcd () {
+#!/bin/bash
+
+function mkcd() {
   mkdir -p "$*"
   cd "$*"
 }
+
