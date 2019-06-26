@@ -1,9 +1,9 @@
 misc
 * No Machine for Remote
 * Dropwizard or Spring Boot
-* Logback vs Log4j
 
 Dependencies not found for dotfiles:
+* Auto install intellij `sudo snap install intellij-idea-ultimate --classic`
 
 todo:
 * Improve env-setup:
@@ -13,7 +13,3 @@ todo:
 * tmux start up script w/ windows created and named
 * cheat search w/ context
 
-
-# Should be moved to cheat crs
-One general comment, I believe we should use any() or any`<type`>() when setting up expectations ie when(mock.call(anyString(), any())).thenReturn("world")
-Then in the verify you explicitly state what values you expected ie verify(mock).call("hello", psr);
