@@ -1,1 +1,1 @@
-alias ij='${DOTFILES}/intellij/start-intellij.sh'
+alias ij='intellij-idea-ultimate > /dev/null 2>&1 &'
