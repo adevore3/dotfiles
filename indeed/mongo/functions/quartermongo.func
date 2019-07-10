@@ -15,12 +15,14 @@ function quartermongo() {
   echo ""
 
   local productGroup=source
+  local password=$(echo "cat /var/local/product_groups/${productGroup}/product_group_auto.properties" | ssh tst-mexec1 "sudo su - ${productGroup}" | grep qm.mongo.${replSet}.users.${dbUser}Pwd | sed 's/.*=//g')
+  local host=${replSet}/$(curl --basic --user $USER https://provisioning.sandbox.qa.indeed.net/api/v1/mongo/replicaSets/${replSet}/config | python -m json.tool | grep '"host"' | sed -r 's/^.*"(.+)",$/\1/' | tr '\n' ',' | sed -r 's/,$//')
 
   mongo \
     --ssl $dbName \
     --sslAllowInvalidCertificates \
     -u $dbUser \
-    -p $(echo "cat /var/local/product_groups/${productGroup}/product_group_auto.properties" | ssh tst-mexec1 "sudo su - ${productGroup}" | grep qm.mongo.${replSet}.users.${dbUser}Pwd | sed 's/.*=//g') \
-    --host ${replSet}/$(curl --basic --user $USER https://provisioning.sandbox.qa.indeed.net/api/v1/mongo/replicaSets/${replSet}/config | python -m json.tool | grep '"host"' | sed -r 's/^.*"(.+)",$/\1/' | tr '\n' ',' | sed -r 's/,$//')
+    -p $password \
+    --host $host
 }
 
