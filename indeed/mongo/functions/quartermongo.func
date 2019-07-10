@@ -2,15 +2,25 @@
 
 # Connect to a mongo rw instance in quartermaster
 function quartermongo() {
-  if [ $# -ne 3 ]; then
-    echo "Error: Must specify 3 arguments: replSet, dbName, dbUser."
-    return 1
-  fi
+  # Unfortunately some repos have different dbNames per environment. Try qa first before trying common
+  local dbNameQa=${2:-`git grep mongo.db.name src/resources/ | grep qa | cut -d= -f2`}
 
-  local replSet=$1
-  local dbName=$2
-  local dbUser=$3
+  local replSet=${1:-`git grep mongo.service.tags src/resources/ | grep common | cut -d= -f2`}
+  local dbName=${dbNameQa:-`git grep mongo.db.name src/resources/ | grep common | cut -d= -f2`}
+  local dbUser=${3:-rw}
+
+  echo "replSet=$replSet"
+  echo "dbName=$dbName"
+  echo "dbUser=$dbUser"
+  echo ""
+
   local productGroup=source
-  mongo --ssl $dbName --sslAllowInvalidCertificates -u $dbUser -p $(echo "cat /var/local/product_groups/${productGroup}/product_group_auto.properties" | ssh tst-mexec1 "sudo su - ${productGroup}" | grep qm.mongo.${replSet}.users.${dbUser}Pwd | sed 's/.*=//g') --host ${replSet}/$(curl --basic --user $USER https://provisioning.sandbox.qa.indeed.net/api/v1/mongo/replicaSets/${replSet}/config | python -m json.tool | grep '"host"' | sed -r 's/^.*"(.+)",$/\1/' | tr '\n' ',' | sed -r 's/,$//')
+
+  mongo \
+    --ssl $dbName \
+    --sslAllowInvalidCertificates \
+    -u $dbUser \
+    -p $(echo "cat /var/local/product_groups/${productGroup}/product_group_auto.properties" | ssh tst-mexec1 "sudo su - ${productGroup}" | grep qm.mongo.${replSet}.users.${dbUser}Pwd | sed 's/.*=//g') \
+    --host ${replSet}/$(curl --basic --user $USER https://provisioning.sandbox.qa.indeed.net/api/v1/mongo/replicaSets/${replSet}/config | python -m json.tool | grep '"host"' | sed -r 's/^.*"(.+)",$/\1/' | tr '\n' ',' | sed -r 's/,$//')
 }
 
