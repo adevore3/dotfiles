@@ -48,3 +48,12 @@ StandardCharsets.UTF_8.name();
 # Git diff side-by-side
 git difftool --tool=vimdiff
 
+# Killing a rouge node process if you see `throw er; // Unhandled 'error' event`
+ps aux | awk '/node/{print $2}' | xargs kill -9
+
+# If running `update-rad-artifacts` hangs w/ message `Calling rhone delta health check at http://localhost:25502/api/ruok`
+rm /tmp/rhonedeltatmp/download/delta-repo.lock
+
+# Useful things to grep out of hobo logs
+hlf | egrep -v "(MemoryAndGarbageReporter|MongoRegistry|indeed\.logentry|healthcheck|rabbitmq|AbstractProctorLoader|connections balanced across)"
+
