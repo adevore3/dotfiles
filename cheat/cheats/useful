@@ -57,3 +57,6 @@ rm /tmp/rhonedeltatmp/download/delta-repo.lock
 # Useful things to grep out of hobo logs
 hlf | egrep -v "(MemoryAndGarbageReporter|MongoRegistry|indeed\.logentry|healthcheck|rabbitmq|AbstractProctorLoader|connections balanced across)"
 
+# Tmux make pane into a window
+break-pane
+
