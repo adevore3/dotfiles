@@ -50,6 +50,7 @@ alias rd='rmdir'
 alias reload!='. ~/.bashrc'
 alias shrug='meh'
 alias t1='tail -n1'
+alias d-d='f(){ date -d "$1" +"%Y-%m-%d 00:00"; unset -f f; }; f'
 alias update='sudo apt-get update && sudo apt-get upgrade'
 alias updatey="sudo apt-get --yes"
 alias vd='vi `git diff --name-only`'
