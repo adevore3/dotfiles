@@ -10,6 +10,7 @@ todo:
 ** Don't always run git submodule or tmux plugins
 ** git stash apply stash@{n} function
 ** $(whichopen) "${url}" &>/dev/null
+** function to scp to desktop or laptop
 * tattoo
 * look into @Value potentially returning null
 * tmux start up script w/ windows created and named
