@@ -60,3 +60,6 @@ hlf | egrep -v "(MemoryAndGarbageReporter|MongoRegistry|indeed\.logentry|healthc
 # Tmux make pane into a window
 break-pane
 
+# Viewing raw logentries in QA
+ssh logrepo-rawlogs.qa.indeed.net
+
