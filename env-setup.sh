@@ -14,13 +14,6 @@ function installing_template() {
   fi
 }
 
-function install_tmux() {
-  wget https://raw.githubusercontent.com/kaosf/ubuntu-setup/master/tmux-setup.sh
-  chmod u+x tmux-setup.sh
-  sudo ./tmux-setup.sh
-  rm tmux-setup.sh
-}
-
 function install_cheat() {
   sudo python $DOTFILES/cheat/get-pip.py
   sudo pip install cheat
@@ -32,6 +25,7 @@ function install_autojump() {
 }
 
 function install_tmux_plugins() {
+  # Start a session to install plugins
   tmux new -d -s test
   $DOTFILES/tmux/plugins/tpm/bindings/install_plugins
   tmux kill-session -t test
@@ -50,13 +44,13 @@ apt_install_template "figlet"
 apt_install_template "fortune"
 apt_install_template "jq"
 apt_install_template "tree"
+apt_install_template "tmux"
 apt_install_template "vim"
 apt_install_template "wget"
 
 echo "Installing submodules"
 git submodule update --init --recursive
 
-installing_template "tmux" install_tmux
 installing_template "cheat" install_cheat
 installing_template "autojump" install_autojump
 
