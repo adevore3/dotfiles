@@ -1,2 +1,7 @@
+*adevore*.properties
 ,*
+.gradle/
+/*.iml
 /.idea
+build/
+node_modules/
