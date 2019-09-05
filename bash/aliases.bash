@@ -25,8 +25,8 @@ alias xq='xrandr -q' # Display monitor info
 # misc
 alias _='sudo'
 alias ag='alias | grep'
-alias apt-get="sudo apt-get"
 alias cdp='cd -P'
+alias d-d='f(){ date -d "$1" +"%Y-%m-%d 00:00"; unset -f f; }; f'
 alias diff='diff -W $(tput cols)'
 alias dirs='dirs -v'
 alias e='exit'
@@ -48,11 +48,11 @@ alias ports='netstat -tulanp'
 alias psg='ps fauxwww | grep -v grep | grep'
 alias rd='rmdir'
 alias reload!='. ~/.bashrc'
+alias sai='sudo apt install'
+alias saiy='sudo apt install -y'
 alias shrug='meh'
 alias t1='tail -n1'
-alias d-d='f(){ date -d "$1" +"%Y-%m-%d 00:00"; unset -f f; }; f'
-alias update='sudo apt-get update && sudo apt-get upgrade'
-alias updatey="sudo apt-get --yes"
+alias update='sudo apt update && sudo apt upgrade'
 alias vd='vi `git diff --name-only`'
 alias watch='watch -c '
 
