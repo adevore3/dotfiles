@@ -51,7 +51,6 @@
   autocrlf = input
   editor = vim -f
   excludesfile = /home/adevore/.gitignore
-  excludesfile = /home/adevore/env/etc/git/gitignore_global
   pager = less -FRSX
   whitespace = fix, -trailing-space, -space-before-tab, -indent-with-non-tab, cr-at-eol
   hooksPath = /home/adevore/dotfiles/git/hooks
@@ -86,8 +85,8 @@
 [include]
   path = /home/adevore/env/etc/git/aliases
   path = /home/adevore/env/etc/git/general-config
-  path = /home/adevore/env/etc//git/aliases
-  path = /home/adevore/env/etc//git/general-config
+  path = /home/adevore/env/etc/git/skynet/aliases
+  path = /home/adevore/env/etc/git/skynet/general-config
 [init]
   templatedir = ~/.git-templates
 [filter "lfs"]
