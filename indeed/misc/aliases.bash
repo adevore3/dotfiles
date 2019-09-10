@@ -1,7 +1,7 @@
 alias ahdhlf='ant hobo-deploy && hobo logs -f $(basename "$PWD")'
 alias dev='DISPLAY=:0 firefox -new-tab -url $(basename "$PWD").$(whoami).$INDEED_OFFICE.indeed.net'
 alias dll='download_log4j_logs'
-alias gci='f(){ git clone git@code.corp.indeed.com:$(basename "$PWD")/$1.git; unset -f f; }; f'
+alias gci='f(){ git clone git@code.corp.indeed.com:$(basename "$PWD")/$1.git; cd $1; unset -f f; }; f'
 alias gciacp='f(){ git clone git@code.corp.indeed.com:$(basename "$PWD")/$1.git; cd $1; ant clippy-project; unset -f f; }; f'
 alias gcobi='f(){ git checkout -b jira/$(whoami)/$1; unset -f f; }; f'
 alias glogj='glogf --json'
