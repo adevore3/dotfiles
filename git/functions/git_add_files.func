@@ -2,8 +2,7 @@
 
 # Git add files that match a grep expression
 function git_add_files() {
-  if [ $# -ne 1 ]
-  then
+  if [ $# -ne 1 ]; then
     echo "Error: Must provide a pattern that grep will recognize"
     return 1
   fi
