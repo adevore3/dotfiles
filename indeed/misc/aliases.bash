@@ -21,6 +21,7 @@ alias pipetq='f(){ DISPLAY=:0 firefox -new-tab -url https://pipet.sandbox.qa.ind
 alias proc='f(){ DISPLAY=:0 firefox -new-tab -url $PROCTOR_BASE_URL/proctor/definition/$(echo $1 | tr "[:upper:]" "[:lower:]")?branch=${2:-trunk}; unset -f f; }; f'
 alias prod='DISPLAY=:0 firefox -new-tab -url https://$(basename "$PWD").sandbox.indeed.net'
 alias qa='DISPLAY=:0 firefox -new-tab -url https://$(basename "$PWD").sandbox.qa.indeed.net'
+alias qalogs='ssh logrepo-rawlogs.qa.indeed.net'
 alias umr='update-managed-repos'
 alias upb='DISPLAY=:0 firefox -new-tab -url $UPSOURCE_BASE_URL/$(basename $(dirname "$PWD"))--$(basename "$PWD")/branch/$(git symbolic-ref --short HEAD)'
 alias upba='DISPLAY=:0 firefox -new-tab -url $UPSOURCE_BASE_URL/$(basename $(dirname "$PWD"))--$(basename "$PWD")/branches'
