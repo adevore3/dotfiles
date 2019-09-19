@@ -14,20 +14,17 @@ source "${DOTFILES}/bash/colors.theme"
 source "${DOTFILES}/bash/base.theme"
 
 # source our functions (must go before configs because conditionally_prefix_path is required for some configs)
-for config_file in $(find ${DOTFILES} -type f -name *.func)
-do
+for config_file in $(find ${DOTFILES} -type f -name *.func); do
   source $config_file
 done
 
 # source our configurations
-for config_file in $(find ${DOTFILES} -type f -name config.bash)
-do
+for config_file in $(find ${DOTFILES} -type f -name config.bash); do
   source $config_file
 done
 
 # source our aliases
-for config_file in $(find ${DOTFILES} -type f -name aliases.bash)
-do
+for config_file in $(find ${DOTFILES} -type f -name aliases.bash); do
   source $config_file
 done
 
