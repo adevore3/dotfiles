@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Get the repo name based on the path
+function get_repo_name() {
+  if [ ! -d ".git" ]; then
+    echo "Error: Must be in a git directory"
+    return 1
+  fi
+
+  echo $(basename "$PWD")
+}
+

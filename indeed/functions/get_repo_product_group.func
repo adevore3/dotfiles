@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Get the product group based on the path
+function get_repo_product_group() {
+  if [ ! -d ".git" ]; then
+    echo "Error: Must be in a git directory"
+    return 1
+  fi
+
+  echo $(basename $(dirname "$PWD"))
+}
+

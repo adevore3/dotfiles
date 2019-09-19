@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Open up the poodlepants page for a given service assuming we're in a repo that
+# has a service running
+function poodlepants() {
+  if [ ! -d ".git" ]; then
+    echo "Error: Must be in a git directory"
+    return 1
+  fi
+
+  if [ $# -ne 1 ]; then
+    echo "Error: No environment specified. Usage: poodlepants [dev|qa|prod}"
+    return 1
+  fi
+
+  case $1 in
+      dev)
+            ENV="dev"
+            ;;
+      qa)
+            ENV="qa"
+            ;;
+      prod|production)
+            ENV="production"
+            ;;
+      *)
+            ENV="qa"
+            ;;
+  esac
+
+  local url=$(service_base_url $ENV)
+
+  DISPLAY=:0 firefox -new-tab -url $url
+}
+
