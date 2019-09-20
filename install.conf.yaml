@@ -8,7 +8,7 @@
 - link:
     /etc/apt/apt.conf.d/90assumeyes: bash/90assumeyes
     ~/.bashrc: bash/bashrc
-    ~/.gitconfig: git/gitconfig
+    ~/.gitconfig: git/final_gitconfig
     ~/.gitignore: git/gitignore
     ~/.inputrc: bash/inputrc
     ~/.lessfilter: bash/lessfilter

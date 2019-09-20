@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Concat multiple gitignore files into 1 file. Sorts and de-dupes
+function concat_multiple_gitignores() {
+  local final_filename=$DOTFILES/git/final_gitignore
+  cat $DOTFILES/git/gitignore $INDEED_ENV_DIR/etc/git/gitignore_global | sort | uniq > $final_filename
+}
+
