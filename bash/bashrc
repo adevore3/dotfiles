@@ -30,6 +30,7 @@ done
 
 unset config_file
 
+# private or per instance configuration
 if [ -a ~/.localrc ]; then source ~/.localrc; fi
 
 if [[ $PROMPT ]]; then
