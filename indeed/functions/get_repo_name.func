@@ -7,6 +7,6 @@ function get_repo_name() {
     return 1
   fi
 
-  echo $(basename "$PWD")
+  get_dir_name
 }
 

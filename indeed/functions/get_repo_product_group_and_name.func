@@ -7,6 +7,6 @@ function get_repo_product_group_and_name() {
     return 1
   fi
 
-  echo $(basename $(dirname "$PWD"))/$(basename "$PWD")
+  echo $(basename $(dirname "$PWD"))/$(get_dir_name)
 }
 

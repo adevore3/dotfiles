@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Get the repo name based on the path
+function get_dir_name() {
+  echo $(basename "$PWD")
+}
+
