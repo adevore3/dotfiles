@@ -1,8 +1,9 @@
-# misc
 alias c='cheat'
 alias ce='cheat -e'
-alias cu='cheat useful'
 alias ceu='cheat -e useful'
+alias cl='f(){ cheat $1 | less; unset -f f; }; f'
+alias cs='f(){ cheat -s $1; unset -f f; }; f'
+alias csl='f(){ cheat -s $1 | less; unset -f f; }; f'
+alias cu='cheat useful'
 alias cul='cheat useful | less'
 alias cutl='cheat useful | tail'
-
