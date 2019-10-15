@@ -12,4 +12,5 @@ alias trwd='tmux rename-window $(basename "$PWD")'
 alias trwj='tmux rename-window $(if [ -e repo.cfg ]; then fgrep "jira=" repo.cfg | cut -d= -f2; else echo $(basename "$PWD"); fi)'
 alias trwm='tmux rename-window misc'
 
+# Alias for functions
 alias cw='create_window_with_n_panes'
