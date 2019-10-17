@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Transpose last log entry and sort
+function transpose_last_and_sort() {
+  if [ $# -ne 1 ]; then
+    echo "Error: No file specified."
+    return 1
+  fi
+
+  local filename=$1
+  if [ -f $filename ]; then
+    tail -n1 $filename | transpose-log-entries | sort
+  else
+    echo "'$filename' is not a valid file"
+  fi
+}
+
