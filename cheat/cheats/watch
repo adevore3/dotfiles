@@ -1,3 +1,6 @@
 # Watch a command refreshing every 30 seconds and highlighting differences
 watch -n 30 -d "wc -l cmrs.log"
 
+# Watch pipet for proctor changes
+watch -n 10 -d "echo '$(date) >>> $(./verify_proctor_test hire_eval_deboost_musthave_keywords_tst | grep experimental)'"
+

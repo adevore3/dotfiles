@@ -60,3 +60,6 @@ hlf | egrep -v "(MemoryAndGarbageReporter|MongoRegistry|indeed\.logentry|healthc
 # Tmux make pane into a window
 break-pane
 
+# Git all files that ever existed
+git log --pretty=format: --name-only --diff-filter=A | sort -u
+
