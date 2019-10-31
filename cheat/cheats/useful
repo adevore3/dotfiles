@@ -24,10 +24,8 @@ skill -KILL -u adevore
 time LANG=C fgrep <string> <file> -c
 time LC_ALL=C fgrep <string> <file> -c
 
-# All intellij projects that have upsource connection set
-find . -path "*/.idea/*" -type f | xargs grep -i upsource | cut -d : -f 1 | uniq | less
-
 # All intellij projects that don't have upsource connection set (assumes that it is in workspace.xml; also don't care about node_modules)
+# Useful if I need to access workspace for every project
 find . -path "*/.idea/*" -type f | grep workspace.xml | grep -v node_modules | xargs grep -vi upsource | cut -d : -f 1 | uniq | less
 
 # Publishing a library (defaults to master branch)
@@ -62,4 +60,7 @@ break-pane
 
 # Git all files that ever existed
 git log --pretty=format: --name-only --diff-filter=A | sort -u
+
+# Austin's method for merging
+"Jenkins please retry a build"
 
