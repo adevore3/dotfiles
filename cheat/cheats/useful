@@ -64,3 +64,6 @@ git log --pretty=format: --name-only --diff-filter=A | sort -u
 # Austin's method for merging
 "Jenkins please retry a build"
 
+# When IntelliJ stops registering keystrokes (https://superuser.com/questions/708538/on-ubuntu-13-10-multiple-hits-on-ctrltab-makes-my-intellij-13-keyboard-stuck-n/716440#716440)
+ibus-daemon -rd
+
