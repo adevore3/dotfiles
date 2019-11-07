@@ -29,10 +29,10 @@ function service_base_url() {
   esac
 
   local url=""
-  if [ $ENV = "dev"]; then
+  if [ $ENV = "dev" ]; then
     url="$(get_repo_name).$(whoami).$INDEED_OFFICE.indeed.net"
   else
-    [[ $ENV = "qa" ]] && url_env="qa." || url_env=""
+    [ $ENV = "qa" ] && url_env="qa." || url_env=""
     url="https://$(get_repo_name).sandbox.${url_env}indeed.net"
   fi
 
