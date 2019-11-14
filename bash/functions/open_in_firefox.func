@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Open up the given url in firefox as a new tab.
+# Checks for a valid url
+function open_in_firefox() {
+  if [ $# -ne 1 ]; then
+    echo "Error: Must provide a url to open"
+    return 1
+  fi
+  local url=$1
+
+  local regex='^(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]$'
+  if ! [[ $url =~ $regex ]]; then
+    echo "Error: Link not valid"
+    return 1
+  fi
+
+  DISPLAY=:0 firefox -new-tab -url $url
+}
+

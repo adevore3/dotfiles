@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Find a git tracked file matching the given input. Excludes paths including `test`
+function git_find_file() {
+  if [ $# -ne 1 ]; then
+    echo "Error: Must provide a case-sensitive name to search git files. Only 1 argument allowed."
+    return 1
+  fi
+  local name=$1
+
+  git ls-tree -r master --name-only | fgrep $name
+}
+
