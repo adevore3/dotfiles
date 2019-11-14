@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# show a stash by index
+# Drop a stash by index
 function git_stashdrop() {
   if [ $# -ne 1 ]; then
     echo "ERROR: Stash index not specified."

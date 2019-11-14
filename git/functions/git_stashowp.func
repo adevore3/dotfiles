@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# show a stash by index
+# Show a stash's patch by index
 function git_stashowp() {
   if [ $# -ne 1 ]; then
     echo "ERROR: Stash index not specified."
