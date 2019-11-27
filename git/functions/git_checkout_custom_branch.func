@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Custom git checkout branch
-function git_checkout_branch() {
+# Git checkout with customized branch name
+function git_checkout_custom_branch() {
   if [ $# -lt 2 ]; then
     echo "ERROR: Must specifiy a Jira ticket and a description"
     return 1
