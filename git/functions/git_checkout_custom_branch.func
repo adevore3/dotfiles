@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Custom git checkout branch
+function git_checkout_branch() {
+  if [ $# -lt 2 ]; then
+    echo "ERROR: Must specifiy a Jira ticket and a description"
+    return 1
+  fi
+
+  local jira_ticket=${1^^}
+  if [[ ! ${jira_ticket} =~ [a-zA-Z]+-[0-9]+ ]]; then
+    echo "ERROR: Jira ticket must be in the format of '<project name>-<ticket number>'"
+    return 1
+  fi
+
+  shift;
+  local args=($jira_ticket "${@}")
+  local joined_arguments=$(IFS=_ ; echo "${args[*]}")
+
+  local git_branch=jira/$(whoami)/$joined_arguments
+  git checkout -b $git_branch
+}
+
