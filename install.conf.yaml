@@ -8,8 +8,8 @@
 - link:
     /etc/apt/apt.conf.d/90assumeyes: bash/90assumeyes
     ~/.bashrc: bash/bashrc
-    ~/.gitconfig: git/final_gitconfig
-    ~/.gitignore: git/gitignore
+    ~/.gitconfig: git/gitconfig
+    ~/.gitignore: git/final_gitignore
     ~/.inputrc: bash/inputrc
     ~/.lessfilter: bash/lessfilter
     ~/.profile: profile
