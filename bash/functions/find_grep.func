@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Run find on a directory and then grep the files
+function find_grep() {
+  if [ $# -ne 2 ]; then
+    printf "ERROR: Must specify:\n1) directory\n2) name to grep for"
+    return 1
+  fi
+
+  local dir=$1
+  local name=$2
+
+  find $dir | grep $name
+}
+
