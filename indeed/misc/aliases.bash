@@ -5,6 +5,7 @@ alias gcliacp='f(){ git clone git@code.corp.indeed.com:$(get_dir_name)/$1.git; c
 alias gcobi='f(){ git checkout -b jira/$(whoami)/$1; unset -f f; }; f'
 alias glogj='glogf --json'
 alias jira='f(){ DISPLAY=:0 firefox -new-tab -url $JIRA_BASE_URL/browse/${1:-$(git symbolic-ref --short HEAD | grep -o "[^/]*$")}; unset -f f; }; f'
+alias jj='autojump_jira_project'
 alias jproj='f(){ DISPLAY=:0 firefox -new-tab -url $JIRA_BASE_URL/projects/$(grep jira repo.cfg | cut -d= -f2)/issues; unset -f f; }; f'
 alias og='DISPLAY=:0 firefox -new-tab -url $GITLAB_BASE_URL/$(get_repo_product_group_and_name)'
 alias ogb='DISPLAY=:0 firefox -new-tab -url $GITLAB_BASE_URL/$(get_repo_product_group_and_name)/tree/$(git symbolic-ref --short HEAD)'
