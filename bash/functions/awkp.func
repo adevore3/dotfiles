@@ -7,11 +7,12 @@ function awkp() {
     return 1
   fi
 
+  local desired_position=$1
   local regex='^[0-9]+$'
-  if [[ $1 =~ $regex ]]; then
-    awk -vfield="1" '{print $field}'
+  if [[ $desired_position =~ $regex ]]; then
+    awk -vfield="$desired_position" '{print $field}'
   else
-    echo "ERROR: '$1' is not a valid number."
+    echo "ERROR: '$desired_position' is not a valid number."
     return 1
   fi
 }
