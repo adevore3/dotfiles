@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Highlight pattern
+function highlight() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: Must specify a pattern to highlight"
+    return 1
+  fi
+
+  local pattern=$1
+  egrep "$1|\$"
+}
+
