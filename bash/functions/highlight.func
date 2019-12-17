@@ -8,6 +8,6 @@ function highlight() {
   fi
 
   local pattern=$1
-  egrep "$1|\$"
+  egrep --color=auto "$1|\$"
 }
 
