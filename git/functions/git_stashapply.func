@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Apply a stash by index
+function git_stashapply() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: Stash index not specified."
+    return 1
+  fi
+
+  local regex='^[0-9]+$'
+  if [[ $1 =~ $regex ]]; then
+    git stash apply stash@{$1}
+  else
+    echo "ERROR: '$1' is not a valid number."
+    return 1
+  fi
+}
+

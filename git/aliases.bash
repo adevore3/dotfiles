@@ -33,6 +33,7 @@ alias gpsu='git_push_set_upstream'
 alias gr='cd $(git rev-parse --show-cdup)'
 alias grmad="git status | grep deleted | awk '{print \$2}' | xargs git rm"
 alias gruf=$'f(){ git status | grep -v ":" | grep "${1:-src}" | awk \'{print $1}\' | xargs rm -rf; unset -f f; }; f'
+alias gsa='git_stashapply'
 alias gsd='git_stashdrop'
 alias gsfp='git stash show -p | git apply && git stash drop'
 alias gsl='git stash list'
