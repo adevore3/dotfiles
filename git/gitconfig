@@ -61,6 +61,8 @@
   ui = true
 [diff]
   stat = 200,120
+[fetch]
+  prune = true
 [format]
   pretty = medium
 [help]
