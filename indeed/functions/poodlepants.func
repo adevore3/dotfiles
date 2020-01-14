@@ -28,7 +28,7 @@ function poodlepants() {
             ;;
   esac
 
-  local url=$(service_base_url $ENV)
+  local url="$(service_base_url $ENV)/private/poodlepants"
 
   DISPLAY=:0 firefox -new-tab -url $url
 }
