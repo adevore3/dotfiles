@@ -20,9 +20,20 @@ shopt -s histappend
 shopt -s cdspell
 
 # colored grep
-export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;33'
+unset GREP_OPTIONS
 
 # less respects color output
 export LESS='-R'
+
+export PS1="\n\! \[\e[0;32m\]$(whoami)\[\e[39m\]  λ (\w)\n \$ "
+
+echo ""
+echo "####################################"
+echo "Section for custom notes per server"
+echo ""
+echo "Command you can run"
+echo ""
+echo "End of message"
+echo "####################################"
 
