@@ -29,3 +29,5 @@ alias qalogs='ssh logrepo-rawlogs.qa.indeed.net'
 alias umr='update-managed-repos'
 alias uph='DISPLAY=:0 firefox -new-tab -url $JETBRAINS_BASE_URL/hub'
 alias uraq='GET_THESE_ITEMS="$(cat `find src -name rad-artifacts.json` | \jq .requires[].name | sed "s/\"//g" | sed "s/^/INDEED-qa\//" | tr "\n" " ")" update-rad-artifacts'
+alias vp='$HOME/verify_proctor_test'
+
