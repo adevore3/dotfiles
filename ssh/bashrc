@@ -26,7 +26,7 @@ unset GREP_OPTIONS
 # less respects color output
 export LESS='-R'
 
-export PS1="\n\! \[\e[0;32m\]$(whoami)\[\e[39m\]  λ (\w)\n \$ "
+export PS1="\n\! \[\e[0;32m\]$(whoami)@$(hostname)\[\e[39m\]  λ (\w)\n \$ "
 
 echo ""
 echo "####################################"
