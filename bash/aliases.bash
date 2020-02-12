@@ -40,6 +40,7 @@ alias hl='highlight'
 alias jp='f(){ j $1; cd -P .; unset -f f; }; f'
 alias jq='jq -C'
 alias kp=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias lsg='f(){ ls | grep -i "$1"; unset -f f; }; f'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias md='mkdir -p'
 alias meh='echo "¯\_(ツ)_/¯" | xclip -selection clipboard'
