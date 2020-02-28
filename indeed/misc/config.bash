@@ -1,5 +1,0 @@
-export GITLAB_BASE_URL="https://code.corp.indeed.com"
-export JETBRAINS_BASE_URL="https://jetbrains.corp.indeed.com"
-export JIRA_BASE_URL="https://bugs.indeed.com"
-export OPENGROK_BASE_URL="https://opengrok.dev.indeed.net"
-export PROCTOR_BASE_URL="https://proctor.sandbox.indeed.net"
