@@ -64,6 +64,7 @@ alias tln='tail -n'
 alias update='sudo apt update && sudo apt upgrade'
 alias vd='vi `git diff --name-only`'
 alias vil='vi !$'
+alias vilc='vi $(fc -s)'
 alias watch='watch -c '
 
 # Add an "alert" alias for long running commands.  Use like so:
