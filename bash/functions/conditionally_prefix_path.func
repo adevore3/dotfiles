@@ -9,7 +9,7 @@ function conditionally_prefix_path() {
 
   local dir=$1
   if [ ! -d "$dir" ]; then
-    echo "ERROR: Argument was not a directory"
+    echo "ERROR: '$dir' is not a directory"
     return 1
   fi
 
