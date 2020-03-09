@@ -8,11 +8,8 @@ function conditionally_prefix_path() {
   fi
 
   local dir=$1
-  if [ ! -d "$dir" ]; then
-    echo "ERROR: '$dir' is not a directory"
-    return 1
+  if [ -d "$dir" ]; then
+    PATH="$dir:${PATH}"
   fi
-
-  PATH="$dir:${PATH}"
 }
 
