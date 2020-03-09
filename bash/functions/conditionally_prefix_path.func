@@ -3,13 +3,16 @@
 # Prefix a directory to path
 function conditionally_prefix_path() {
   if [ $# -ne 1 ]; then
-    echo "Error: No directory specified."
+    echo "Usage: conditionally_prefix_path <path-to-directory>"
     return 1
   fi
 
   local dir=$1
-  if [ -d $dir ]; then
-    PATH="$dir:${PATH}"
+  if [ ! -d "$dir" ]; then
+    echo "ERROR: Argument was not a directory"
+    return 1
   fi
+
+  PATH="$dir:${PATH}"
 }
 

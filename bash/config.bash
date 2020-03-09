@@ -36,7 +36,10 @@ export AUTOFEATURE=true autotest
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # add any tools or scripts in home bin
-conditionally_prefix_path "${HOME}/bin"
+home_bin="${HOME}/bin"
+if [ -d "$home_bin" ]; then
+  conditionally_prefix_path $home_bin
+fi
 
 # vi for the command line
 set -o vi
