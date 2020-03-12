@@ -46,7 +46,7 @@ StandardCharsets.UTF_8.name();
 # Git diff side-by-side
 git difftool --tool=vimdiff
 
-# Killing a rouge node process if you see `throw er; // Unhandled 'error' event`
+# Killing a rogue node process if you see `throw er; // Unhandled 'error' event`
 ps aux | awk '/node/{print $2}' | xargs kill -9
 
 # If running `update-rad-artifacts` hangs w/ message `Calling rhone delta health check at http://localhost:25502/api/ruok`
@@ -66,4 +66,10 @@ git log --pretty=format: --name-only --diff-filter=A | sort -u
 
 # When IntelliJ stops registering keystrokes (https://superuser.com/questions/708538/on-ubuntu-13-10-multiple-hits-on-ctrltab-makes-my-intellij-13-keyboard-stuck-n/716440#716440)
 ibus-daemon -rd
+
+# Add migration script
+hobo-django-manage3 hirecentral makemigrations
+
+# Verify migration sql
+hobo-django-manage3 hirecentral sqlmigrate sourceapp [migration_file_name]
 
