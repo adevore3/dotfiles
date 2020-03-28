@@ -44,3 +44,6 @@
 	path = vim/vim/bundle/expand-region
 	url = https://github.com/terryma/vim-expand-region
   ignore = dirty
+[submodule "indeed"]
+	path = indeed
+	url = git@code.corp.indeed.com:adevore/indeed-dotfiles
