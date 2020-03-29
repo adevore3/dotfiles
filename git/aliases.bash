@@ -45,6 +45,7 @@ alias gspmw='git stash push -m "WIP it real good"'
 alias gss='git_stashow'
 alias gssp='git_stashowp'
 alias gst='git status'
+alias gsu='git submodule update'
 alias gup='git pull --rebase'
 
 case $OSTYPE in
