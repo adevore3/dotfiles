@@ -16,7 +16,7 @@ alias gco='f(){ local branch=$(git branch | grep -i $1 | tr -d "[:space:]"); git
 alias gcoad="git status | grep deleted | awk '{print \$2}' | xargs git checkout --"
 alias gcob='git checkout -b'
 alias gcoc='git_checkout_custom_branch'
-alias gcor='f(){ local branch=$(git branch -r | grep -i $1 | tr -d "[:space:]" | cut -c 8-); git checkout -b $branch origin/$branch; unset -f f; }; f'
+alias gcor='git_checkout_remote_branch'
 alias gcount='git shortlog -sn'
 alias gcp='git cherry-pick'
 alias gdv='git diff -w "$@" | vim -R -'
