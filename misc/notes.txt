@@ -1,6 +1,5 @@
 misc
 * No Machine for Remote
-* Dropwizard or Spring Boot
 
 Dependencies not found for dotfiles:
 * Auto install intellij `sudo snap install intellij-idea-ultimate --classic`
@@ -8,12 +7,9 @@ Dependencies not found for dotfiles:
 todo:
 * Improve env-setup:
 ** Don't always run git submodule or tmux plugins
-** git stash apply stash@{n} function
 ** $(whichopen) "${url}" &>/dev/null
 ** function to scp to desktop or laptop
-** git ignore part of gitignore
 * tattoo
-* look into @Value potentially returning null
 * tmux start up script w/ windows created and named
 * cheat search w/ context
 
