@@ -1,8 +1,8 @@
 set nocompatible " not vi compatible
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Pathogen Initialization
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
@@ -10,9 +10,9 @@ call pathogen#helptags()
 
 filetype plugin indent on " enable file type detection
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Theme/Colors
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax on
 
@@ -48,9 +48,9 @@ autocmd BufRead,BufNewFile *.psgi set filetype=perl syntax=perl
 autocmd BufRead,BufNewFile *.ddl set filetype=sql  syntax=sql
 autocmd BufRead,BufNewFile *.func set filetype=sh  syntax=sh
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Easy Align Plugin
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -67,9 +67,9 @@ let g:easy_align_delimiters = {
 \     'ignore_groups':   ['!Comment'] }
 \ }
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Mulitple Cursors Plugin
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " If set to 0, then pressing g:multi_cursor_quit_key in Visual mode will not
 " quit and delete all existing cursors. This is useful if you want to press
@@ -90,9 +90,9 @@ let g:multi_cursor_exit_from_insert_mode=0
 " nnoremap <silent> <M-j> :MultipleCursorsFind <C-R>/<CR>
 " vnoremap <silent> <M-j> :MultipleCursorsFind <C-R>/<CR>
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let mapleader=","
 
@@ -171,9 +171,9 @@ set lazyredraw
 nmap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editing/Navigation
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " disable use of arrow keys in both normal and insert mode
 nnoremap <Left>  :echoerr "USE H TO GO LEFT"<CR>
@@ -230,12 +230,12 @@ endfunction
 nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Folding
 "
 " Enable folding, but by default make it act like folding is off, because
 " folding is annoying in anything but a few rare cases
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Map toggle folding Space key.
 " noremap <space> :call ToggleFold()<CR>
@@ -284,9 +284,31 @@ autocmd BufRead *.xsd set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 autocmd BufRead *.xml set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 autocmd BufRead *.sls set iskeyword-=$
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MULTIPURPOSE TAB KEY
+" Indent if we're at the beginning of a line. Else, do completion.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col
+        return "\<tab>"
+    endif
+
+    let char = getline('.')[col - 1]
+    if char =~ '\k'
+        " There's an identifier before the cursor, so complete the identifier.
+        return "\<c-p>"
+    else
+        return "\<tab>"
+    endif
+endfunction
+inoremap <expr> <tab> InsertTabWrapper()
+inoremap <s-tab> <c-n>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Search Settings
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set ignorecase        " ignore case when searching
 "set incsearch         " find the next match as we type the search
@@ -306,18 +328,18 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Turn Off Swap Files
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set nobackup
 set noswapfile
 set nowb
 set nowritebackup
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Indentation
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set autoindent    " always set autoindenting on
 set copyindent    " copy the previous indentation on autoindenting
@@ -340,27 +362,27 @@ set list listchars=tab:>-,trail:•,extends:#,nbsp:.
 "set nowrap     " don't wrap lines
 set linebreak  " wrap lines at convenient points
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Completion
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set wildmode=list:longest
 "set wildmenu                                          " enable ctrl-n and ctrl-p to scroll thru matches (seems to be enabled by default)
 set wildignore=*.o,*.obj,*~,*.swp,*.bak,*.pyc,*.class " stuff to ignore when tab completing
 set wildignore+=*vim/backups*
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Scrolling
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set scrolloff=8     " start scrolling when we're 8 lines away from margins
 "set sidescrolloff=15
 set sidescroll=4
 set virtualedit=all " allow the cursor to go into invalid places
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Highlighting
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 hi CursorLine cterm=underline
 hi CursorColumn cterm=NONE ctermbg=cyan ctermfg=white guibg=darkred guifg=white
@@ -370,9 +392,23 @@ nnoremap <leader><space> :noh<cr>
 
 set cursorline
 
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RENAME CURRENT FILE
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>n :call RenameFile()<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Local customizations
-"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " local customizations in ~/.vimrc_local
 let $LOCALFILE=expand("~/.vimrc_local")
