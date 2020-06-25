@@ -46,6 +46,7 @@ alias gss='git_stashow'
 alias gssp='git_stashowp'
 alias gst='git status --ignore-submodules'
 alias gsu='git submodule update'
+alias gsua='git submodule update --remote --merge'
 alias gup='git pull --rebase'
 
 case $OSTYPE in
