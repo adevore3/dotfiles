@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=Brave
+GenericName=Web Browser
+Comment=Access the Internet
+Keywords=Internet;WWW;Browser;Web;Explorer
+Exec=/snap/bin/brave %U
+StartupNotify=true
+Terminal=false
+Icon=brave
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml_xml;image/webp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=/snap/bin/brave
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=/snap/bin/brave --incognito
+
