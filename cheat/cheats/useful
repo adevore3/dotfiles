@@ -73,3 +73,6 @@ hobo-django-manage3 hirecentral makemigrations
 # Verify migration sql
 hobo-django-manage3 hirecentral sqlmigrate sourceapp [migration_file_name]
 
+# Set brave to default browser for xdg-open
+xdg-settings set default-web-browser brave.desktop
+
