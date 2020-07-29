@@ -31,9 +31,10 @@ alias gp='git push'
 alias gpdo='git push --delete origin'
 alias gpo='git push origin'
 alias gpsu='git_push_set_upstream'
-alias grt='cd $(git rev-parse --show-cdup)'
+alias gri='git_rebase_helper'
 alias grmad="git status | grep deleted | awk '{print \$2}' | xargs git rm"
 alias grpo='git remote prune origin'
+alias grt='cd $(git rev-parse --show-cdup)'
 alias gruf=$'f(){ git status | grep -v ":" | grep "${1:-src}" | awk \'{print $1}\' | xargs rm -rf; unset -f f; }; f'
 alias gsa='git_stashapply'
 alias gsd='git_stashdrop'
@@ -60,3 +61,4 @@ case $OSTYPE in
     alias gd='git diff'
     ;;
 esac
+

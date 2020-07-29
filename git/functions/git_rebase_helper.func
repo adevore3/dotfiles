@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Apply a stash by index
+function git_rebase_helper() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: Number of commits to rebase not specified."
+    return 1
+  fi
+
+  local regex='^[0-9]+$'
+  if [[ $1 =~ $regex ]]; then
+    git rebase -i HEAD~$1
+  else
+    echo "ERROR: '$1' is not a valid number."
+    return 1
+  fi
+}
+
