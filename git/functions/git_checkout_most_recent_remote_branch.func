@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Git checkout most recent remote branch containing specified pattern
+function git_checkout_most_recent_remote_branch() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: Must specifiy a pattern to match"
+    return 1
+  fi
+
+  local pattern=$1
+
+  local origin_branch=$(gbrlt | grep $1 | hd1 | awkp 7)
+  local branch=$(echo $origin_branch | cut -c 8-)
+
+  git checkout -b $branch $origin_branch
+}
+

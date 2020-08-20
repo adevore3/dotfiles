@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Git checkout remote branch containing specified pattern
-function git_checkout_remote_branch() {
+# Git checkout branch containing specified pattern
+function git_checkout_branch() {
   if [ $# -ne 1 ]; then
     echo "ERROR: Must specifiy a pattern to match"
     return 1
@@ -10,7 +10,7 @@ function git_checkout_remote_branch() {
   local pattern=$1
 
   # Must wrap it in parentheses to make it an array, otherwise it's just a space separated list
-  local branches=($(git branch -r | grep -i $pattern | sed -e 's/^[ \t]*//' | cut -c 8-))
+  local branches=($(git branch | grep -i $pattern | sed -e 's/^[ \t]*//' | grep -v $(git branch --show-current)))
   local size=${#branches[@]}
 
   if [ $size -eq 0 ]; then
@@ -49,6 +49,6 @@ function git_checkout_remote_branch() {
     desired_branch=${branches[0]}
   fi
 
-  git checkout -b $desired_branch origin/$desired_branch
+  git checkout $desired_branch
 }
 
