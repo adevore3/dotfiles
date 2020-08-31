@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# `teh` is a shorthand for tee helper
+#
+# outputs command to a file ',<first argument>_<timestamp>'
+#
+# usage:
+#
+#   `teh hist | grep git`
+function teh() {
+  local date=$(date +"%Y_%m_%d_%T")
+
+  eval "$*" | tee ,$(join_by '_' $1 $date)
+}
+

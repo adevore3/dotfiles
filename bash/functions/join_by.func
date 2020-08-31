@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Joins a list by a single/multi-character delimiter
+#
+# usage:
+#
+#   `join_by ' , ' a b c`
+function join_by {
+  local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}";
+}
+
