@@ -30,3 +30,7 @@ sed ':a;N;$!ba;s/\n//g'  file.txt
 
 # Delete every 3rd line starting from the first
 sed '1~3d' file.txt
+
+# Remove ansi color codes from a file
+sed -i -r "s/[[:cntrl:]]\[[0-9]{1,3}m//g" <file>
+

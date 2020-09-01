@@ -38,7 +38,7 @@ publish-shared-library -Dpublish.compatibility.check=false
 setsid unity
 
 # Rsync directories from desktop to laptop
-rsync -azP --exclude=',*' adevore.seaoff.indeed.net:/home/adevore/indeed/skynet /home/adevore/indeed/
+rsync -azP --exclude=',*' <dns>:/home/adevore/indeed/skynet /home/adevore/indeed/
 
 # Where to get UTF-8 string constant
 StandardCharsets.UTF_8.name();
@@ -75,4 +75,7 @@ hobo-django-manage3 hirecentral sqlmigrate sourceapp [migration_file_name]
 
 # Set brave to default browser for xdg-open
 xdg-settings set default-web-browser brave.desktop
+
+# Primitive watch w/ highlights
+while true; do clear; echo; date; echo; curl <pipet_url>/proctor/matrix/definition/hire_eval_requisition_models_tst | jq . | egrep --color=auto "hireSubmitQuality|\$"; sleep 10; done
 
