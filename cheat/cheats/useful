@@ -79,3 +79,7 @@ xdg-settings set default-web-browser brave.desktop
 # Primitive watch w/ highlights
 while true; do clear; echo; date; echo; curl <pipet_url>/proctor/matrix/definition/hire_eval_requisition_models_tst | jq . | egrep --color=auto "hireSubmitQuality|\$"; sleep 10; done
 
+# Adding a debug breakpoint in react
+/* eslint-disable no-debugger */
+debugger;
+
