@@ -11,6 +11,7 @@ function teh() {
   local date=$(date +"%Y_%m_%d_%T")
   local filename=",$(join_by '_' $1 $date)"
 
+  # Needs to handle slashes (and ideally pipes)
   echo Command: "$*" >> $filename
   echo >> $filename
 
