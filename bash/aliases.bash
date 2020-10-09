@@ -5,6 +5,7 @@ alias la='ls -AF'
 alias ll='ls -al'
 alias l='ls -a'
 alias l1='ls -1'
+alias lss='ls -ld .?* | grep "\->"' # list symlinks
 
 if [ $(uname) = "Linux" ]; then
   alias ls="ls --color=always"

@@ -1,6 +1,7 @@
 alias g='git'
 alias ga='git add'
 alias gaf='git_add_files'
+alias gag='git aliases | grep'
 alias gaia='echo -e "a\n*\nq\n" | git add -i'
 alias gall='git add .'
 alias gau='git add -u'
