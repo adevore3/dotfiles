@@ -11,7 +11,8 @@
 # best to wrap the command in quotes so the filename and command are run correctly
 function teh() {
   local date=$(date +"%Y_%m_%d_%T")
-  local filename=",$(join_by '_' $1 $date)"
+  local first_arg_escaped=$(echo "$1" | sed 's/\//_/g')
+  local filename=",$(join_by '_' $first_arg_escaped $date)"
 
   # Needs to handle slashes (and ideally pipes)
   echo Command: "$*" >> $filename
