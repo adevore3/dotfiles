@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Check for existence of alias in a given file
+function check_aliases() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: No file specified"
+    return 1
+  fi
+
+  local file=$1
+  if [ -f $file ]; then
+    for new_alias in $(cat $file | egrep "^alias " | cut -d= -f1 | awkp 2); do
+      type $new_alias
+    done
+  else
+    echo "'$file' is not a valid file"
+  fi
+}
+
