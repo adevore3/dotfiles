@@ -17,11 +17,12 @@ function prompt() {
     local n_commands="\!"
     local git_branch="$(git_short_sha)$(scm_prompt_info)"
     local prompt_symbol='λ'
+    local node="${cyan}$(node_version_prompt)${reset_color}"
     local open='('
     local close=')'
     local prompt_char=' \$ '
 
-    PS1="\n${n_commands} ${user_host} ${prompt_symbol} ${open}${current_path}${git_branch}${close}${return_status}\n${prompt_char}"
+    PS1="\n${n_commands} ${user_host} ${prompt_symbol} $node ${open}${current_path}${git_branch}${close}${return_status}\n${prompt_char}"
 }
 
 PROMPT_COMMAND=prompt

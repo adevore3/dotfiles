@@ -15,9 +15,6 @@ SCM_SVN_CHAR='⑆'
 SCM_NONE='NONE'
 SCM_NONE_CHAR='○'
 
-RBENV_THEME_PROMPT_PREFIX=' |'
-RBENV_THEME_PROMPT_SUFFIX='|'
-
 function scm {
   if [[ -f .git/HEAD ]]; then SCM=$SCM_GIT
   elif [[ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]]; then SCM=$SCM_GIT
@@ -81,13 +78,6 @@ function svn_prompt_vars {
   SCM_CHANGE=$(svn info 2> /dev/null | sed -ne 's#^Revision: ##p' )
 }
 
-function rbenv_version_prompt {
-  if which rbenv &> /dev/null; then
-    rbenv=$(rbenv version-name) || return
-    echo -e "$RBENV_THEME_PROMPT_PREFIX$rbenv$RBENV_THEME_PROMPT_SUFFIX"
-  fi
-}
-
 # backwards-compatibility
 function git_prompt_info {
   git_prompt_vars
@@ -106,5 +96,9 @@ function scm_char {
 
 function prompt_char {
     scm_char
+}
+
+function node_version_prompt {
+  echo -e "|$(node --version)|"
 }
 
