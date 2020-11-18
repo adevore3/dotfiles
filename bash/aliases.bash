@@ -1,11 +1,12 @@
 # ls aliases
-alias sl=ls
-alias ls='ls -G'
+alias l1='ls -1'
+alias l='ls -a'
 alias la='ls -AF'
 alias ll='ls -al'
-alias l='ls -a'
-alias l1='ls -1'
-alias lss='ls -ld .?* | grep "\->"' # list symlinks
+alias llh='ll -d .*' # list hidden files
+alias lls='ls -ld .?* | grep "\->"' # list symlinks
+alias ls='ls -G'
+alias sl=ls
 
 if [ $(uname) = "Linux" ]; then
   alias ls="ls --color=always"
