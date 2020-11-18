@@ -37,6 +37,7 @@ alias gpdo='git push --delete origin'
 alias gpforce='git push --force'
 alias gpo='git push origin'
 alias gpsu='git_push_set_upstream'
+alias gqf='gst && gau && git cm "fix" && gri 2'
 alias gri='git_rebase_helper'
 alias grmad="git status | grep deleted | awk '{print \$2}' | xargs git rm"
 alias grpo='git remote prune origin'
