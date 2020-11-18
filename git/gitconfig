@@ -51,9 +51,9 @@
   autocrlf = input
   editor = vim -f
   excludesfile = /home/adevore/.gitignore
+  hooksPath = /home/adevore/dotfiles/git/hooks
   pager = less -FRSX
   whitespace = fix, -trailing-space, -space-before-tab, -indent-with-non-tab, cr-at-eol
-  hooksPath = /home/adevore/dotfiles/git/hooks
 [color]
   branch = auto
   diff = auto
@@ -77,8 +77,6 @@
   rebase = false
 [push]
   default = current
-[reviewboard]
-  url = http://gitlab1.sea.marchex.com:8080
 [stat]
   stat = 200,120
 [status]
