@@ -32,7 +32,7 @@
 	path = vim/vim/bundle/json
 	url = https://github.com/elzr/vim-json
 [submodule "autojump"]
-	path = autojump
+	path = autojump/autojump
 	url = https://github.com/wting/autojump.git
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
