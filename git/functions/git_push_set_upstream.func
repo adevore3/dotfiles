@@ -2,7 +2,7 @@
 
 function git_push_set_upstream() {
   if [ ! -d ".git" ]; then
-    echo "Error: Must be in a git directory"
+    echo "ERROR: Must be in a git directory"
     return 1
   fi
 

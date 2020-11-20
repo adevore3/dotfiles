@@ -4,7 +4,7 @@
 function ssh_made_easy() {
   if [ $# -ne 1 ]
   then
-    echo "Error: No host specified."
+    echo "ERROR: No host specified."
     return 1
   fi
 
