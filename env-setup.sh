@@ -60,3 +60,7 @@ installing_template "autojump" install_autojump
 echo "Installing tmux plugins"
 install_tmux_plugins
 
+echo "Things that may manually need installing/updating:"
+echo "  * Brave Browser: https://brave.com/linux/"
+echo "  * Update gitignore: concat_multiple_gitignores"
+
