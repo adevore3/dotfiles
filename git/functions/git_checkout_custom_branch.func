@@ -18,6 +18,13 @@ function git_checkout_custom_branch() {
   local joined_arguments=$(IFS=_ ; echo "${args[*]}")
 
   local git_branch=jira/$(whoami)/$joined_arguments
+  local branch_name_length=$(expr length $git_branch)
+  local max_length=63 # Set arbitrarily by jenkins
+  if [ $branch_name_length -gt $max_length ]; then
+    echo "ERROR: '$git_branch' is $branch_name_length chars long. The restriction is $max_length chars"
+    return 1
+  fi
+
   git checkout -b $git_branch
 }
 
