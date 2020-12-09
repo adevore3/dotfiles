@@ -20,7 +20,7 @@ function install_cheat() {
 }
 
 function install_autojump() {
-  cd $DOTFILES/autojump
+  cd $DOTFILES/autojump/autojump
   ./install.py
 }
 
