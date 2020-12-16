@@ -19,7 +19,11 @@ function git_checkout_custom_branch() {
 
   local git_branch=jira/$(whoami)/$joined_arguments
   local branch_name_length=$(expr length $git_branch)
-  local max_length=63 # Set arbitrarily by jenkins
+
+  local hostname_max_length=63 # Set by marvin
+  local prefix_length=13 # multibranch hostname is prepended w/ "branch-build-" which is 13 chars
+  local max_length=$(expr $hostname_max_length - $prefix_length)
+
   if [ $branch_name_length -gt $max_length ]; then
     echo "ERROR: '$git_branch' is $branch_name_length chars long. The restriction is $max_length chars"
     return 1
