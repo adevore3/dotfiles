@@ -42,6 +42,7 @@ alias gri='git_rebase_helper'
 alias grmad="git status | grep deleted | awk '{print \$2}' | xargs git rm"
 alias grpo='git remote prune origin'
 alias grt='cd $(git rev-parse --show-cdup)'
+alias gru='git_remove_untracked'
 alias gruf=$'f(){ git status | grep -v ":" | grep "${1:-src}" | awk \'{print $1}\' | xargs rm -rf; unset -f f; }; f'
 alias gsa='git_stashapply'
 alias gsd='git_stashdrop'
@@ -56,6 +57,8 @@ alias gst='git status --ignore-submodules'
 alias gsu='git submodule update'
 alias gsua='git submodule update --remote --merge'
 alias gup='git pull --rebase'
+
+alias git_remove_untracked="git checkout -q master && git fetch -q --prune && git branch -vv | awk '/: gone]/{print \$1}' | xargs -r git branch -d"
 
 case $OSTYPE in
   linux*)
