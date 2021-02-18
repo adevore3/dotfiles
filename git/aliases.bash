@@ -26,6 +26,7 @@ alias gcount='git shortlog -sn'
 alias gcp='git cherry-pick'
 alias gdv='git diff -w "$@" | vim -R -'
 alias gg='git grep -n --recurse-submodules'
+alias gga='f(){ git grep -n --recurse-submodules "alias $1"; unset -f f; }; f'
 alias ggl='git grep -l --recurse-submodules'
 alias glg='git log --grep'
 alias gln='git log -n'
@@ -61,7 +62,11 @@ alias gsu='git submodule update'
 alias gsua='git_submodule_update_all'
 alias gup='git pull --rebase'
 
+alias og='open_git_base_url'
+alias ogb='open_git_branch_url'
+
 # Long alias names
+alias git_base_url='f(){ local url=https://$(cat .git/config | grep "url = git" | cut -d@ -f2 | sed "s/:/\//" | head -n1); echo ${url%.git}; unset -f f; }; f'
 alias git_checkout_all_deleted_files="git status | grep deleted | awk '{print \$2}' | xargs git checkout --"
 alias git_quick_fix='gst && gau && git cm "fix" && gri 2'
 alias git_remove_all_deleted_files=$'git status | grep deleted | awk \'{print $2}\' | xargs git rm'
@@ -72,6 +77,8 @@ alias git_restore_file=$'f(){ git status | grep "new file" | grep -i "${1:-src}"
 alias git_root='cd $(git rev-parse --show-cdup)'
 alias git_stash_force_push='git stash show -p | git apply && git stash drop'
 alias git_submodule_update_all='git submodule update --remote --merge'
+alias open_git_base_url='xdg-open $(git_base_url) >/dev/null 2>&1'
+alias open_git_branch_url='xdg-open $(git_base_url)/tree/$(git symbolic-ref --short HEAD) >/dev/null 2>&1'
 
 case $OSTYPE in
   linux*)
