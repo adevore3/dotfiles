@@ -1,0 +1,340 @@
+num of moves initially made: 11
+num of games created: 24014
+num of unique games: 219
+33 moves made:
+Move from vial 1 to vial 7
+Move from vial 2 to vial 7
+Move from vial 0 to vial 8
+Move from vial 1 to vial 8
+Move from vial 3 to vial 8
+
+Move from vial 4 to vial 1
+Move from vial 4 to vial 0
+Move from vial 4 to vial 3
+Move from vial 0 to vial 4
+Move from vial 0 to vial 4
+
+Move from vial 2 to vial 0
+Move from vial 2 to vial 7
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+Move from vial 5 to vial 2
+
+Move from vial 6 to vial 5
+Move from vial 6 to vial 8
+Move from vial 0 to vial 6
+Move from vial 0 to vial 6
+Move from vial 5 to vial 0
+
+Move from vial 5 to vial 0
+Move from vial 3 to vial 5
+Move from vial 3 to vial 5
+Move from vial 0 to vial 3
+Move from vial 0 to vial 3
+
+Move from vial 3 to vial 0
+Move from vial 3 to vial 0
+Move from vial 3 to vial 0
+Move from vial 3 to vial 4
+Move from vial 6 to vial 1
+
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+Move from vial 6 to vial 7
+
+real    0m6.502s
+user    0m6.462s
+sys     0m0.040s
+
+
+num of moves initially made: 10
+num of games created: 65141
+num of unique games: 293
+32 moves made:
+Move from vial 1 to vial 7
+Move from vial 2 to vial 7
+Move from vial 0 to vial 8
+Move from vial 1 to vial 8
+Move from vial 3 to vial 8
+
+Move from vial 4 to vial 1
+Move from vial 4 to vial 0
+Move from vial 4 to vial 3
+Move from vial 0 to vial 4
+Move from vial 0 to vial 4
+
+Move from vial 0 to vial 2
+Move from vial 5 to vial 1
+Move from vial 6 to vial 0
+Move from vial 6 to vial 8
+Move from vial 2 to vial 6
+
+Move from vial 2 to vial 6
+Move from vial 2 to vial 7
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+Move from vial 6 to vial 7
+Move from vial 3 to vial 6
+
+Move from vial 3 to vial 6
+Move from vial 3 to vial 5
+Move from vial 3 to vial 4
+Move from vial 5 to vial 0
+Move from vial 5 to vial 0
+
+Move from vial 5 to vial 6
+Move from vial 5 to vial 6
+
+real    0m17.858s
+user    0m17.833s
+sys     0m0.024s
+
+
+num of moves initially made: 8
+num of games created: 118380
+num of unique games: 332
+32 moves made:
+Move from vial 1 to vial 7
+Move from vial 2 to vial 7
+Move from vial 0 to vial 8
+Move from vial 1 to vial 8
+Move from vial 3 to vial 8
+
+Move from vial 4 to vial 1
+Move from vial 4 to vial 0
+Move from vial 4 to vial 3
+Move from vial 0 to vial 4
+Move from vial 0 to vial 4
+
+Move from vial 0 to vial 2
+Move from vial 5 to vial 1
+Move from vial 6 to vial 0
+Move from vial 6 to vial 8
+Move from vial 2 to vial 6
+
+Move from vial 2 to vial 6
+Move from vial 2 to vial 7
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+Move from vial 6 to vial 7
+Move from vial 3 to vial 6
+
+Move from vial 3 to vial 6
+Move from vial 3 to vial 5
+Move from vial 3 to vial 4
+Move from vial 5 to vial 0
+Move from vial 5 to vial 0
+
+Move from vial 5 to vial 6
+Move from vial 5 to vial 6
+
+real    0m32.512s
+user    0m32.425s
+sys     0m0.084s
+
+
+num of moves initially made: 7
+num of games created: 106801
+num of unique games: 421
+32 moves made:
+Move from vial 1 to vial 7
+Move from vial 2 to vial 7
+Move from vial 0 to vial 8
+Move from vial 1 to vial 8
+Move from vial 3 to vial 8
+
+Move from vial 4 to vial 1
+Move from vial 4 to vial 0
+Move from vial 3 to vial 4
+Move from vial 5 to vial 1
+Move from vial 3 to vial 5
+
+Move from vial 0 to vial 3
+Move from vial 0 to vial 3
+Move from vial 0 to vial 2
+Move from vial 5 to vial 0
+Move from vial 5 to vial 0
+
+Move from vial 4 to vial 5
+Move from vial 4 to vial 5
+Move from vial 3 to vial 4
+Move from vial 3 to vial 4
+Move from vial 3 to vial 4
+
+Move from vial 6 to vial 0
+Move from vial 6 to vial 8
+Move from vial 2 to vial 6
+Move from vial 2 to vial 6
+Move from vial 2 to vial 7
+
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+
+Move from vial 6 to vial 1
+Move from vial 6 to vial 7
+
+real    0m28.666s
+user    0m28.586s
+sys     0m0.076s
+
+
+num of moves initially made: 6
+num of games created: 380131
+num of unique games: 545
+33 moves made:
+Move from vial 1 to vial 7
+Move from vial 2 to vial 7
+Move from vial 0 to vial 8
+Move from vial 1 to vial 8
+Move from vial 3 to vial 8
+
+Move from vial 4 to vial 1
+Move from vial 0 to vial 4
+Move from vial 0 to vial 2
+Move from vial 5 to vial 1
+Move from vial 6 to vial 0
+
+Move from vial 6 to vial 8
+Move from vial 2 to vial 6
+Move from vial 2 to vial 6
+Move from vial 2 to vial 7
+Move from vial 1 to vial 2
+
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+
+Move from vial 6 to vial 7
+Move from vial 3 to vial 6
+Move from vial 3 to vial 5
+Move from vial 4 to vial 3
+Move from vial 4 to vial 3
+
+Move from vial 4 to vial 6
+Move from vial 3 to vial 4
+Move from vial 3 to vial 4
+Move from vial 3 to vial 4
+Move from vial 5 to vial 0
+
+Move from vial 5 to vial 0
+Move from vial 5 to vial 6
+Move from vial 5 to vial 6
+
+real    1m45.941s
+user    1m45.800s
+sys     0m0.140s
+
+
+num of moves initially made: 5
+num of games created: 744391
+num of unique games: 599
+33 moves made:
+Move from vial 1 to vial 7
+Move from vial 2 to vial 7
+Move from vial 0 to vial 8
+Move from vial 1 to vial 8
+Move from vial 3 to vial 8
+
+Move from vial 4 to vial 1
+Move from vial 0 to vial 4
+Move from vial 0 to vial 2
+Move from vial 5 to vial 1
+Move from vial 6 to vial 0
+
+Move from vial 6 to vial 8
+Move from vial 2 to vial 6
+Move from vial 2 to vial 6
+Move from vial 2 to vial 7
+Move from vial 1 to vial 2
+
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+
+Move from vial 6 to vial 7
+Move from vial 3 to vial 6
+Move from vial 3 to vial 5
+Move from vial 4 to vial 3
+Move from vial 4 to vial 3
+
+Move from vial 4 to vial 6
+Move from vial 3 to vial 4
+Move from vial 3 to vial 4
+Move from vial 3 to vial 4
+Move from vial 5 to vial 0
+
+Move from vial 5 to vial 0
+Move from vial 5 to vial 6
+Move from vial 5 to vial 6
+
+real    3m36.863s
+user    3m36.406s
+sys     0m0.384s
+
+
+num of moves initially made: 4
+num of games created: 7543448
+num of unique games: 783
+33 moves made:
+Move from vial 1 to vial 7
+Move from vial 2 to vial 7
+Move from vial 0 to vial 8
+Move from vial 1 to vial 8
+Move from vial 3 to vial 8
+
+Move from vial 4 to vial 1
+Move from vial 0 to vial 4
+Move from vial 0 to vial 2
+Move from vial 5 to vial 1
+Move from vial 6 to vial 0
+
+Move from vial 6 to vial 8
+Move from vial 2 to vial 6
+Move from vial 2 to vial 6
+Move from vial 2 to vial 7
+Move from vial 1 to vial 2
+
+Move from vial 1 to vial 2
+Move from vial 1 to vial 2
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+Move from vial 6 to vial 1
+
+Move from vial 6 to vial 7
+Move from vial 3 to vial 6
+Move from vial 3 to vial 5
+Move from vial 4 to vial 3
+Move from vial 4 to vial 3
+
+Move from vial 4 to vial 6
+Move from vial 3 to vial 4
+Move from vial 3 to vial 4
+Move from vial 3 to vial 4
+Move from vial 5 to vial 0
+
+Move from vial 5 to vial 0
+Move from vial 5 to vial 6
+Move from vial 5 to vial 6
+
+real    35m43.009s
+user    35m38.493s
+sys     0m4.452s
+
+

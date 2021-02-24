@@ -1,0 +1,126 @@
+push()
+        #if self.size == 0 or color == self.colors[self.size - 1]:
+        #    self.weight += 1
+        #else:
+        #    self.weight -= 1
+
+pop()
+        #if self.size != 0 and color == self.colors[self.size - 1]:
+        #    self.weight -= 1
+        #else:
+        #    self.weight += 1
+
+
+        return self.complete_num
+
+num of unique games: 118
+length of queue 55
+29 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.13s user 0.01s system 95% cpu 0.151 total
+=======================================================================================================
+
+        return self.complete_num ** 2
+
+num of unique games: 104
+length of queue 61
+32 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.14s user 0.01s system 95% cpu 0.157 total
+=======================================================================================================
+
+        return self.weight
+
+num of games created: 125
+num of unique games: 45
+length of queue 56
+31 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.07s user 0.01s system 92% cpu 0.095 total
+=======================================================================================================
+
+        return self.weight ** 2
+
+num of games created: 276
+num of unique games: 115
+length of queue 61
+32 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.12s user 0.01s system 95% cpu 0.137 total
+=======================================================================================================
+
+        return self.weight + self.complete_num
+
+num of games created: 248
+num of unique games: 110
+length of queue 50
+30 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.11s user 0.01s system 94% cpu 0.133 total
+=======================================================================================================
+
+        return self.weight + (self.complete_num * self.complete_num)
+
+num of games created: 229
+num of unique games: 96
+length of queue 59
+30 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.11s user 0.01s system 94% cpu 0.128 total
+=======================================================================================================
+
+        return self.weight + (self.complete_num * self.complete_num) - (self.count - self.complete_num)
+
+num of games created: 229
+num of unique games: 96
+length of queue 59
+30 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.10s user 0.01s system 93% cpu 0.123 total
+=======================================================================================================
+
+        penalty = 0
+        if self.count != 0:
+            penalty = self.count - self.complete_num
+        return (3 * self.complete_num - penalty) ** 2
+
+num of games created: 403
+num of unique games: 155
+length of queue 53
+32 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.17s user 0.01s system 96% cpu 0.186 total
+=======================================================================================================
+
+        penalty = 0
+        if self.count != 0:
+            penalty = self.count - self.complete_num
+        return self.weight + (3 * self.complete_num - penalty) ** 2
+
+num of games created: 351
+num of unique games: 155
+length of queue 53
+32 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.14s user 0.01s system 95% cpu 0.163 total
+=======================================================================================================
+
+        return self.complete_num + self.weight
+
+num of games created: 316
+num of unique games: 118
+length of queue 55
+29 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.13s user 0.01s system 95% cpu 0.152 total
+=======================================================================================================
+
+        return (self.complete_num ** 2) + self.weight
+
+num of games created: 229
+num of unique games: 96
+length of queue 59
+30 moves made:
+
+python3 ~/dotfiles/misc/scripts/water_sort_puzzle/solve.py  0.10s user 0.01s system 93% cpu 0.122 total
+

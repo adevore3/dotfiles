@@ -1,0 +1,136 @@
+Game complete!
+31 moves made:
+Move from 2 to 9
+Move from 5 to 9
+Move from 6 to 10
+Move from 4 to 10
+Move from 2 to 4
+
+Move from 0 to 2
+Move from 8 to 0
+Move from 8 to 5
+Move from 8 to 10
+Move from 8 to 6
+
+Move from 4 to 8
+Move from 5 to 8
+Move from 6 to 5
+Move from 4 to 6
+Move from 4 to 2
+
+Move from 0 to 4
+Move from 3 to 4
+Move from 0 to 2
+Move from 1 to 0
+Move from 7 to 0
+
+Move from 1 to 6
+Move from 7 to 1
+Move from 7 to 10
+Move from 7 to 4
+Move from 5 to 7
+
+Move from 3 to 7
+Move from 3 to 5
+Move from 1 to 5
+Move from 1 to 9
+Move from 6 to 3
+
+Move from 6 to 0
+
+
+
+==========================================================
+        return self.weight
+
+num of games created: 211
+num of unique games: 63
+length of queue 103
+33 moves made:
+Move from 2 to 9
+Move from 0 to 10
+Move from 5 to 9
+Move from 2 to 5
+Move from 3 to 0
+
+Move from 2 to 10
+Move from 0 to 2
+Move from 8 to 2
+Move from 5 to 8
+Move from 10 to 0
+
+Move from 8 to 10
+Move from 5 to 10
+Move from 3 to 5
+Move from 4 to 8
+Move from 4 to 10
+
+Move from 6 to 8
+Move from 6 to 5
+Move from 4 to 6
+Move from 0 to 4
+Move from 1 to 0
+
+Move from 7 to 0
+Move from 3 to 7
+Move from 6 to 3
+Move from 1 to 3
+Move from 0 to 6
+
+Move from 5 to 0
+Move from 7 to 5
+Move from 1 to 5
+Move from 1 to 9
+Move from 8 to 1
+
+Move from 7 to 1
+Move from 0 to 8
+Move from 2 to 7
+
+
+==========================================================
+        return self.weight - self.num_moves()
+
+num of games created: 19076
+num of unique games: 1683
+length of queue 2895
+31 moves made:
+Move from 2 to 9
+Move from 2 to 10
+Move from 0 to 2
+Move from 8 to 0
+Move from 8 to 10
+
+Move from 5 to 9
+Move from 5 to 10
+Move from 6 to 8
+Move from 4 to 8
+Move from 6 to 5
+
+Move from 4 to 10
+Move from 4 to 6
+Move from 4 to 2
+Move from 8 to 4
+Move from 8 to 5
+
+Move from 6 to 8
+Move from 7 to 6
+Move from 1 to 6
+Move from 1 to 8
+Move from 7 to 1
+
+Move from 7 to 4
+Move from 0 to 7
+Move from 0 to 2
+Move from 0 to 6
+Move from 5 to 0
+
+Move from 1 to 5
+Move from 3 to 7
+Move from 3 to 0
+Move from 3 to 5
+Move from 1 to 9
+
+Move from 3 to 8
+
+

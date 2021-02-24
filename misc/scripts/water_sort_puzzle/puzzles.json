@@ -1,0 +1,7280 @@
+[
+    {
+        "name": "01",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "ORANGE"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "02",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "ORANGE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "03",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "BLUE",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": []
+            },
+            {
+                "name": 4,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "04",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "ORANGE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": []
+            },
+            {
+                "name": 4,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "05",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "06",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "07",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "PINK",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "PINK",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "08",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "09",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "BLUE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "10",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "CYAN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "11",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "PINK",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "RED",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "RED",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "12",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "NEON_GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "13",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "NEON_GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "GRAY",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "GRAY",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "14",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "BLUE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "GRAY",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "CYAN",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "15",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "ORANGE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "16",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "17",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "GRAY",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "18",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "PINK",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "19",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "GRAY",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "NEON_GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "RED",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "20",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "RED",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "21",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "22",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "CYAN",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "23",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "ORANGE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "GRAY",
+                    "RED",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "24",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "BLUE",
+                    "BLUE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "25",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "CYAN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "26",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "CYAN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "PINK",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "ORANGE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "BLUE",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "27",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": []
+            },
+            {
+                "name": 6,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "28",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "PINK",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "ORANGE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "29",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "30",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "31",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "PINK",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "PURPLE",
+                    "GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "ORANGE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "PURPLE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GRAY",
+                    "GREEN",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "GRAY",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "32",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "PURPLE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PURPLE",
+                    "GRAY",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "GREEN",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "PINK",
+                    "GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "CYAN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GREEN",
+                    "PURPLE",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "33",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "BLUE",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "GRAY",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PINK",
+                    "GRAY",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "34",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PURPLE",
+                    "RED",
+                    "BLUE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "ORANGE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PURPLE",
+                    "GREEN",
+                    "CYAN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "RED",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "CYAN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GREEN",
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "35",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "PINK",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "PINK",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "PURPLE",
+                    "GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "ORANGE",
+                    "GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "ORANGE",
+                    "RED",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "PURPLE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "PURPLE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GREEN",
+                    "RED",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "36",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "GRAY",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "37",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "NEON_GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "CYAN",
+                    "PURPLE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GREEN",
+                    "BLUE",
+                    "RED",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "BLUE",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "PURPLE",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "ORANGE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "NEON_GREEN",
+                    "PINK",
+                    "PURPLE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "38",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "BLUE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GREEN",
+                    "GRAY",
+                    "PURPLE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "PURPLE",
+                    "GRAY",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "39",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "BLUE",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "CYAN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "RED",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "40",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GREEN",
+                    "PINK",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "GREEN",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "GREEN",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "PURPLE",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "ORANGE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "41",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "GREEN",
+                    "PURPLE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PURPLE",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "RED",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "PURPLE",
+                    "GRAY",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GREEN",
+                    "BLUE",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "42",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "GRAY",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "GRAY",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "43",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "PURPLE",
+                    "GRAY",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GREEN",
+                    "ORANGE",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "PURPLE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "PURPLE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GREEN",
+                    "CYAN",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "44",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "PINK",
+                    "CYAN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "RED",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "GRAY",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PURPLE",
+                    "PURPLE",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "GRAY",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "PURPLE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "45",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "ORANGE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "46",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GREEN",
+                    "CYAN",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "GREEN",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PURPLE",
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "RED",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "ORANGE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "BLUE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "47",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "BLUE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GREEN",
+                    "ORANGE",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "GREEN",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "GRAY",
+                    "ORANGE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GREEN",
+                    "CYAN",
+                    "PINK",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "PURPLE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "48",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "RED",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "PINK",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "CYAN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "49",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "ORANGE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "GRAY",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GREEN",
+                    "GREEN",
+                    "PURPLE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "GREEN",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GREEN",
+                    "PINK",
+                    "PINK",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "PURPLE",
+                    "PURPLE",
+                    "RED",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "50",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "PURPLE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "PURPLE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "RED",
+                    "GREEN",
+                    "GRAY",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "RED",
+                    "BLUE",
+                    "ORANGE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "51",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "CYAN",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "GRAY",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "52",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "CYAN",
+                    "GRAY",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GREEN",
+                    "PURPLE",
+                    "GRAY",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "BLUE",
+                    "GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "PURPLE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "CYAN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "PINK",
+                    "GRAY",
+                    "PINK",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "53",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "GREEN",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "CYAN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "NEON_GREEN",
+                    "PINK",
+                    "PURPLE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "CYAN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "GRAY",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "RED",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "PURPLE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GREEN",
+                    "ORANGE",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GREEN",
+                    "ORANGE",
+                    "ORANGE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "54",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "GRAY",
+                    "GRAY",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "55",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PURPLE",
+                    "BLUE",
+                    "ORANGE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "PINK",
+                    "GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PURPLE",
+                    "BLUE",
+                    "ORANGE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "NEON_GREEN",
+                    "GREEN",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GREEN",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "56",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "CYAN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "GREEN",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PURPLE",
+                    "CYAN",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "CYAN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "NEON_GREEN",
+                    "GREEN",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "57",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "PINK",
+                    "NEON_GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "CYAN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "58",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GREEN",
+                    "BLUE",
+                    "BLUE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "PURPLE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "RED",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "ORANGE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "GRAY",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "PURPLE",
+                    "RED",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "NEON_GREEN",
+                    "GREEN",
+                    "CYAN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "59",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "GREEN",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GREEN",
+                    "RED",
+                    "PURPLE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PURPLE",
+                    "PINK",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "ORANGE",
+                    "PURPLE",
+                    "RED",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "60",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "BLUE",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "BLUE",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "ORANGE",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "61",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "GREEN",
+                    "GRAY",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "NEON_GREEN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "BLUE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "PURPLE",
+                    "PURPLE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "RED",
+                    "PURPLE",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "62",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PURPLE",
+                    "GREEN",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "RED",
+                    "PURPLE",
+                    "GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GREEN",
+                    "PINK",
+                    "CYAN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GREEN",
+                    "BLUE",
+                    "GRAY",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "63",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "RED",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "CYAN",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "GRAY",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "NEON_GREEN",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "64",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "GRAY",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PURPLE",
+                    "GREEN",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GREEN",
+                    "GRAY",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "PURPLE",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "GREEN",
+                    "PURPLE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "BLUE",
+                    "PURPLE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "NEON_GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "65",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "RED",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GREEN",
+                    "RED",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "PINK",
+                    "GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PURPLE",
+                    "PURPLE",
+                    "CYAN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "RED",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "66",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "PINK",
+                    "CYAN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "PINK",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "BLUE",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "ORANGE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "67",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "GREEN",
+                    "RED",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "ORANGE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "RED",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PURPLE",
+                    "NEON_GREEN",
+                    "GRAY",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "PURPLE",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "ORANGE",
+                    "GREEN",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "PURPLE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "68",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "CYAN",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PURPLE",
+                    "BLUE",
+                    "PINK",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "CYAN",
+                    "PURPLE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "GREEN",
+                    "GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "69",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "PINK",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "ORANGE",
+                    "ORANGE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "GRAY",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "PINK",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "CYAN",
+                    "RED",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "70",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "NEON_GREEN",
+                    "RED",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "PURPLE",
+                    "PURPLE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "GREEN",
+                    "GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PURPLE",
+                    "PURPLE",
+                    "BLUE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "GREEN",
+                    "RED"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "71",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PURPLE",
+                    "ORANGE",
+                    "PURPLE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GREEN",
+                    "PINK",
+                    "PURPLE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "GREEN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "PURPLE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "72",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "RED",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "73",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "ORANGE",
+                    "PURPLE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "GREEN",
+                    "RED",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GREEN",
+                    "CYAN",
+                    "GRAY",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "PURPLE",
+                    "RED",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "PINK",
+                    "GREEN",
+                    "ORANGE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "74",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GREEN",
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "GREEN",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "GREEN",
+                    "PURPLE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "PURPLE",
+                    "RED",
+                    "GRAY",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "75",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "GRAY",
+                    "PINK",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "CYAN",
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "BLUE",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "76",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PURPLE",
+                    "PURPLE",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "CYAN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "PURPLE",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "PINK",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "RED",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "GRAY",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GREEN",
+                    "PURPLE",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "77",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "GREEN",
+                    "NEON_GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "GREEN",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PURPLE",
+                    "ORANGE",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "ORANGE",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "NEON_GREEN",
+                    "GREEN",
+                    "PURPLE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "PURPLE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "78",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "ORANGE",
+                    "GRAY",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "GRAY",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "PINK",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "79",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PURPLE",
+                    "CYAN",
+                    "PURPLE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PURPLE",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "CYAN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PURPLE",
+                    "CYAN",
+                    "PINK",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GREEN",
+                    "ORANGE",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GREEN",
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "GRAY",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "80",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "PURPLE",
+                    "GRAY",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PURPLE",
+                    "CYAN",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "BLUE",
+                    "GRAY",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "ORANGE",
+                    "PURPLE",
+                    "PINK",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "CYAN",
+                    "GREEN",
+                    "BLUE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GREEN",
+                    "GREEN",
+                    "GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "81",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "ORANGE",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "GRAY",
+                    "BLUE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "83",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PURPLE",
+                    "GRAY",
+                    "GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "RED",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "GREEN",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "PINK",
+                    "GRAY",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GREEN",
+                    "PINK",
+                    "PURPLE",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "RED",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "NEON_GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "CYAN",
+                    "PURPLE",
+                    "ORANGE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "84",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "CYAN",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "PINK",
+                    "ORANGE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "BLUE",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "RED",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "BLUE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "NEON_GREEN",
+                    "GRAY",
+                    "CYAN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "BLUE",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "85",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "RED",
+                    "PURPLE",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "PINK",
+                    "GRAY",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "RED",
+                    "BLUE",
+                    "PURPLE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "BLUE",
+                    "PURPLE",
+                    "GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "GREEN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "86",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "CYAN",
+                    "BLUE",
+                    "PINK",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "RED",
+                    "GREEN",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "GRAY",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "RED",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "NEON_GREEN",
+                    "GREEN",
+                    "PURPLE",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "BLUE",
+                    "GRAY",
+                    "BLUE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "87",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "PINK",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "ORANGE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "RED",
+                    "RED"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "ORANGE",
+                    "NEON_GREEN",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "88",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "PINK",
+                    "CYAN",
+                    "RED",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "GREEN",
+                    "ORANGE",
+                    "PURPLE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PINK",
+                    "GREEN",
+                    "GRAY",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GREEN",
+                    "PURPLE",
+                    "GRAY",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "CYAN",
+                    "RED",
+                    "RED",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "PINK",
+                    "NEON_GREEN",
+                    "GRAY",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "BLUE",
+                    "PINK",
+                    "NEON_GREEN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "89",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "ORANGE",
+                    "GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PURPLE",
+                    "BLUE",
+                    "GRAY",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "GRAY",
+                    "GREEN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "CYAN",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PURPLE",
+                    "PURPLE",
+                    "ORANGE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "GREEN",
+                    "BLUE",
+                    "PINK",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "GRAY",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "PURPLE",
+                    "PINK",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "RED",
+                    "RED"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "90",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "RED",
+                    "ORANGE",
+                    "RED",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "BLUE",
+                    "BLUE",
+                    "CYAN",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GRAY",
+                    "RED",
+                    "ORANGE",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "NEON_GREEN",
+                    "CYAN",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "RED",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "GRAY",
+                    "GRAY",
+                    "PINK"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": []
+            },
+            {
+                "name": 8,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "91",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "RED",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "RED",
+                    "GREEN",
+                    "PINK",
+                    "ORANGE"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "GRAY",
+                    "CYAN",
+                    "GRAY",
+                    "RED"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "GREEN",
+                    "NEON_GREEN",
+                    "NEON_GREEN",
+                    "CYAN"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PINK",
+                    "GREEN",
+                    "ORANGE",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "PURPLE",
+                    "PURPLE",
+                    "CYAN",
+                    "BLUE"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "ORANGE",
+                    "PINK",
+                    "PINK",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GREEN",
+                    "BLUE",
+                    "PURPLE",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "GRAY",
+                    "BLUE",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    },
+    {
+        "name": "92",
+        "vials": [
+            {
+                "name": 0,
+                "colors": [
+                    "ORANGE",
+                    "GRAY",
+                    "RED",
+                    "NEON_GREEN"
+                ]
+            },
+            {
+                "name": 1,
+                "colors": [
+                    "PINK",
+                    "PINK",
+                    "CYAN",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 2,
+                "colors": [
+                    "PURPLE",
+                    "ORANGE",
+                    "ORANGE",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 3,
+                "colors": [
+                    "CYAN",
+                    "NEON_GREEN",
+                    "BLUE",
+                    "RED"
+                ]
+            },
+            {
+                "name": 4,
+                "colors": [
+                    "PURPLE",
+                    "BLUE",
+                    "NEON_GREEN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 5,
+                "colors": [
+                    "BLUE",
+                    "GREEN",
+                    "PINK",
+                    "GRAY"
+                ]
+            },
+            {
+                "name": 6,
+                "colors": [
+                    "BLUE",
+                    "CYAN",
+                    "RED",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 7,
+                "colors": [
+                    "GREEN",
+                    "ORANGE",
+                    "CYAN",
+                    "PURPLE"
+                ]
+            },
+            {
+                "name": 8,
+                "colors": [
+                    "RED",
+                    "NEON_GREEN",
+                    "PINK",
+                    "GREEN"
+                ]
+            },
+            {
+                "name": 9,
+                "colors": []
+            },
+            {
+                "name": 10,
+                "colors": []
+            }
+        ]
+    }
+]

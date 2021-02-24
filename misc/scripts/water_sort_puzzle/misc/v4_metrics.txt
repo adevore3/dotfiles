@@ -1,0 +1,67 @@
+game52
+
+        weight = 0
+
+num of moves initially made: 0
+num of games created: 1438
+num of unique games: 249
+length of queue 268
+35 moves made:
+
+real    0m0.729s      real    0m0.691s      real    0m0.674s
+user    0m0.713s      user    0m0.687s      user    0m0.654s
+sys     0m0.017s      sys     0m0.004s      sys     0m0.020s
+
+average = 698
+
+
+
+        weight = self.vial_count - self.num_completed_vials
+
+num of moves initially made: 0
+num of games created: 831
+num of unique games: 237
+length of queue 308
+34 moves made:
+
+real    0m0.404s      real    0m0.481s      real    0m0.391s
+user    0m0.395s      user    0m0.465s      user    0m0.383s
+sys     0m0.009s      sys     0m0.016s      sys     0m0.008s
+
+average 425.33
+
+
+
+        for vial in self.vials:
+            weight += vial.get_weight()
+
+num of moves initially made: 0
+num of games created: 123
+num of unique games: 54
+length of queue 41
+30 moves made:
+
+real    0m0.094s      real    0m0.130s      real    0m0.094s
+user    0m0.090s      user    0m0.118s      user    0m0.090s
+sys     0m0.004s      sys     0m0.012s      sys     0m0.004s
+
+average = 106
+
+
+
+        return self.weight
+
+num of moves initially made: 0
+num of games created: 123
+num of unique games: 54
+length of queue 41
+30 moves made:
+
+real    0m0.106s      real    0m0.091s      real    0m0.114s
+user    0m0.097s      user    0m0.087s      user    0m0.102s
+sys     0m0.008s      sys     0m0.004s      sys     0m0.012s
+
+average 103.67
+
+
+
