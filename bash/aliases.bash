@@ -42,12 +42,12 @@ alias hist=$'history | awk \'{print $2}\' | sort | uniq -c | sort -rn | head'
 alias hl='highlight'
 alias jp='f(){ j $1; cd -P .; unset -f f; }; f'
 alias jq='jq -C'
-alias kp=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias kp='kill_process'
 alias lsg='f(){ ls | grep -i "$1"; unset -f f; }; f'
-alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias md='mkdir -p'
 alias meh='echo "¯\_(ツ)_/¯" | xclip -selection clipboard'
 alias meh_escaped='echo "¯\\\_(ツ)\_/¯" | xclip -selection clipboard'
+alias otp='open_time_picture'
 alias path='echo $PATH'
 alias pathg='echo $PATH | grep'
 alias pathl='path | tr : "\n" | sort'
@@ -59,7 +59,7 @@ alias sai='sudo apt install'
 alias saiy='sudo apt install -y'
 alias sar='sudo apt remove'
 alias shrug='meh'
-alias skp=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias skp='sudo_kill_process'
 alias tl1='tail -n1'
 alias tln='tail -n'
 alias update='sudo apt update && sudo apt upgrade'
@@ -67,6 +67,12 @@ alias vd='vi `git diff --name-only`'
 alias vil='vi !$'
 alias vilc='vi $(fc -s)'
 alias watch='watch -c '
+
+# misc long names
+alias open_time_picture='xdg-open $DOTFILES/misc/pictures/is_it_worth_the_time.png'
+alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
+alias kill_process=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias sudo_kill_process=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
