@@ -15,12 +15,22 @@ class PuzzleDao:
 
 
     def save(self):
+        self.update_puzzle_names()
+
         self.puzzles.sort(key=lambda puzzle: puzzle.name)
 
         self.puzzles_json = [Puzzle.serialize(puzzle) for puzzle in self.puzzles]
 
         with open(self.filename, 'w') as f:
             json.dump(self.puzzles_json, f, indent=4)
+
+
+    def update_puzzle_names(self):
+        num_puzzles = len(self.puzzles)
+        num_digits = len(f"{num_puzzles}")
+        for puzzle in self.puzzles:
+            if len(puzzle.name) < num_digits:
+                puzzle.name = f"0{puzzle.name}"
 
 
     def load(self):

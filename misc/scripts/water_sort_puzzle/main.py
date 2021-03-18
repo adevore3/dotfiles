@@ -41,7 +41,7 @@ def choose_puzzle() -> Puzzle:
         puzzle.pretty_print(True)
 
     def ask_and_find_puzzle_names() -> List[str]:
-        search_key = input(f"Choose a puzzle number: [{puzzles[0].name}] ").strip() or puzzles[0].name
+        search_key = input(f"Choose a puzzle number: [{puzzles[len(puzzles) - 1].name}] ").strip() or puzzles[len(puzzles) - 1].name
         print()
 
         puzzle = puzzle_names_to_puzzles[search_key] if search_key in puzzle_names_to_puzzles else None
@@ -217,10 +217,11 @@ if True:
             else:
                 is_good = "n"
                 while not is_good == "Y":
-                    print(f"Please choose your colors for vial {vial_index}")
+                    print(f"\nPlease choose your colors for vial {vial_index}")
                     color_choices = choose_colors()
 
                     vial = Vial(vial_index, color_choices)
+                    print()
                     vial.pretty_print()
                     is_good = input("\nDoes the vial look correct? [Y/n] ").strip() or "Y"
 
@@ -235,10 +236,14 @@ if True:
     elif choice == 6:
         print("To be built...")
 
+        dao.save()
+
+        print("Saving games")
+
     elif choice == 7:
         print("Printing missing puzzles...\n")
 
-        for expected_index in range(1, 101):
+        for expected_index in range(1, 111):
             found_expected_puzzle = False
 
             for puzzle in puzzles:

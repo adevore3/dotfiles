@@ -1,5 +1,5 @@
 from enum import Enum, unique
-from colorama import Fore, Style
+from colorama import Back, Fore, Style
 
 
 @unique
@@ -14,6 +14,9 @@ class Color(Enum):
     PINK = Fore.MAGENTA + Style.BRIGHT
     ORANGE = Fore.RED + Style.BRIGHT
     NEON_GREEN = Fore.GREEN + Style.BRIGHT
+    DARK_GREEN = Fore.GREEN + Style.DIM
+    YELLOW = Fore.YELLOW
+    BROWN = Back.BLACK + Fore.YELLOW + Style.DIM
 
 
     @staticmethod
