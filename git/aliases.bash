@@ -60,7 +60,7 @@ alias gssp='git_stashowp'
 alias gst='git status --ignore-submodules'
 alias gsu='git submodule update'
 alias gsua='git_submodule_update_all'
-alias gup='git pull --rebase'
+alias gup='git pull --rebase --autostash'
 
 alias og='open_git_base_url'
 alias ogb='open_git_branch_url'
