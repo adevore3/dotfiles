@@ -15,7 +15,7 @@ function git_checkout_custom_branch() {
 
   shift;
   local args=($jira_ticket "${@}")
-  local joined_arguments=$(IFS=_ ; echo "${args[*]}")
+  local joined_arguments=$(IFS=- ; echo "${args[*]}")
 
   local git_branch=jira/$(whoami)/$joined_arguments
   local branch_name_length=$(expr length $git_branch)
