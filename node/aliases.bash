@@ -1,4 +1,5 @@
 alias nag='ag "npm"'
+alias nco='npx cypress open'
 alias nls='if command -v list-scripts &> /dev/null; then list-scripts; else echo "list-scripts has not been installed, run: npm install -g list-scripts"; fi'
 alias nu='cdnvm .'
 
