@@ -15,7 +15,7 @@ function recursive_type() {
 
     local aliased_command_output=$(echo $type_output | grep aliased | awkp 5 | sed "s/['\`]//g")
 
-    type $aliased_command_output
+    recursive_type $aliased_command_output
 
   else
     type $word
