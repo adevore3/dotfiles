@@ -86,9 +86,7 @@
   email = adevore@indeed.com
 [include]
   path = /home/adevore/env/etc/git/aliases
-  path = /home/adevore/env/etc/git/general-config
   path = /home/adevore/env/etc/git/skynet/aliases
-  path = /home/adevore/env/etc/git/skynet/general-config
 [init]
   templatedir = ~/.git-templates
 [filter "lfs"]
