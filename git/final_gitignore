@@ -21,3 +21,4 @@ node_modules/
 *.swo
 *.swp
 .vscode
+**/allure-results/
