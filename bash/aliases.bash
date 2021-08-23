@@ -26,7 +26,7 @@ alias xq='xrandr -q' # Display monitor info
 
 # misc
 alias _='sudo'
-alias ag='alias | grep'
+alias ag='alias | grep -i'
 alias cdp='cd -P'
 alias d-d='f(){ date -d "$1" +"%Y-%m-%d 00:00"; unset -f f; }; f'
 alias diff='diff -W $(tput cols)'
