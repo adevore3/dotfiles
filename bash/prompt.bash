@@ -11,15 +11,15 @@ function git_short_sha() {
 }
 
 function prompt() {
-    local return_status=""
-    local user_host="${green}\h${reset_color}"
-    local current_path="\w"
     local n_commands="\!"
-    local git_branch="$(git_short_sha)$(scm_prompt_info)"
+    local user_host="${green}\h${reset_color}"
     local prompt_symbol='λ'
     local node="${cyan}$(node_version_prompt)${reset_color}"
     local open='('
+    local current_path="\w"
+    local git_branch="$(git_short_sha)$(scm_prompt_info)"
     local close=')'
+    local return_status=""
     local prompt_char=' \$ '
 
     PS1="\n${n_commands} ${user_host} ${prompt_symbol} $node ${open}${current_path}${git_branch}${close}${return_status}\n${prompt_char}"
