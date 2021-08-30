@@ -43,12 +43,12 @@ function scm_prompt_info {
 }
 
 function git_prompt_vars {
-  if [[ -n $(git status -s 2> /dev/null |grep -v ^# |grep -v "working directory clean") ]]; then
+  if [[ -n $(git status -s --ignore-submodules 2> /dev/null |grep -v ^# |grep -v "working directory clean") ]]; then
     SCM_DIRTY=1
-     SCM_STATE=${GIT_THEME_PROMPT_DIRTY:-$SCM_THEME_PROMPT_DIRTY}
+    SCM_STATE=${GIT_THEME_PROMPT_DIRTY:-$SCM_THEME_PROMPT_DIRTY}
   else
     SCM_DIRTY=0
-     SCM_STATE=${GIT_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
+    SCM_STATE=${GIT_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
   fi
   SCM_PREFIX=${GIT_THEME_PROMPT_PREFIX:-$SCM_THEME_PROMPT_PREFIX}
   SCM_SUFFIX=${GIT_THEME_PROMPT_SUFFIX:-$SCM_THEME_PROMPT_SUFFIX}
@@ -69,7 +69,7 @@ function scm_char {
 }
 
 function prompt_char {
-    scm_char
+  scm_char
 }
 
 function node_version_prompt {
