@@ -7,6 +7,15 @@ Includes:
 * Tmux settings
 * Autojump
 * Cheat
+* Work specific configs are set up in a private work repository and added as a git submodule
+
+## Notes
+
+This repo contains submodules and an easy way to clone those along with this repo is using the following command
+
+```
+git clone --recurse-submodules <this repo>
+```
 
 ## Inspiration
 
