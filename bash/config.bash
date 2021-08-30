@@ -46,7 +46,7 @@ export VISUAL=vim
 export EDITOR="$VISUAL"
 
 # Set up for autojump
-[[ -s /home/adevore/.autojump/etc/profile.d/autojump.sh ]] && source /home/adevore/.autojump/etc/profile.d/autojump.sh
+[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
 # Set up less with pygmentize
 export LESS='-R'
