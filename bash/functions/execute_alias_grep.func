@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# List aliases matching grep and execute the selected alias
+function execute_alias_grep() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: Must specifiy a pattern to match"
+    return 1
+  fi
+
+  local pattern=$1
+
+  # Builds an array from output of command
+  mapfile -t aliases < <( alias | grep -i $pattern )
+
+  local size=${#aliases[@]}
+
+  if [ $size -eq 0 ]; then
+    echo "No aliases found containing \"$pattern\""
+    return 0
+  fi
+
+  local desired_alias="no alias selected"
+  if [ $size -gt 1 ]; then
+    echo "Found $size aliases."
+
+    for index in "${!aliases[@]}"; do
+      local position=$(( $index + 1 ))
+      printf "\t%s)\t%s\n" "$position" "${aliases[$index]}"
+    done
+
+    local desired_position=1
+    local number_regex='^[0-9]+$'
+    while :; do
+      echo
+      read -p "Please enter a number between 1 and $size for the desired alias: " number
+
+      [[ $number =~ $number_regex ]] || { echo "Please enter a valid number"; continue; }
+
+      if ((number >= 1 && number <= $size)); then
+        desired_position=$number
+        break
+      else
+        echo "ERROR: Number out of range, please try again"
+      fi
+    done
+
+    local desired_index=$(( $desired_position - 1 ))
+    desired_alias=${aliases[$desired_index]}
+  else
+    desired_alias=${aliases[0]}
+  fi
+
+  local alias_name=$(echo $desired_alias | cut -d = -f 1 | cut -c 6-)
+
+  eval ${alias_name}
+}
+
