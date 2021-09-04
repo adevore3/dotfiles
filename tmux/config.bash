@@ -4,3 +4,4 @@
 # terminal says. the $TERM environment variable is the second place where tmux
 # inherits its terminal type
 export TERM="screen-256color"
+
