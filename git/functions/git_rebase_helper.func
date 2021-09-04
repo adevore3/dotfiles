@@ -1,17 +1,18 @@
 #!/bin/bash
 
-# Apply a stash by index
+# Squash N commits into 1 commit
 function git_rebase_helper() {
   if [ $# -ne 1 ]; then
     echo "ERROR: Number of commits to rebase not specified."
     return 1
   fi
 
+  local num_commits=$1
   local regex='^[0-9]+$'
-  if [[ $1 =~ $regex ]]; then
-    git rebase -i HEAD~$1
+  if [[ $num_commits =~ $regex ]]; then
+    git rebase -i HEAD~$num_commits
   else
-    echo "ERROR: '$1' is not a valid number."
+    echo "ERROR: '$num_commits' is not a valid number."
     return 1
   fi
 }
