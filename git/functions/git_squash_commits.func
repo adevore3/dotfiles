@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Squash all commits on branch into 1 commit
+function git_squash_commits() {
+  git rebase -i HEAD~$(git_branch_commit_count)
+}
+
