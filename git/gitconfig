@@ -50,8 +50,8 @@
 [core]
   autocrlf = input
   editor = vim -f
-  excludesfile = /home/adevore/.gitignore
-  hooksPath = /home/adevore/dotfiles/git/hooks
+  excludesfile = ~/.gitignore
+  hooksPath = ~/dotfiles/git/hooks
   pager = less -FRSX
   whitespace = fix, -trailing-space, -space-before-tab, -indent-with-non-tab, cr-at-eol
 [color]
@@ -85,8 +85,7 @@
   name = Anton DeVore
   email = adevore@indeed.com
 [include]
-  path = /home/adevore/env/etc/git/aliases
-  path = /home/adevore/env/etc/git/skynet/aliases
+  path = ~/env/etc/git/aliases
 [init]
   templatedir = ~/.git-templates
 [filter "lfs"]
