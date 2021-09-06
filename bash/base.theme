@@ -73,6 +73,6 @@ function prompt_char {
 }
 
 function node_version_prompt {
-  type node &> /dev/null echo -e "|$(node --version)|"
+  type node &> /dev/null && echo -e "|$(node --version)|"
 }
 
