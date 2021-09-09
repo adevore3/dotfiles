@@ -18,7 +18,7 @@
     ~/.vimrc: vim/vimrc
 
 - shell:
-  - command: "/home/$(whoami)/dotfiles/env-setup.sh"
+  - command: "sudo /home/$(whoami)/dotfiles/env-setup.sh"
     stdout: true
     stderr: true
     description: "Running env setup script."
