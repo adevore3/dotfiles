@@ -1,0 +1,9 @@
+# xclip into middle click pasting
+xclip response.json
+
+# xclip into Ctrl+V pasting
+xclip -sel clip resonse.json
+
+# Output of command into xclip
+cat response.json | xclip -sel clip
+
