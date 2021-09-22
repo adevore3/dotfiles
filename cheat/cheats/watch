@@ -2,5 +2,5 @@
 watch -n 30 -d "wc -l cmrs.log"
 
 # Watch pipet for proctor changes
-watch -n 10 -d "echo '$(date) >>> $(./verify_proctor_test hire_eval_deboost_musthave_keywords_tst | grep experimental)'"
+watch -n 10 -d "~/verify_proctor_test ihp_dradis_opt_in_tog prod"
 
