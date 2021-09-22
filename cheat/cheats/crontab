@@ -1,0 +1,6 @@
+# List cronjobs
+crontab -l
+
+# Update cronjobs from a file named cron
+crontab <directory_to_file>/cron
+
