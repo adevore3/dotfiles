@@ -73,6 +73,7 @@ alias git_branch_commit_count='git rev-list --count HEAD ^master'
 alias git_checkout_all_deleted_files="git status | grep deleted | awk '{print \$2}' | xargs git checkout --"
 alias git_quick_fix='gst && gau && git cm "fix" && gri 2'
 alias git_remove_all_deleted_files=$'git status | grep deleted | awk \'{print $2}\' | xargs git rm'
+alias git_remove_all_untracked_files='git clean -fdx'
 alias git_remove_untracked_branches=$'git checkout -q master && git fetch -q --prune && git branch -vv | awk \'/: gone]/{print $1}\' | xargs -r git branch -d'
 alias git_remove_untracked_files=$'f(){ git status | grep "${1:-src}" | awk \'{print $1}\' | xargs rm -rf; unset -f f; }; f'
 alias git_remove_untracked_unmerged_branches=$'git checkout -q master && git fetch -q --prune && git branch -vv | awk \'/: gone]/{print $1}\' | xargs -r git branch -D'
