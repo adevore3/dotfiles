@@ -40,3 +40,6 @@ curl -X POST  -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoun
 # Example using curl for xmlrpc
 curl --user mcmkwapi@marchex.com:keyw0rdc0mpl1ance -H 'Content-Type: text/xml' -d '<methodCall><methodName>number.list</methodName><params><value><string>CtjSf1Zva1hD_QDe</string></value></params></methodCall>' api.voicestar.com/api/xmlrpc/1 | tidy -xml -i - > ,number_list
 
+# Example using curl to check a service's healthcheck
+curl -s "<service_url>/healthcheck" | jq '.results.OK[] | {id, urgency}' | grep -E -i -A 2 -B 1 '(docservice)|(graphql)|(location)'
+
