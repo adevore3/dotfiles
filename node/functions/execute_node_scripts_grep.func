@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# List node scripts matching grep and execute the selected script
+function execute_node_scripts_grep() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: Must specifiy a pattern to match"
+    return 1
+  fi
+
+  local pattern=$1
+
+  # Builds an array from output of command
+  # Grep node scripts using list-scripts and remove the starting '*' from each command
+  mapfile -t scripts < <( nlsg $pattern | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' )
+
+  local size=${#scripts[@]}
+
+  if [ $size -eq 0 ]; then
+    echo "No scripts found containing \"$pattern\""
+    return 0
+  fi
+
+  local desired_script="no script selected"
+  if [ $size -gt 1 ]; then
+    echo "Found $size scripts."
+
+    for index in "${!scripts[@]}"; do
+      local position=$(( $index + 1 ))
+      printf "\t%s)\t%s\n" "$position" "${scripts[$index]}"
+    done
+
+    local desired_position=1
+    local number_regex='^[0-9]+$'
+    while :; do
+      echo
+      read -p "Please enter a number between 1 and $size for the desired script: " number
+
+      [[ $number =~ $number_regex ]] || { echo "Please enter a valid number"; continue; }
+
+      if ((number >= 1 && number <= $size)); then
+        desired_position=$number
+        break
+      else
+        echo "ERROR: Number out of range, please try again"
+      fi
+    done
+
+    local desired_index=$(( $desired_position - 1 ))
+    desired_script=${scripts[$desired_index]}
+  else
+    desired_script=${scripts[0]}
+  fi
+
+  local script_name=$(echo "$desired_script" | awk '{print $1}')
+
+  local command="npm run ${script_name}"
+
+  echo
+  echo "Running \"$command\""
+
+  eval $command
+}
+

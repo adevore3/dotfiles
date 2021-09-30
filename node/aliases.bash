@@ -6,4 +6,8 @@ alias nu='cdnvm .'
 # Built on pre-existing aliases
 alias nr?='nrh'
 alias nrh='nls && echo -e "\\nag \"npm\"" && nag'
+alias nlsg='nls | grep -i'
+
+# Aliases for functions
+alias nlsge='execute_node_scripts_grep'
 
