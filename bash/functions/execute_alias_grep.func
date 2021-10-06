@@ -50,7 +50,11 @@ function execute_alias_grep() {
     desired_alias=${aliases[0]}
   fi
 
-  local alias_name=$(echo $desired_alias | cut -d = -f 1 | cut -c 6-)
+  local alias_name=$(echo $desired_alias | cut -d = -f 1 | cut -c 7-)
+
+  echo
+  echo "Executing '$alias_name'"
+  echo
 
   eval ${alias_name}
 }
