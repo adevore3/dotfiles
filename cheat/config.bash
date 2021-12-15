@@ -1,4 +1,4 @@
 # Set default cheat path
-export DEFAULT_CHEAT_DIR="${DOTFILES}/cheat/cheats"
+export CHEAT_CONFIG_PATH="~/dotfiles/cheat/conf.yml"
 export PYTHONIOENCODING=utf-8
 

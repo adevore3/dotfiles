@@ -28,17 +28,8 @@ time LC_ALL=C fgrep <string> <file> -c
 # Useful if I need to access workspace for every project
 find . -path "*/.idea/*" -type f | grep workspace.xml | grep -v node_modules | xargs grep -vi upsource | cut -d : -f 1 | uniq | less
 
-# Publishing a library (defaults to master branch)
-publish-shared-library
-
-# Publishing a library ignoring that you're breaking backwards compatability
-publish-shared-library -Dpublish.compatibility.check=false
-
 # Problems w/ transparent windows on Unity
 setsid unity
-
-# Rsync directories from desktop to laptop
-rsync -azP --exclude=',*' <dns>:/home/adevore/indeed/skynet /home/adevore/indeed/
 
 # Where to get UTF-8 string constant
 StandardCharsets.UTF_8.name();
@@ -49,9 +40,6 @@ git difftool --tool=vimdiff
 # Killing a rogue node process if you see `throw er; // Unhandled 'error' event`
 ps aux | awk '/node/{print $2}' | xargs kill -9
 
-# If running `update-rad-artifacts` hangs w/ message `Calling rhone delta health check at http://localhost:25502/api/ruok`
-rm /tmp/rhonedeltatmp/download/delta-repo.lock
-
 # Useful things to grep out of hobo logs
 hlf | egrep -v "(MemoryAndGarbageReporter|MongoRegistry|indeed\.logentry|healthcheck|rabbitmq|AbstractProctorLoader|connections balanced across)"
 
@@ -61,25 +49,9 @@ break-pane
 # Git all files that ever existed
 git log --pretty=format: --name-only --diff-filter=A | sort -u
 
-# Austin's method for merging
-"Jenkins please retry a build"
-
 # When IntelliJ stops registering keystrokes (https://superuser.com/questions/708538/on-ubuntu-13-10-multiple-hits-on-ctrltab-makes-my-intellij-13-keyboard-stuck-n/716440#716440)
 ibus-daemon -rd
 
-# Add migration script
-hobo-django-manage3 hirecentral makemigrations
-
-# Verify migration sql
-hobo-django-manage3 hirecentral sqlmigrate sourceapp [migration_file_name]
-
 # Set brave to default browser for xdg-open
 xdg-settings set default-web-browser brave.desktop
-
-# Primitive watch w/ highlights
-while true; do clear; echo; date; echo; curl <pipet_url>/proctor/matrix/definition/hire_eval_requisition_models_tst | jq . | egrep --color=auto "hireSubmitQuality|\$"; sleep 10; done
-
-# Adding a debug breakpoint in react
-/* eslint-disable no-debugger */
-debugger;
 
