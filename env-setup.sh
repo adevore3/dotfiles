@@ -15,8 +15,11 @@ function installing_template() {
 }
 
 function install_cheat() {
-  sudo python $DOTFILES/cheat/get-pip.py
-  sudo pip install cheat
+  if hash go 2>/dev/null; then
+    go install github.com/cheat/cheat/cmd/cheat@latest
+  else
+    echo "  Unable to install cheat, 'go' not available (hash go)"
+  fi
 }
 
 function install_autojump() {
