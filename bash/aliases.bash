@@ -72,7 +72,7 @@ alias vilc='vi $(fc -s)'
 alias watch='watch -c '
 
 # misc long names
-alias open_time_picture='xdg-open $DOTFILES/misc/pictures/is_it_worth_the_time.png'
+alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias kill_process=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 alias sudo_kill_process=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
