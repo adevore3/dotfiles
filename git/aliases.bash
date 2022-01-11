@@ -1,5 +1,7 @@
 alias g='git'
 alias ga='git add'
+alias gacc='git_all_commit_count'
+alias gafc='git_all_file_count'
 alias gaf='git_add_files'
 alias gag='git aliases | grep'
 alias gaia='echo -e "a\n*\nq\n" | git add -i'
@@ -68,6 +70,8 @@ alias og='open_git_base_url'
 alias ogb='open_git_branch_url'
 
 # Long alias names
+alias git_all_commit_count='git rev-list --all --count'
+alias git_all_file_count='git ls-tree --name-only -r origin/master | wc -l'
 alias git_base_url='f(){ local url=https://$(cat .git/config | grep "url = git" | cut -d@ -f2 | sed "s/:/\//" | head -n1); echo ${url%.git}; unset -f f; }; f'
 alias git_branch_commit_count='git rev-list --count HEAD ^master'
 alias git_checkout_all_deleted_files="git status | grep deleted | awk '{print \$2}' | xargs git checkout --"
