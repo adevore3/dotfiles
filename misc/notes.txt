@@ -1,4 +1,4 @@
-misc
+Misc
 * No Machine for Remote
 
 Dependencies not found for dotfiles:
@@ -7,13 +7,18 @@ Dependencies not found for dotfiles:
 todo:
 * Improve env-setup:
 ** Don't always run git submodule or tmux plugins
-** $(whichopen) "${url}" &>/dev/null
 ** function to scp to desktop or laptop
 * tattoo
-* tmux start up script w/ windows created and named
 * cheat search w/ context
 
 I'm a beast, not a day goes by that I don't sacrifice sweat to the gods of swoll at the temple of iron.
 I didn't move to meat street yesterday, I got a mortgage from swells fargo and I've been passing plates ever since.
 I call this one papier and this one mache because my shit is shredded.
 https://www.youtube.com/watch?v=Bchx0mS7XOY 11:47
+
+
+
+Interesting things
+* program AI to play Risk
+* explore command line scripts written in java
+
