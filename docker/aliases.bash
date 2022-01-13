@@ -1,3 +1,6 @@
+# general
+alias dps='docker ps'
+
 # short aliases
 alias dkac=docker_kill_all_containers
 alias drac=docker_remove_all_containers
