@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if ! [ -x "$(command -v cloc)" ]; then
+  echo "'cloc' command needed to calculate lines"
+fi
+
 # This is not accurate because it checks the file at the current version
 # For a more accurate count we would need to check out each commit and then
 # run cloc against the files for that sha
