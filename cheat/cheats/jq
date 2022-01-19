@@ -11,10 +11,17 @@ cat package.json | jq '. | {dep: .dependencies, devDep: .devDependencies}' | egr
 jq '. | length'
 
 # Filter on field in object
-time cat <some_file> |  \jq -cS '. | select(.originLogType == "sourcetInviteToApply")' > ,sourcetInviteToApply
+time cat <file> |  \jq -cS '. | select(.originLogType == "sourcetInviteToApply")' > ,output
 
 # Slice & Dice
 jq '.[2:4]'
 jq '.[:3]'
 jq '.[-2:]'
+
+# List keys of a json object
+jq '.jobs[0] | keys'
+
+
+# Sort by key and list only keys
+cat <file> | jq '.jobs|=sort_by(.company) | .jobs[].company' | less
 
