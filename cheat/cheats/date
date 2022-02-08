@@ -1,0 +1,10 @@
+# Convert unixtime to datetime
+date -d @1643999791
+
+> Fri Feb  4 10:36:31 PST 2022
+
+# Convert unixtime to utc datetime
+date -ud "@1643999791" +'%Y-%m-%d %H:%M:%S'
+
+> 2022-02-04 18:36:31
+
