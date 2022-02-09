@@ -10,7 +10,7 @@ function convert_unixtime() {
         return 1
     fi
   else
-      unixtime=$1
+    unixtime=$(echo $1 | sed 's/,//g')
   fi
   date -d "@$unixtime"
 }

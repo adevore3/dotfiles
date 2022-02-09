@@ -10,7 +10,7 @@ function convert_unixtime_to_utc() {
         return 1
     fi
   else
-      unixtime=$1
+    unixtime=$(echo $1 | sed 's/,//g')
   fi
   date -ud "@$unixtime" +'%Y-%m-%d %H:%M:%S'
 }
