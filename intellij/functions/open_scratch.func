@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Open a scratch file created by IntelliJ
+function open_scratch() {
+  local intellij_version="IntelliJIdea2021.3"
+  local jetbrains_dir="$HOME/.config/JetBrains/$intellij_version/"
+
+  if [ ! -d "$jetbrains_dir" ]; then
+    echo "ERROR: No jetbrains directory found for '$jetbrains_dir'"
+    return 1
+  fi
+
+  # Must wrap it in parentheses to make it an array, otherwise it's just a space separated list
+  local files=($(find "$jetbrains_dir" -name "scratch*" -type f))
+  local size=${#files[@]}
+
+  if [ $size -eq 0 ]; then
+    echo "No scratch files found in '$jetbrains_dir'"
+    return 0
+  fi
+
+  local desired_file="no branch selected"
+  if [ $size -gt 1 ]; then
+    echo "Found $size files."
+
+    for index in "${!files[@]}"; do
+      local position=$(( $index + 1 ))
+      printf "\t%s)\t%s\n" "$position" "${files[$index]}"
+    done
+
+    local desired_position=1
+    local number_regex='^[0-9]+$'
+    while :; do
+      echo
+      read -p "Please enter a number between 1 and $size for the desired branch: " number
+
+      [[ $number =~ $number_regex ]] || { echo "Please enter a valid number"; continue; }
+
+      if ((number >= 1 && number <= $size)); then
+        desired_position=$number
+        break
+      else
+        echo "ERROR: Number out of range, please try again"
+      fi
+    done
+
+    local desired_index=$(( $desired_position - 1 ))
+    desired_file=${files[$desired_index]}
+  else
+    desired_file=${files[0]}
+  fi
+
+  vi $desired_file
+}
+
