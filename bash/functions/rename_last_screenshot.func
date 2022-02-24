@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Rename the last modified file in ~/Pictures. Arguments passed in are joined
+# with underscores to create a new file name
+#
+# usage:
+#
+#   `rename_last_screenshot hello world`
+#
+function rename_last_screenshot() {
+  if [ $# -lt 1 ]; then
+    echo "ERROR: Must specifiy a new name for the last screenshot"
+    return 1
+  fi
+
+  local new_filename=$(IFS=_ ; echo "$*")
+
+  local picture_dir="$HOME/Pictures"
+
+  # `ls` is aliased so we explicitly use the original `ls` command
+  local last_screenshot_filename=$(\ls -t $picture_dir | head -n1)
+
+  mv "$picture_dir/$last_screenshot_filename" "$picture_dir/$new_filename"
+}
+
