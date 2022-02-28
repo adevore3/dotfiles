@@ -3,19 +3,19 @@
 # Open a scratch file created by IntelliJ
 function open_scratch() {
   local intellij_version="IntelliJIdea2021.3"
-  local jetbrains_dir="$HOME/.config/JetBrains/$intellij_version/"
+  local jetbrains_scratches_dir="$HOME/.config/JetBrains/$intellij_version/scratches"
 
-  if [ ! -d "$jetbrains_dir" ]; then
-    echo "ERROR: No jetbrains directory found for '$jetbrains_dir'"
+  if [ ! -d "$jetbrains_scratches_dir" ]; then
+    echo "ERROR: No jetbrains directory found for '$jetbrains_scratches_dir'"
     return 1
   fi
 
   # Must wrap it in parentheses to make it an array, otherwise it's just a space separated list
-  local files=($(find "$jetbrains_dir" -name "scratch*" -type f))
+  local files=($(find "$jetbrains_scratches_dir" -type f | sort))
   local size=${#files[@]}
 
   if [ $size -eq 0 ]; then
-    echo "No scratch files found in '$jetbrains_dir'"
+    echo "No scratch files found in '$jetbrains_scratches_dir'"
     return 0
   fi
 
