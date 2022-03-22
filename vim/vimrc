@@ -280,6 +280,7 @@ autocmd BufRead *.scala call FoldBraces()
 " - counts is not word delimiter in xml
 autocmd BufRead *.xml set iskeyword+=-
 autocmd BufRead *.xsd set iskeyword+=-
+autocmd BufRead *.sc set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 autocmd BufRead *.xsd set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 autocmd BufRead *.xml set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 autocmd BufRead *.sls set iskeyword-=$
