@@ -1,5 +1,6 @@
 alias ta='tmux a -t'
 alias taw='tmux a -t work'
+alias tbp='tmux break-pane'
 alias tda='tmux detach -a'
 alias tkp='tmux kill-pane -a'
 alias tks='tmux kill-session -t'
@@ -13,3 +14,4 @@ alias trwm='tmux rename-window misc'
 
 # Alias for functions
 alias cw='create_window_with_n_panes'
+
