@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Search aliases, functions & commands for a given expression
+function search_everywhere() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: Search expression not specified."
+    return 1
+  fi
+
+  local search_expr=$1
+
+  search_output() {
+    echo "Searching aliases:"
+    ag "$search_expr"
+
+    echo
+    echo "Searching functions:"
+    cfg "$search_expr"
+
+    echo
+    echo "Searching commands:"
+    ccg "$search_expr"
+  }
+
+  search_output | less -cFRX -p "$search_expr"
+}
+
