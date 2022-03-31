@@ -52,6 +52,9 @@ export EDITOR="$VISUAL"
 export LESS='-R'
 export LESSOPEN='|~/.lessfilter %s'
 
+# Set up less with better highlighting (especially in tmux)
+export LESS_TERMCAP_so=$'\E[01;33;03;40m'
+
 # Set up custom command_not_found handle
 command_not_found_handle () {
     if [ -x "$(command -v figlet)" ] && [ -x "$(command -v fortune)" ] && [ -x "$(command -v cowsay)" ]; then

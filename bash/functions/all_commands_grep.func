@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Search aliases, functions & commands for a given expression
-function search_everywhere() {
+function all_commands_grep() {
   if [ $# -ne 1 ]; then
     echo "ERROR: Search expression not specified."
     return 1
@@ -11,17 +11,19 @@ function search_everywhere() {
 
   search_output() {
     echo "Searching aliases:"
-    ag "$search_expr"
+    alias | grep -i "$search_expr"
 
     echo
     echo "Searching functions:"
-    cfg "$search_expr"
+    compgen -A function | grep -i "$search_expr"
 
     echo
     echo "Searching commands:"
-    ccg "$search_expr"
+    compgen -c | grep -i "$search_expr"
   }
 
-  search_output | less -cFRX -p "$search_expr"
+  search_output | less -F -p $search_expr
+
+  unset -f search_output
 }
 
