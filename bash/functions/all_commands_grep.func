@@ -9,21 +9,15 @@ function all_commands_grep() {
 
   local search_expr=$1
 
-  search_output() {
-    echo "Searching aliases:"
-    alias | grep -i "$search_expr"
+  echo "Searching aliases:"
+  alias | grep -i "$search_expr"
 
-    echo
-    echo "Searching functions:"
-    compgen -A function | grep -i "$search_expr"
+  echo
+  echo "Searching functions:"
+  compgen -A function | grep -i "$search_expr"
 
-    echo
-    echo "Searching commands:"
-    compgen -c | grep -i "$search_expr"
-  }
-
-  search_output | less -F -p $search_expr
-
-  unset -f search_output
+  echo
+  echo "Searching commands:"
+  compgen -c | grep -i "$search_expr"
 }
 
