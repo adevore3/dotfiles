@@ -1,14 +1,28 @@
 set hlsearch
 set number
 set cursorline
+set linebreak  " wrap lines at convenient points
+set scrolloff=8
+set sidescroll=4
+
+let mapleader=","
+
+" navigate between splits
 map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-H> <C-W>h
 map <C-L> <C-W>l
-set scrolloff=8
-set sidescroll=4
+
+" movement by file line instead of screen line
 nnoremap j gj
 nnoremap k gk
+
+" toggle line numbers
+nnoremap <leader>N :setlocal number!<cr>
+
+" inserting a new-line w/o entering insert mode
+map <S-Enter> O<ESC>
+map <Enter> o<ESC>
 
 " search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
