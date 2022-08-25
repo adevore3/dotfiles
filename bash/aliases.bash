@@ -28,6 +28,7 @@ alias xq='xrandr -q' # Display monitor info
 alias _='sudo'
 alias acg='all_commands_grep'
 alias ag='alias | grep -i'
+alias cac='cat ~/.aws/credentials'
 alias ccg='compgen -c | grep -i'
 alias cdp='cd -P'
 alias cfg='compgen -A function | grep -i'
