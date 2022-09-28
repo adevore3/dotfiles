@@ -26,7 +26,10 @@ alias xq='xrandr -q' # Display monitor info
 
 # history commands
 alias h='history'
+alias hclr='history -c'
+alias hdel='history -d'
 alias hg='history | grep'
+alias ht='history | tail'
 alias htt='history_top_ten'
 
 # misc
@@ -78,11 +81,13 @@ alias vilc='vi $(fc -s)'
 alias watch='watch -c '
 
 # misc long names
-alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
-alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
-alias kill_process=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
-alias sudo_kill_process=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias history_disable='set +o history'
+alias history_enable='set -o history'
 alias history_top_ten=$'history | awk \'{for (i = 9; i <= NF; i++) printf $i " "; print ""}\' | sort | uniq -c | sort -rn | head'
+alias kill_process=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
+alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
+alias sudo_kill_process=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
