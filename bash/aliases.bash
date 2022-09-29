@@ -30,7 +30,7 @@ alias hclr='history -c'
 alias hdel='history -d'
 alias hg='history | grep'
 alias ht='history | tail'
-alias htt='history_top_ten'
+alias htt='hist_top_ten'
 
 # misc
 alias _='sudo'
@@ -81,9 +81,10 @@ alias vilc='vi $(fc -s)'
 alias watch='watch -c '
 
 # misc long names
-alias history_disable='set +o history'
-alias history_enable='set -o history'
-alias history_top_ten=$'history | awk \'{for (i = 9; i <= NF; i++) printf $i " "; print ""}\' | sort | uniq -c | sort -rn | head'
+alias hist_disable='set +o history'
+alias hist_enable='set -o history'
+alias hist_top_ten=$'history | awk -F \'PDT\' \'{print $2}\' | sort | uniq -c | sort -rn | head'
+alias hist_delete_all=$'f(){ local exp=$1; local count=$(history | grep "$exp" | wc -l); for ((i=1; i<=$count; i++)); do hdel $(hg "$exp" | hd1 | awkp 1); done; unset -f f; }; f'
 alias kill_process=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
