@@ -85,6 +85,7 @@ alias vilc='vi $(fc -s)'
 alias watch='watch -c '
 
 # misc long names
+alias generic_for_loop=$'f(){ local count=$1; local exp_command=$2; for ((i=1; i<=$count; i++)); do eval $exp_command; done; unset -f f; }; f'
 alias kill_process=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
