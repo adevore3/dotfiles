@@ -1,10 +1,13 @@
 alias ..='cd ..'
 alias ...='cd ../..'
 
+alias ag='alias | grep -i'
 alias dirs='dirs -v'
-alias e='exit'
+alias envg='env | grep -i'
+alias hg='history | grep'
 alias jq='jq -C'
 alias ll='ls -al'
+alias mkcd=$'f(){ mkdir $1; cd $1; unset -f f; }; f'
 alias psg='ps fauxwww | grep -v grep | grep'
 alias vi=$( which vim )
 alias watch='watch -c '
