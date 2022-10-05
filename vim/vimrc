@@ -150,9 +150,6 @@ nnoremap <leader>rt :%s/\t/  /g<Enter>
 " search and replace selected text
 vnoremap <C-r> "hy:%s/<C-r>h//g<left><left>
 
-" quickly escape from insert mode
-inoremap jj <ESC>
-
 " reselect the text that was just pasted
 nnoremap <leader>v V`]
 
