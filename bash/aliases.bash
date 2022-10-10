@@ -83,6 +83,7 @@ alias vgd='vi `git diff --name-only`'
 alias vil='vi !$'
 alias vilc='vi $(fc -s)'
 alias watch='watch -c '
+alias xclipf='xclip -sel clip'
 
 # misc long names
 alias generic_for_loop=$'f(){ local count=$1; local exp_command=$2; for ((i=1; i<=$count; i++)); do eval $exp_command; done; unset -f f; }; f'
