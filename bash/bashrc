@@ -13,6 +13,9 @@ export DOTFILES="${HOME}/dotfiles"
 source "${DOTFILES}/bash/colors.theme"
 source "${DOTFILES}/bash/base.theme"
 
+# private or per instance configuration
+if [ -a ~/.localrc ]; then source ~/.localrc; fi
+
 # source our functions (must go before configs because conditionally_prefix_path is required for some configs)
 for config_file in $(find ${DOTFILES} -type f -name *.func); do
   source $config_file
@@ -29,9 +32,6 @@ for config_file in $(find ${DOTFILES} -type f -name aliases.bash); do
 done
 
 unset config_file
-
-# private or per instance configuration
-if [ -a ~/.localrc ]; then source ~/.localrc; fi
 
 if [[ $PROMPT ]]; then
     export PS1=$PROMPT
