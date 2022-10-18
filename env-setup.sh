@@ -54,9 +54,6 @@ apt_install_template "tree"
 apt_install_template "vim"
 apt_install_template "wget"
 
-echo "Installing submodules"
-git submodule update --init --recursive
-
 installing_template "cheat" install_cheat
 installing_template "autojump" install_autojump
 
