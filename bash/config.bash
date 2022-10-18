@@ -42,21 +42,31 @@ conditionally_prefix_path "${HOME}/bin"
 # vi for the command line
 set -o vi
 
-# Set default editor
+# set default editor
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
-# Set up for autojump
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile)
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# set up for autojump
 [[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
-# Set up less with pygmentize
+# set up less with pygmentize
 export LESS='-R'
 export LESSOPEN='|~/.lessfilter %s'
 
-# Set up less with better highlighting (especially in tmux)
+# set up less with better highlighting (especially in tmux)
 export LESS_TERMCAP_so=$'\E[01;33;03;40m'
 
-# Set up custom command_not_found handle
+# set up custom command_not_found handle
 command_not_found_handle () {
     if [ -x "$(command -v figlet)" ] && [ -x "$(command -v fortune)" ] && [ -x "$(command -v cowsay)" ]; then
         { echo NOPE | figlet; fortune; } | cowsay -f stegosaurus -n
