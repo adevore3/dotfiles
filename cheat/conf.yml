@@ -1,11 +1,11 @@
 cheatpaths:
-  - name: general
-    path: ~/dotfiles/cheat/cheats
-    tags: [ general ] # these tags will be applied to all sheets on the path
-    readonly: false # new sheets may be written here
-
   - name: indeed
     path: ~/dotfiles/indeed/cheat/cheats
     tags: [ indeed ]
-    readonly: true # if true, `cheat` will not create new cheatsheets here
+    readonly: false # can update sheets here but not add sheets since the below path exists
+
+  - name: general
+    path: ~/dotfiles/cheat/cheats
+    tags: [ general ] # these tags will be applied to all sheets on the path
+    readonly: false # new sheets are written here since it's the last non-readonly path
 
