@@ -84,8 +84,6 @@
 [user]
   name = Anton DeVore
   email = adevore@indeed.com
-[include]
-  path = ~/env/etc/git/aliases
 [init]
   templatedir = ~/.git-templates
 [filter "lfs"]
