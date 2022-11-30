@@ -12,7 +12,7 @@
     ~/.gitignore: git/final_gitignore
     ~/.inputrc: bash/inputrc
     ~/.lessfilter: bash/lessfilter
-    ~/.profile: profile
+    ~/.profile: bash/profile
     ~/.tmux.conf: tmux/tmux.conf
     ~/.vim: vim/vim
     ~/.vimrc: vim/vimrc
