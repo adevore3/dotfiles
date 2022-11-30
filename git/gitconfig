@@ -91,4 +91,9 @@
   process = git-lfs filter-process
   required = true
   smudge = git-lfs smudge -- %f
+# BEGIN Managed by shell_setup role
+[include]
+    path = /home/adevore/env/etc/git/aliases
+    path = /home/adevore/env/etc/git/general-config
+# END Managed by shell_setup role
 
