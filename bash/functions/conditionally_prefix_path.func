@@ -9,7 +9,10 @@ function conditionally_prefix_path() {
 
   local dir=$1
   if [ -d "$dir" ]; then
-    PATH="$dir:${PATH}"
+    output=$(echo $PATH | grep $dir)
+    if [ -z "$output" ]; then
+      PATH="$dir:${PATH}"
+    fi
   fi
 }
 
