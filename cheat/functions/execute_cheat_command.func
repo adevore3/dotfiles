@@ -19,7 +19,6 @@ function execute_cheat_command() {
     return 0
   fi
 
-  local desired_command="no command selected"
   echo "Found $size commands."
 
   for index in "${!commands[@]}"; do
@@ -44,7 +43,7 @@ function execute_cheat_command() {
   done
 
   local desired_index=$(( $desired_position - 1 ))
-  desired_command=${commands[$desired_index]}
+  local desired_command=${commands[$desired_index]}
 
   echo
   echo "Executing '$desired_command'"
