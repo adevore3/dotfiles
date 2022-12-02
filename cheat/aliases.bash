@@ -9,4 +9,5 @@ alias cug='cheat useful | grep'
 alias cul='cheat useful | less'
 alias cutl='cheat useful | tail'
 alias ecc='execute_cheat_command'
+alias eccu='execute_cheat_command useful'
 
