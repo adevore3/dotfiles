@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# List cheat commands matching grep and execute the selected command
-function execute_cheat_command() {
+# List cheatsheet comands and execute the selected command
+function cheat_execute_command() {
   if [ $# -ne 1 ]; then
     echo "ERROR: Must specifiy a valid cheatsheet"
     return 1
