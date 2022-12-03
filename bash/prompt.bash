@@ -12,7 +12,13 @@ function git_short_sha() {
 
 function prompt() {
     local n_commands="\!"
-    local user_host="${green}\h${reset_color}"
+    local vm="$(hostnamectl | sed -n '2p' | awkp 3)"
+    if [ "$vm" = "computer-vm" ]; then
+      vm=" $vm"
+    else
+      vm=""
+    fi
+    local user_host="${green}\h$vm${reset_color}"
     local prompt_symbol='λ'
     local node="${cyan}$(node_version_prompt)${reset_color}"
     local open='('
