@@ -41,6 +41,9 @@ else
     let g:NeatStatusLine_color_filetype='ctermfg=37 ctermbg=235 cterm=bold'
 endif
 
+" set status
+set ruler
+
 " set filetype and syntax of certain file extensions
 autocmd BufRead,BufNewFile *.xpl set filetype=perl syntax=perl
 autocmd BufRead,BufNewFile *.tap set filetype=perl syntax=perl
@@ -277,10 +280,12 @@ autocmd BufRead *.scala call FoldBraces()
 " - counts is not word delimiter in xml
 autocmd BufRead *.xml set iskeyword+=-
 autocmd BufRead *.xsd set iskeyword+=-
-autocmd BufRead *.sc set tabstop=2 | set softtabstop=2 | set shiftwidth=2
-autocmd BufRead *.xsd set tabstop=2 | set softtabstop=2 | set shiftwidth=2
-autocmd BufRead *.xml set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 autocmd BufRead *.sls set iskeyword-=$
+
+autocmd BufRead *.func set tabstop=2 | set softtabstop=2 | set shiftwidth=2
+autocmd BufRead *.sc set tabstop=2 | set softtabstop=2 | set shiftwidth=2
+autocmd BufRead *.xml set tabstop=2 | set softtabstop=2 | set shiftwidth=2
+autocmd BufRead *.xsd set tabstop=2 | set softtabstop=2 | set shiftwidth=2
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MULTIPURPOSE TAB KEY
