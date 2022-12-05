@@ -26,7 +26,8 @@ alias gcomr='git_checkout_most_recent_branch'
 alias gcomrr='git_checkout_most_recent_remote_branch'
 alias gcor='git_checkout_remote_branch'
 alias gcp='git cherry-pick'
-alias gdv='git diff -w "$@" | vim -R -'
+alias gd='git diff'
+alias gdi='git diff --ignore-submodules'
 alias gg='git grep -n'
 alias ggrs='git grep -n --recurse-submodules'
 alias gga='f(){ git grep -n --recurse-submodules "alias $1"; unset -f f; }; f'
@@ -64,7 +65,7 @@ alias gsq='git_squash_commits'
 alias gss='git_stashow'
 alias gssp='git_stashowp'
 alias gst='git status'
-alias gstig='git status --ignore-submodules'
+alias gsti='git status --ignore-submodules'
 alias gsu='git submodule update'
 alias gsua='git_submodule_update_all'
 alias gup='git pull --rebase --autostash'
@@ -97,16 +98,4 @@ alias git_user_commit_count='git shortlog -sn'
 # Open url to git related link
 alias open_git_base_url='xdg-open $(git_base_url) >/dev/null 2>&1'
 alias open_git_branch_url='xdg-open $(git_base_url)/tree/$(git symbolic-ref --short HEAD) >/dev/null 2>&1'
-
-case $OSTYPE in
-  linux*)
-    alias gd='git diff | vim -R -'
-    ;;
-  darwin*)
-    alias gd='git diff | mate'
-    ;;
-  darwin*)
-    alias gd='git diff'
-    ;;
-esac
 
