@@ -34,7 +34,7 @@ alias htt='hist_top_ten'
 alias hist_delete_all=$'f(){ sed -i "/$1/d" ~/.bash_history; unset -f f; }; f'
 alias hist_disable='set +o history'
 alias hist_enable='set -o history'
-alias hist_top_ten=$'history | awk -F \'PDT\' \'{print $2}\' | sort | uniq -c | sort -rn | head'
+alias hist_top_ten=$'history | awk -F \'PST\' \'{print $2}\' | sort | uniq -c | sort -rn | head'
 
 # misc
 alias _='sudo'
@@ -94,11 +94,7 @@ alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | so
 alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
 alias sudo_kill_process=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
+alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee ,filesperdirectory | tail"
 
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -107,3 +103,17 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
+
+# example of changing an alias based on ostypes
+case $OSTYPE in
+  linux*)
+    alias ostype="echo $OSTYPE"
+    ;;
+  darwin*)
+    alias ostype="echo $OSTYPE"
+    ;;
+  darwin*)
+    alias ostype="echo $OSTYPE"
+    ;;
+esac
+
