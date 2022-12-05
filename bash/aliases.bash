@@ -34,7 +34,8 @@ alias htt='hist_top_ten'
 alias hist_delete_all=$'f(){ sed -i "/$1/d" ~/.bash_history; unset -f f; }; f'
 alias hist_disable='set +o history'
 alias hist_enable='set -o history'
-alias hist_top_ten=$'history | awk -F \'PST\' \'{print $2}\' | sort | uniq -c | sort -rn | head'
+alias hist_top_ten=$'history | awk -F "PST|PDT" \'{print $2}\' | sort | uniq -c | sort -rn | head'
+
 
 # misc
 alias _='sudo'
