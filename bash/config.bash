@@ -24,12 +24,12 @@ shopt -s histappend
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 export HISTIGNORE='\.\.:\.\.\.:ag*:exit:gst:gup:htop:ij:ll:ls:tnw:tnwi:umr:[ ]*'
-export HISTTIMEFORMAT="%c "
+export HISTTIMEFORMAT="%a %F %T %Z "
 export HISTCONTROL=erasedups
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-export HISTSIZE=5000
-export HISTFILESIZE=2000
+export HISTSIZE=10000
+export HISTFILESIZE=5000
 
 export AUTOFEATURE=true autotest
 
