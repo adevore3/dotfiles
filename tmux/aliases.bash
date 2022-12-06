@@ -16,4 +16,5 @@ alias trwm='tmux rename-window misc'
 
 # Alias for functions
 alias cw='create_window_with_n_panes'
+alias tsce='tmux_send_command_every_session_window_pane'
 

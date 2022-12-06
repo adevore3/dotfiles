@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Send a command to every session, every window and every pane
+tmux_send_command_every_session_window_pane() {
+  for session in `tmux list-sessions -F '#S'`; do
+    for window in `tmux list-windows -t $session -F '#P' | sort`; do
+      # Tmux config has windows set to start from 1 instead of 0
+      local window_number=$(( $window + 1 ))
+      for pane in `tmux list-panes -t $session:$window_number -F '#P' | sort`; do
+        tmux send-keys -t "$session:$window_number.$pane" "$*" C-m
+      done
+    done
+  done
+}
+
