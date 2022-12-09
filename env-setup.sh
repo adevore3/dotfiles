@@ -42,6 +42,7 @@ function apt_install_template() {
 }
 
 echo "Installing various commands"
+apt_install_template "clipit"
 apt_install_template "cowsay"
 apt_install_template "figlet"
 apt_install_template "fortune"
