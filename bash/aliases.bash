@@ -40,6 +40,7 @@ alias hist_top_ten=$'history | awk -F "PST|PDT" \'{print $2}\' | sort | uniq -c 
 # misc
 alias _='sudo'
 alias acg='all_commands_grep'
+alias ackg="$(which ag)"
 alias ag='alias | grep -i'
 alias agx='alias_grep_execute'
 alias ccg='compgen -c | grep -i'
