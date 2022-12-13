@@ -8,6 +8,6 @@ function git_find_file() {
   fi
   local name=$1
 
-  git ls-tree -r master --name-only | fgrep $name
+  git ls-tree -r $(git_default_branch) --name-only | fgrep $name
 }
 
