@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List cheatsheet comands and execute the selected command
-function cheat_execute_command() {
+function cheat_execute() {
   if [ $# -ne 1 ]; then
     echo "ERROR: Must specifiy a valid cheatsheet"
     return 1
