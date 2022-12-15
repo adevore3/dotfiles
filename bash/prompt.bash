@@ -27,6 +27,9 @@ function prompt() {
     local close=')'
     local return_status=""
     local prompt_char=' \$ '
+    if [ -n "${ASSUMED_ROLE_ACCOUNT}" ]; then
+      prompt_char=" Assumed drp-emr role for $ASSUMED_ROLE_ACCOUNT $ "
+    fi
 
     PS1="\n${n_commands} ${user_host} ${prompt_symbol} $node ${open}${current_path}${git_branch}${close}${return_status}\n${prompt_char}"
 }
