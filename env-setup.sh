@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 function installing_template() {
   local program_name=$1;
