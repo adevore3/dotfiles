@@ -10,7 +10,6 @@
   cleanup = !git remote prune origin && git gc && git clean -dfx && git stash clear
   cm = commit -m
   co = checkout
-  com = checkout master
   db = diff -b
   dc = diff --cached
   df = diff
@@ -33,7 +32,6 @@
   sb = !ls .git/refs/remotes/*/$(git cb) | cut -d/ -f4,5 | xargs git show-branch $(git cb)
   showtool = "!sh -c 'if [ -z $1 ]; then REVISION=HEAD; else REVISION=$1; fi; git difftool $REVISION~ $REVISION' -"
   sortdiff = !sh -c 'git diff "$@" | grep "^[+-]" | sort --key=1.2 | uniq -u -s1'
-  st = status
   taglist = log --reverse --format=%h%d --tags --no-walk
   tags = fetch --tags
   today = !git log --since=midnight --author=\"$(git config user.name)\" --oneline
