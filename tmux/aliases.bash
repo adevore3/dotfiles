@@ -13,6 +13,10 @@ alias trw='tmux rename-window'
 alias trwd='tmux rename-window $(basename "$PWD")'
 alias trwj='tmux rename-window $(if [ -e repo.cfg ]; then fgrep "jira=" repo.cfg | cut -d= -f2; else echo $(basename "$PWD"); fi)'
 alias trwm='tmux rename-window misc'
+alias tsrac='tmux_save_reload_all_commands'
+
+# Long commands
+alias tmux_save_reload_all_commands='tmux_send_command_every_session_window_pane "history -a; history -r"'
 
 # Alias for functions
 alias cw='create_window_with_n_panes'
