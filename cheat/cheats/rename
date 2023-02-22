@@ -4,3 +4,6 @@ rename 'y/A-Z/a-z/' *
 # Remove prefix from all files and folders in current directory
 rename 's/^mcm-//' mcm-*
 
+# Replace all occurences of pattern
+rename 's/20230208/20230209/g' *.tsv
+
