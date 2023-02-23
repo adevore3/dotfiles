@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Check if the variable is set
+function check_variable() {
+  if [ $# -ne 1 ]; then
+    echo "ERROR: Column # not specified."
+    return 1
+  fi
+
+  local var=$1
+  if [ -z ${!var+x} ]; then
+    echo "$var is unset"
+  else
+    echo "$var is set to '${!var}'"
+  fi
+}
+
