@@ -50,6 +50,7 @@ autocmd BufRead,BufNewFile *.tap set filetype=perl syntax=perl
 autocmd BufRead,BufNewFile *.psgi set filetype=perl syntax=perl
 autocmd BufRead,BufNewFile *.ddl set filetype=sql  syntax=sql
 autocmd BufRead,BufNewFile *.func set filetype=sh  syntax=sh
+autocmd BufRead,BufNewFile *.sh set filetype=sh  syntax=sh
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Easy Align Plugin
