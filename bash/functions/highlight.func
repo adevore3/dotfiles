@@ -1,13 +1,7 @@
 #!/bin/bash
 
-# Highlight pattern
+# Highlight all patterns ignoring case
 function highlight() {
-  if [ $# -ne 1 ]; then
-    echo "ERROR: Must specify a pattern to highlight"
-    return 1
-  fi
-
-  local pattern=$1
-  egrep --color=auto "$1|\$"
+  egrep --color=auto -i "$(IFS=\| ; echo "$*")|\$"
 }
 
