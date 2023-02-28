@@ -19,6 +19,7 @@ function install_cheat() {
     go install github.com/cheat/cheat/cmd/cheat@latest
   else
     echo "  Unable to install cheat, 'go' not available (hash go)"
+    echo "  Check installation doc for more options: https://github.com/cheat/cheat/blob/master/INSTALLING.md"
   fi
 }
 
