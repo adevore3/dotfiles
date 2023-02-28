@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+alias kinit='kinit -c /tmp/krb5cc_$(id -u) adevore'
+alias tsd='xinput disable $(xinput | grep "Finger touch" | awkp 8 | cut -d= -f2)'
+alias tse='xinput enable $(xinput | grep "Finger touch" | awkp 8 | cut -d= -f2)'
+
+export CVM_USER_OVERRIDE="adevore"
