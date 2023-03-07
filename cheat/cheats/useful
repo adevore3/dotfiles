@@ -55,3 +55,7 @@ ibus-daemon -rd
 # Set brave to default browser for xdg-open
 xdg-settings set default-web-browser brave.desktop
 
+# Fix release issue with sudo apt update e.g.
+# E: The repository 's3://indeed-cpe-apt-repo bionic Release' no longer has a Release file.
+sudo apt update --allow-releaseinfo-change
+
