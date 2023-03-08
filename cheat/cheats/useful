@@ -59,3 +59,9 @@ xdg-settings set default-web-browser brave.desktop
 # E: The repository 's3://indeed-cpe-apt-repo bionic Release' no longer has a Release file.
 sudo apt update --allow-releaseinfo-change
 
+# Print out the commands as they run
+set -x
+
+# If something fails in the script, the whole program dies.
+set -e
+
