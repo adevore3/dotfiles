@@ -1,0 +1,47 @@
+#!/bin/bash
+
+function unixtime() {
+  local __usage="
+This will generate a unixtime in the specified format.
+
+Usage: unixtime [OPTIONS]
+
+OPTIONS:
+  -f, --format <unit>          The unit type of this unixtime, defaults to 'seconds'
+  -h, --help                   Prints this message
+
+EXAMPLES:
+
+  unixtime
+
+  unixtime -f ms
+
+  unixtime -f nanoseconds
+"
+
+  while [[ $# -gt 0 ]]; do
+    opt="$1"
+    shift;
+    current_arg="$1"
+    if [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+      echo "WARN: You may have left an argument blank. Double check your command"
+    fi
+    case "$opt" in
+      "-h"|"--help"   ) echo "$__usage"; return 1;;
+      "-f"|"--format" ) local format="$1"; shift;;
+      *               ) echo ERROR: Invalid option: \"$opt\" >&2; return 1;;
+    esac
+  done
+
+  format=${format:-s}
+  local supported_formats=["s|seconds","ms|milliseconds","us|microseconds","ns|nanoseconds"]
+
+  case "$format" in
+    "s"|"seconds"       ) date +%s;;
+    "ms"|"milliseconds" ) expr `date +%s%N` / 1000000;;
+    "us"|"microseconds" ) expr `date +%s%N` / 1000;;
+    "ns"|"nanoseconds"  ) date +%s%N;;
+    *                   ) echo ERROR: Unrecognized unixtime format: \"$format\". Supported formats: ${supported_formats[*]} >&2; return 1;;
+  esac
+}
+

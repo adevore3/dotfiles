@@ -2,7 +2,40 @@
 
 # Using date, convert unixtime to datetime
 function convert_unixtime() {
-  if [[ -z "$1" ]]; then
+  local __usage="
+This will convert unixtime to datetime
+
+Usage: unixtime [OPTIONS]
+
+OPTIONS:
+  -f, --format <string>        The format of the datetime, defaults to whatever date's default is
+  -h, --help                   Prints this message
+
+EXAMPLES:
+
+  convert_unixtime 1678255821
+
+  convert_unixtime -f utc 1678255821
+"
+
+  while [[ $# -gt 1 ]] || [[ "$1" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+    shift;
+    current_arg="$1"
+    if [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+      echo "WARN: You may have left an argument blank. Double check your command"
+      return 1
+    fi
+
+    case "$opt" in
+      "-h"|"--help"   ) echo "$__usage"; return 1;;
+      "-f"|"--format" ) local format="$1"; shift;;
+      *               ) echo ERROR: Invalid option: \"$opt\" >&2; return 1;;
+    esac
+  done
+
+  local unixtime_raw=$1
+  if [[ -z "$unixtime_raw" ]]; then
     if [[ -p /dev/stdin ]]; then # input from a pipe
         read -r p
     else
@@ -10,8 +43,28 @@ function convert_unixtime() {
         return 1
     fi
   else
-    unixtime=$(echo $1 | sed 's/,//g')
+    local unixtime_clean=$(echo $unixtime_raw | sed 's/,//g')
   fi
-  date -d "@$unixtime"
+
+  local length=${#unixtime_clean}
+  local unixtime_s=$unixtime_clean
+  if [[ $length -ge 10 ]]; then
+    case $length in
+      10 ) ;;
+      13 ) unixtime_s=$(echo "($unixtime_clean + 500) / 1000" | bc);;
+      16 ) unixtime_s=$(echo "($unixtime_clean + 500000) / 1000000" | bc);;
+      19 ) unixtime_s=$(echo "($unixtime_clean + 500000000) / 1000000000" | bc);;
+      *  ) echo ERROR: This only supports Unix timestamps in seconds, milliseconds, microseconds and nanoseconds >&2; return 1;;
+    esac
+  fi
+
+  format=${format:-default}
+  local supported_formats=["default","utc"]
+
+  case "$format" in
+    "default" ) date -d @$unixtime_s;;
+    "utc"     ) date -ud "@$unixtime_s" +'%Y-%m-%d %H:%M:%S';;
+    *         ) echo ERROR: Unrecognized unixtime format: \"$format\". Supported formats: ${supported_formats[*]} >&2; return 1;;
+  esac
 }
 
