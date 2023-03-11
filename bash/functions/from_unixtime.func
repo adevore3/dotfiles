@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Using date, convert unixtime to datetime
 function from_unixtime() {
