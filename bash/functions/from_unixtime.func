@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Using date, convert unixtime to datetime
-function convert_unixtime() {
+function from_unixtime() {
   local __usage="
 This will convert unixtime to datetime
 
-Usage: unixtime [OPTIONS]
+Usage: from_unixtime [OPTIONS]
 
 OPTIONS:
   -f, --format <string>        The format of the datetime, defaults to whatever date's default is
@@ -13,9 +13,9 @@ OPTIONS:
 
 EXAMPLES:
 
-  convert_unixtime 1678255821
+  from_unixtime 1678255821
 
-  convert_unixtime -f utc 1678255821
+  from_unixtime -f utc 1678255821
 "
 
   while [[ $# -gt 1 ]] || [[ "$1" =~ ^-{1,2}.* ]]; do
@@ -58,7 +58,7 @@ EXAMPLES:
     esac
   fi
 
-  format=${format:-default}
+  local format=${format:-default}
   local supported_formats=["default","utc"]
 
   case "$format" in
