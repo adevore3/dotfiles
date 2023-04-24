@@ -65,3 +65,6 @@ set -x
 # If something fails in the script, the whole program dies.
 set -e
 
+# Remove color codes
+sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ,emr-legacy-index-salary-prod > ,tmp
+

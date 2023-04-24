@@ -25,3 +25,6 @@ jq '.jobs[0] | keys'
 # Sort by key and list only keys
 cat <file> | jq '.jobs|=sort_by(.company) | .jobs[].company' | less
 
+# Sort all keys
+cat ,app_557345 | jq -S .SparkProperties | less
+
