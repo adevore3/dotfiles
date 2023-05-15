@@ -21,6 +21,9 @@ function install_cheat() {
     echo "  Unable to install cheat, 'go' not available (hash go)"
     echo "  Check installation doc for more options: https://github.com/cheat/cheat/blob/master/INSTALLING.md"
   fi
+
+  cd $DOTFILES/cheat/cheatsheets/
+  git clone https://github.com/cheat/cheatsheets community
 }
 
 function install_autojump() {
@@ -43,7 +46,6 @@ function apt_install_template() {
 }
 
 echo "Installing various commands"
-apt_install_template "clipit"
 apt_install_template "cowsay"
 apt_install_template "figlet"
 apt_install_template "fortune"
@@ -57,8 +59,10 @@ apt_install_template "tree"
 apt_install_template "vim"
 apt_install_template "wget"
 
-installing_template "cheat" install_cheat
+export DOTFILES=${DOTFILES:-/home/$(whoami)/dotfiles}
+
 installing_template "autojump" install_autojump
+installing_template "cheat" install_cheat
 
 echo "Installing tmux plugins"
 install_tmux_plugins
@@ -67,4 +71,5 @@ echo 'Things that may manually need installing/updating:'
 echo '  * Brave Browser: https://brave.com/linux/'
 echo '  * Update gitignore: concat_multiple_gitignores'
 echo '  * Set .localrc per host'
+echo '  * Verify autojump, cheat & tmux works'
 
