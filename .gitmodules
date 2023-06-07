@@ -47,3 +47,6 @@
 [submodule "indeed"]
 	path = indeed
 	url = git@code.corp.indeed.com:adevore/indeed-dotfiles
+[submodule "cheat/cheatsheets/community"]
+	path = cheat/cheatsheets/community
+	url = https://github.com/cheat/cheatsheets
