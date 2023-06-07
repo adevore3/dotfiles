@@ -55,7 +55,7 @@ cheatpaths:
 
   # Work
   - name: indeed
-    path: ~/dotfiles/indeed/cheat/cheats
+    path: ~/dotfiles/indeed/cheat/cheatsheets
     tags: [ indeed ]
     readonly: false
 
