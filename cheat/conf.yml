@@ -60,9 +60,9 @@ cheatpaths:
     readonly: false
 
   # Personal
-  - name: general
-    path: ~/dotfiles/cheat/cheats
-    tags: [ general ] # these tags will be applied to all sheets on the path
+  - name: personal
+    path: ~/dotfiles/cheat/cheatsheets/personal
+    tags: [ personal ] # these tags will be applied to all sheets on the path
     readonly: false
 
   # While it requires no configuration here, it's also worth noting that
