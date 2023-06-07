@@ -1,6 +1,0 @@
-# Grab 1 minute of log entries matching 'dratCreateCandidate'
-time glog dratCreateCandidate '1 minute ago' 'now' > ,test
-
-# Help screen
-glog -h
-

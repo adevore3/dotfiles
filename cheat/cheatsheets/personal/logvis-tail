@@ -1,6 +1,0 @@
-# Getting help
-logvis-tail --help
-
-# Getting warn and error logs for last 96 hours from prod
-time logvis-tail --env prod --app ActivitySourcingCoordinatorDaemon --log-levels=WARN,ERROR -s '96 hour ago' > ,warns_errors_96_hours_2019_02_28
-
