@@ -1,0 +1,38 @@
+# Enter interactive mode
+bluetoothctl
+
+# Help
+bluetoothctl help
+
+bluetoothctl power off
+bluetoothctl power on
+
+# Find specific device
+bluetoothctl devices | grep Mpow
+
+bluetoothctl pair 50:18:12:84:9B:5D
+
+bluetoothctl connect 50:18:12:84:9B:5D
+
+
+# misc
+bluetoothctl show 6F:4D:AD:3D:34:D1
+
+bluetoothctl list
+
+bluetoothctl disconnect 50:18:12:84:9B:5D
+
+bluetoothctl scan on
+
+## Debugging issues
+
+# Tail service to find issue
+journalctl -u bluetooth.service -f
+
+# helpful article
+# https://askubuntu.com/questions/1172000/a2dp-sink-profile-connect-failed
+sudo apt install pulseaudio-bluetooth
+sudo apt install pulseaudio-module-bluetooth
+sudo killall pulseaudio
+pulseaudio --start
+
