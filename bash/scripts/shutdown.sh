@@ -7,11 +7,11 @@ kill_process() {
     echo INFO $process not currently running
   else
     echo INFO Killing $process
-    sudo kill $process_id
+    killall $process
   fi
 }
 
-kill_process brave-browser
+kill_process brave
 kill_process idea
 kill_process google
 kill_process firefox
@@ -21,5 +21,5 @@ kill_process postman
 sleep 3
 
 echo INFO Shutting down
-sudo shutdown -r now
+sudo shutdown now
 
