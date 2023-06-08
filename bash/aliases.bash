@@ -96,7 +96,13 @@ alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | so
 alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
 alias sudo_kill_process=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 
-alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee ,filesperdirectory | tail"
+# bluetoothctl
+alias bluedev='bluetoothctl devices'
+alias bluecon=$'f(){ bluetoothctl connect $(bluetoothctl devices | grep -i $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias bluedis=$'f(){ bluetoothctl disconnect $(bluetoothctl devices | grep -i $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias bluecm='bluecon Mpow'
+alias bluedm='bluedis Mpow'
+
 
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
