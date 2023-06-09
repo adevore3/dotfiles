@@ -1,10 +1,10 @@
 # ls aliases
-alias l1='ls -1'
 alias l='ls -a'
 alias la='ls -AF'
+alias ll.='ls -ld .[!.]?*' # list hidden files
 alias ll='ls -al'
-alias llh='ls -ld .[!.]?*' # list hidden files
-alias lls='ls -ld .?* | grep "\->"' # list symlinks
+alias llh='ls -alh'
+alias llsym='ls -ld .?* | grep "\->"' # list symlinks
 alias ls='ls -G'
 alias sl=ls
 
