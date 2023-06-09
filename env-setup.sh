@@ -47,11 +47,13 @@ function apt_install_template() {
 
 echo "Installing various commands"
 apt_install_template "cowsay"
+apt_install_template "diodon"
 apt_install_template "figlet"
 apt_install_template "fortune"
 apt_install_template "htop"
 apt_install_template "httpie"
 apt_install_template "jq"
+apt_install_template "net-tools"
 apt_install_template "rename"
 apt_install_template "silversearcher-ag"
 apt_install_template "tmux"
