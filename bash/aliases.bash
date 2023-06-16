@@ -85,8 +85,6 @@ alias vgd='vi `git diff --name-only`'
 alias vil='vi !$'
 alias vilc='vi $(fc -s)'
 alias watch='watch -c '
-alias work_start='$DOTFILES/bash/scripts/startup.sh'
-alias work_stop='$DOTFILES/bash/scripts/shutdown.sh'
 alias xclipf='xclip -sel clip'
 
 # misc long names
