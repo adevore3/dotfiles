@@ -15,12 +15,13 @@ function installing_template() {
 }
 
 function install_cheat() {
-  if hash go 2>/dev/null; then
-    go install github.com/cheat/cheat/cmd/cheat@latest
-  else
-    echo "  Unable to install cheat, 'go' not available (hash go)"
-    echo "  Check installation doc for more options: https://github.com/cheat/cheat/blob/master/INSTALLING.md"
-  fi
+  echo "  Installing cheat version 4.4.0. For latest version check out https://github.com/cheat/cheat/blob/master/INSTALLING.md"
+
+  cd /tmp \
+    && wget https://github.com/cheat/cheat/releases/download/4.4.0/cheat-linux-amd64.gz \
+    && gunzip cheat-linux-amd64.gz \
+    && chmod +x cheat-linux-amd64 \
+    && sudo mv cheat-linux-amd64 /usr/local/bin/cheat
 
   cd $DOTFILES/cheat/cheatsheets/
   git clone https://github.com/cheat/cheatsheets community
