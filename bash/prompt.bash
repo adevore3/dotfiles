@@ -14,7 +14,7 @@ function prompt() {
     local n_commands="\!"
     local vm="$(hostnamectl | sed -n '2p' | awkp 3)"
     if [ "$vm" = "computer-vm" ]; then
-      vm=" $vm"
+      vm=" ${underline_orange}${bold_orange}$vm${normal}"
     else
       vm=""
     fi
