@@ -22,7 +22,7 @@ EXAMPLES:
     opt="$1"
     shift;
     current_arg="$1"
-    if [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+    if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
       echo "WARN: You may have left an argument blank. Double check your command"
       return 1
     fi
