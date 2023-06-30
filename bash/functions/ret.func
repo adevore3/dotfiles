@@ -34,8 +34,7 @@ EXAMPLES:
     esac
   done
 
-  local args=("${@}")
-  local joined_arguments=$(IFS=- ; echo "${args[*]}")
+  local joined_arguments=$(join_by - $@)
 
   if [ -z "$joined_arguments" ]; then
     cat /tmp/capture.out
