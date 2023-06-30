@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+function cap() {
+  local __usage="
+This will capture the output of a command to a file in /tmp
+
+Usage: cap [OPTIONS] <strings>
+
+OPTIONS:
+  -h, --help                   Prints this message
+
+EXAMPLES:
+
+  # stores output in default file /tmp/capture.out
+  echo hello world | cap
+
+  # stores output in custom named file /tmp/hello-world1.out
+  echo hello world | cap hello world1
+"
+
+  while [[ "$1" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+    shift;
+    current_arg="$1"
+    if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+      echo "WARN: You may have left an argument blank. Double check your command"
+      return 1
+    fi
+
+    case "$opt" in
+      "-h"|"--help"   ) echo "$__usage"; return 1;;
+      *               ) echo ERROR: Invalid option: \"$opt\" >&2; return 1;;
+    esac
+  done
+
+  local args=("${@}")
+  local joined_arguments=$(IFS=- ; echo "${args[*]}")
+
+  if [ ! -z "$joined_arguments" ]; then
+    tee "/tmp/$joined_arguments.out"
+  else
+    tee /tmp/capture.out
+  fi
+}
+

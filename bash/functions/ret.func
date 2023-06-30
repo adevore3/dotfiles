@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+function ret() {
+  local __usage="
+This will return the output of a command that was captured by cap either from
+the default output file or a custom output file
+
+Usage: ret [OPTIONS] <strings>
+
+OPTIONS:
+  -h, --help                   Prints this message
+
+EXAMPLES:
+
+  # outputs contents of default file /tmp/capture.out
+  ret
+
+  # outputs contents of custom named file /tmp/hello-world1.out
+  ret hello world1
+"
+
+  while [[ "$1" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+    shift;
+    current_arg="$1"
+    if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+      echo "WARN: You may have left an argument blank. Double check your command"
+      return 1
+    fi
+
+    case "$opt" in
+      "-h"|"--help"   ) echo "$__usage"; return 1;;
+      *               ) echo ERROR: Invalid option: \"$opt\" >&2; return 1;;
+    esac
+  done
+
+  local args=("${@}")
+  local joined_arguments=$(IFS=- ; echo "${args[*]}")
+
+  if [ -z "$joined_arguments" ]; then
+    cat /tmp/capture.out
+  else
+    local file="/tmp/$joined_arguments.out"
+    if [ -f "$file" ]; then
+      cat "$file"
+    else
+      local partial_match_file=$(ls /tmp/*.out | grep $joined_arguments | head -n 1)
+      if [ -z "$partial_match_file" ]; then
+        echo ERROR: Unable to find an output file in /tmp matching $joined_arguments
+      else
+        cat $(ls /tmp/*.out | grep $joined_arguments | head -n 1)
+      fi
+    fi
+  fi
+}
+
