@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+function save_to_clipboard() {
+  if [ ! -x "$(command -v xclip)" ]; then
+    echo ERROR: 'xclip' not found
+    return 1
+  fi
+
+  local __usage="
+NAME:
+  save_to_clipboard - read from stdin, save to clipboard and output to stdout
+
+SYNOPSIS
+  save_to_clipboard [OPTIONS]... [FILE]...
+
+OPTIONS:
+  -h, --help       Prints this message
+  -q, --quiet      Saves to standard clipboard & suppresses output
+
+EXAMPLES:
+  save_to_clipboard -h
+
+  echo hello world | save_to_clipboard
+
+  echo hello world | save_to_clipboard -q
+"
+
+  if (( $# == 0 )); then
+    tee >(xclip -selection c) < /dev/stdin
+  else
+    while [[ "$1" =~ ^-{1,2}.* ]]; do
+      opt="$1"
+      shift;
+      current_arg="$1"
+      if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+        echo "WARN: You may have left an argument blank. Double check your command"
+        return 1
+      fi
+
+      case "$opt" in
+        "-h"|"--help")
+          echo "$__usage"
+          return 1;;
+        "-q"|"--quiet")
+          xclip -selection c < /dev/stdin
+          return 1;;
+        *)
+          echo ERROR: Invalid option: \"$opt\" >&2
+          return 1;;
+      esac
+    done
+  fi
+}
+
