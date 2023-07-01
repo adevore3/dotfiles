@@ -3,15 +3,18 @@
 # Using date, convert unixtime to datetime
 function from_unixtime() {
   local __usage="
-This will convert unixtime to datetime
+NAME:
+  from_unixtime - convert from unixtime to datetime
 
-Usage: from_unixtime [OPTIONS]
+SYNOPSIS:
+  from_unixtime [OPTIONS]...
 
 OPTIONS:
   -f, --format <string>        The format of the datetime, defaults to whatever date's default is
   -h, --help                   Prints this message
 
 EXAMPLES:
+  from_unixtime -h
 
   from_unixtime 1678255821
 
