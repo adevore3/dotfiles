@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# todo
+function source_dotfiles_file() {
+  local commands=(
+    "(cd $DOTFILES && git status --porcelain --ignore-submodules | egrep -v \"(cheatsheets|scripts|vimrc)\" | awk '{print \$2}' | sed \"s|^|$DOTFILES/|\") | sort"
+    "(cd $INDEED_DOTFILES && git status --porcelain --ignore-submodules | egrep -v \"(cheatsheets|scripts)\" | awk '{print \$2}' | sed \"s|^|$INDEED_DOTFILES/|\") | sort"
+  )
+
+  local final_command=""
+  for index in "${!commands[@]}"; do
+    local command="${commands[$index]}"
+    if [ -z "$final_command" ]; then
+      final_command="$command"
+    else
+      final_command="$final_command; $command"
+    fi
+  done
+
+  select_from_options "$final_command"
+
+  local desired_command=$(ret select_from_options)
+
+  source $desired_command
+}
+
