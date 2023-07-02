@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # List node scripts matching grep and execute the selected script
+# todo: replace with select_from_options when ready to test
 function execute_node_scripts_grep() {
   if [ $# -ne 1 ]; then
     echo "ERROR: Must specifiy a pattern to match"

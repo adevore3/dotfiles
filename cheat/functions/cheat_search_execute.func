@@ -9,41 +9,9 @@ function cheat_search_execute() {
 
   local pattern=$1
 
-  # Builds an array from output of command
-  mapfile -t commands < <( cheat -s $pattern | egrep -v "^[[:space:]]*$" | grep -v "\\#" | egrep "^[[:space:]]{1,}" | sed 's/^[[:space:]]*//' )
+  select_from_options "cheat -s $pattern | egrep -v \"^[[:space:]]*$\" | grep -v \"\\#\" | egrep \"^[[:space:]]{1,}\" | sed 's/^[[:space:]]*//' | egrep '^$pattern'"
 
-  local size=${#commands[@]}
-
-  if [ $size -eq 0 ]; then
-    echo "No cheetsheets found containing \"$pattern\""
-    return 0
-  fi
-
-  echo "Found $size commands."
-
-  for index in "${!commands[@]}"; do
-    local position=$(( $index + 1 ))
-    printf "\t%s)\t%s\n" "$position" "${commands[$index]}"
-  done
-
-  local desired_position=1
-  local number_regex='^[0-9]+$'
-  while :; do
-    echo
-    read -p "Please enter a number between 1 and $size for the desired command: " number
-
-    [[ $number =~ $number_regex ]] || { echo "Please enter a valid number"; continue; }
-
-    if ((number >= 1 && number <= $size)); then
-      desired_position=$number
-      break
-    else
-      echo "ERROR: Number out of range, please try again"
-    fi
-  done
-
-  local desired_index=$(( $desired_position - 1 ))
-  local desired_command=${commands[$desired_index]}
+  local desired_command=$(ret select_from_options)
 
   echo
   echo "Executing '$desired_command'"
