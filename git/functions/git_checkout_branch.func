@@ -9,7 +9,7 @@ function git_checkout_branch() {
 
   local pattern=$1
 
-  select_from_options "git branch | grep -i $pattern | egrep -v '\* ' | sed -e 's/^[ \t]*//' "
+  select_from_options -d "git branch | grep -i $pattern | egrep -v '\* ' | sed -e 's/^[ \t]*//' "
 
   local desired_branch=$(ret select_from_options)
 
