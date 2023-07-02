@@ -19,6 +19,6 @@ function cheat_execute() {
 
   echo -n "$desired_command" | save_to_all_clipboards
 
-  eval ${desired_command}
+  eval $desired_command
 }
 

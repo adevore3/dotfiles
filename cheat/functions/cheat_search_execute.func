@@ -17,6 +17,6 @@ function cheat_search_execute() {
   echo "Executing '$desired_command'"
   echo
 
-  eval ${desired_command}
+  eval $desired_command
 }
 
