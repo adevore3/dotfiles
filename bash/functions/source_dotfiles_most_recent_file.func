@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# todo
+function source_dotfiles_most_recent_file() {
+  local most_recent_file=$(
+    (
+      (cd $DOTFILES && git status -s --ignore-submodules | awk '{print $2}' | sed "s|^|$DOTFILES/|g"); \
+      (cd $INDEED_DOTFILES && git status -s --ignore-submodules | awk '{print $2}' | sed "s|^|$INDEED_DOTFILES/|g")
+    ) \
+    | while read file; do echo $(stat -c %y $file) $file; done \
+    | sort -r \
+    | head -n1 \
+    | awk '{print $4}')
+
+  source $most_recent_file
+}
+
