@@ -2,7 +2,8 @@
 
 function save_to_tmux_clipboard() {
   if { [ -z "$TMUX" ] || [ -z "$TMUX_PANE" ]; } then
-    echo ERROR: Not in a tmux session
+    echo WARN: Not in a tmux session
+    cat
   fi
 
   local __usage="

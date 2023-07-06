@@ -2,8 +2,8 @@
 
 function save_to_clipboard() {
   if [ ! -x "$(command -v xclip)" ]; then
-    echo ERROR: 'xclip' not found
-    return 1
+    echo WARN: 'xclip' not found
+    cat
   fi
 
   local __usage="
