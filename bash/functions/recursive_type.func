@@ -1,24 +1,28 @@
 #!/bin/bash
 
-# Recursively runs type on a given word
+# Recursively runs type on a given command
 function recursive_type() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: Word not given"
+    echo ERROR: Command not given
     return 1
   fi
 
-  local word=$1
-  local type_output=$(type $word 2>&1)
-  if [[ $(echo $type_output | grep "$word is aliased to") ]]; then
-    echo $type_output
+  local command=$1
+  local type_output=$(type $command 2>&1)
+  if [[ $(echo $type_output | grep "$command is aliased to") ]]; then
     echo
+    echo $type_output
 
-    local aliased_command_output=$(echo $type_output | grep aliased | awkp 5 | sed "s/['\`]//g")
+    local aliased_command_output=$(echo $type_output | grep aliased | awk '{print $5}' | sed "s/['\`]//g")
 
     recursive_type $aliased_command_output
 
+  elif [[ $(echo $type_output | grep "$command is a function") ]]; then
+    echo
+    type $command
+
   else
-    type $word
+    return 0
 
   fi
 }
