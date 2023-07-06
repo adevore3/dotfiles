@@ -2,12 +2,15 @@
 
 function cap() {
   local __usage="
-This will capture the output of a command to a file in /tmp
+NAME
+  cap - read from standard input and write to standard output and a file in /tmp
 
-Usage: cap [OPTIONS] <strings>
+SYNOPSIS
+  cap [OPTIONS]... <strings>...
 
 OPTIONS:
   -h, --help                   Prints this message
+  -q, --quiet                  Suppresses output
 
 EXAMPLES:
 
@@ -16,29 +19,37 @@ EXAMPLES:
 
   # stores output in custom named file /tmp/hello-world1.out
   echo hello world | cap hello world1
+
+  # stores output in custom named file /tmp/hello-world1.out and suppresses output
+  echo hello world | cap -q hello world1
 "
 
   while [[ "$1" =~ ^-{1,2}.* ]]; do
     opt="$1"
     shift;
-    current_arg="$1"
-    if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-      echo "WARN: You may have left an argument blank. Double check your command"
-      return 1
-    fi
-
     case "$opt" in
-      "-h"|"--help"   ) echo "$__usage"; return 1;;
-      *               ) echo ERROR: Invalid option: \"$opt\" >&2; return 1;;
+      "-h"|"--help")
+        echo "$__usage"
+        return 0;;
+      "-q"|"--quiet")
+        local quiet=yes;;
+      *)
+        echo ERROR: Invalid option: \"$opt\" >&2
+        return 1;;
     esac
   done
 
   local joined_arguments=$(join_by - $@)
 
+  local file="/tmp/capture.out"
   if [ ! -z "$joined_arguments" ]; then
-    tee "/tmp/$joined_arguments.out"
+    file="/tmp/$joined_arguments.out"
+  fi
+
+  if [ "$quiet" == "yes" ]; then
+    tee $file >/dev/null
   else
-    tee /tmp/capture.out
+    tee $file
   fi
 }
 
