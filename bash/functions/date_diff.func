@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Get the diff between two dates in seconds
+function date_diff() {
+  if [ $# -ne 2 ]; then
+    echo "ERROR: No dates specified"
+    return 1
+  fi
+
+  local res=$(( $(date -d "$1" +"%s") - $(date -d "$2" +"%s") ))
+
+  res=${res#-}
+
+  echo ${res}s
+  date -d@${res} -u +%H:%M:%S
+}
+
