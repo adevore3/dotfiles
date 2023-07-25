@@ -49,8 +49,8 @@ autocmd BufRead,BufNewFile *.xpl set filetype=perl syntax=perl
 autocmd BufRead,BufNewFile *.tap set filetype=perl syntax=perl
 autocmd BufRead,BufNewFile *.psgi set filetype=perl syntax=perl
 autocmd BufRead,BufNewFile *.ddl set filetype=sql  syntax=sql
-autocmd BufRead,BufNewFile *.func set filetype=sh  syntax=sh
 autocmd BufRead,BufNewFile *.sh set filetype=sh  syntax=sh
+autocmd FileType func setlocal shiftwidth=2 tabstop=2 syntax=sh
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Easy Align Plugin
