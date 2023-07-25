@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Using date, convert datetime to unixtime seconds
+function from_datetime() {
+  local __usage="
+NAME:
+  from_datetime - convert from datetime to unixtime
+
+SYNOPSIS:
+  from_datetime [OPTIONS]...
+
+OPTIONS:
+  -h, --help                   Prints this message
+
+EXAMPLES:
+  from_datetime -h
+
+  from_datetime 2023-07-18T05:01:42.550
+"
+
+  while [[ $# -gt 1 ]] || [[ "$1" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+    shift;
+    current_arg="$1"
+    if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+      echo "WARN: You may have left an argument blank. Double check your command"
+      return 1
+    fi
+
+    case "$opt" in
+      "-h"|"--help"   ) echo "$__usage"; return 1;;
+      *               ) echo ERROR: Invalid option: \"$opt\" >&2; return 1;;
+    esac
+  done
+
+  local datetime=$1
+  date -d "$datetime" +"%s"
+}
+
