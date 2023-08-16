@@ -2,8 +2,9 @@
 
 function save_to_tmux_clipboard() {
   if { [ -z "$TMUX" ] || [ -z "$TMUX_PANE" ]; } then
-    echo WARN: Not in a tmux session
+    #>&2 echo WARN: Not in a tmux session
     cat
+    return 1
   fi
 
   local __usage="
@@ -43,10 +44,10 @@ EXAMPLES:
           return 1;;
         "-q"|"--quiet")
           tmux loadb - < /dev/stdin
-          return 1;;
+          return 0;;
         *)
           echo ERROR: Invalid option: \"$opt\" >&2
-          return 1;;
+          return 0;;
       esac
     done
   fi
