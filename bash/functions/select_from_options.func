@@ -90,7 +90,7 @@ function select_from_options() {
     local desired_option=${options[$desired_index]}
   fi
 
-  echo -n $desired_option | save_to_all_clipboards | cap select_from_options
+  echo -n $desired_option | cap select_from_options
   echo
 }
 
