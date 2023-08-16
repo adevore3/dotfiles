@@ -7,10 +7,18 @@ alias envg='env | grep -i'
 alias hg='history | grep'
 alias jq='jq -C'
 alias ll='ls -al'
+alias llh='ls -alh'
 alias mkcd=$'f(){ mkdir $1; cd $1; unset -f f; }; f'
 alias psg='ps fauxwww | grep -v grep | grep'
 alias vi=$( which vim )
 alias watch='watch -c '
+
+# Highlight all patterns ignoring case
+function highlight() {
+  egrep --color=auto -i "$(IFS=\| ; echo "$*")|\$"
+}
+alias hl='highlight'
+
 
 # Enable vi-mode for command line interface
 set -o vi
@@ -31,9 +39,9 @@ export LESS='-R'
 
 export PS1="\n\! \[\e[0;32m\]$(whoami)@$(hostname)\[\e[39m\]  λ (\w)\n \$ "
 
-cat <<EOF
-###############################################################################
-Custom commands that are repeated per server
-###############################################################################
-EOF
+#cat <<EOF
+################################################################################
+#Custom commands that are repeated per server
+################################################################################
+#EOF
 
