@@ -88,6 +88,7 @@ alias sudo_kill_process=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk
 # function aliases
 alias acg='all_commands_grep'
 alias agx='alias_grep_execute'
+alias calc='calculate'
 alias findg='find_grep'
 alias fu='from_unixtime'
 alias futc='from_unixtime -f utc'
