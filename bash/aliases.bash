@@ -103,8 +103,8 @@ alias skp='sudo_kill_process'
 
 # bluetoothctl
 alias bluedev='bluetoothctl devices'
-alias bluecon=$'f(){ bluetoothctl connect $(bluetoothctl devices | grep -i $1 | awk \'{print $2}\'); unset -f f; }; f'
-alias bluedis=$'f(){ bluetoothctl disconnect $(bluetoothctl devices | grep -i $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias bluecon=$'f(){ bluetoothctl connect $(bluetoothctl devices | grep -i "$1" | awk \'{print $2}\'); unset -f f; }; f'
+alias bluedis=$'f(){ bluetoothctl disconnect $(bluetoothctl devices | grep -i "$1" | awk \'{print $2}\'); unset -f f; }; f'
 alias bluecm='bluecon Mpow'
 alias bluedm='bluedis Mpow'
 
