@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# backup a list of files by appending a suffix to each file
+#
+# usage:
+#
+#   `backup_files .profile .bashrc .localrc`
+function backup_files() {
+  for filename in "$@"; do
+    mv "$filename" "${filename}_bak"
+  done
+}
+
