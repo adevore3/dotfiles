@@ -65,3 +65,6 @@ find . -path "*/.idea/*" -type f
 # To find files and print only the file name
 find src/java/ -type f -printf "%f\n"
 
+# Search for files matching pattern & list sizes in sorted order
+find . -name "*hive*jar" -exec ls -l "{}" \; | sort -k 9
+
