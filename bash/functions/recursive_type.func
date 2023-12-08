@@ -15,7 +15,10 @@ function recursive_type() {
 
     local aliased_command_output=$(echo $type_output | grep aliased | awk '{print $5}' | sed "s/['\`]//g")
 
-    recursive_type $aliased_command_output
+    # avoid infinite loop e.g. ls is aliased to `ls --color=always'
+    if ! [[ $command == $aliased_command_output ]]; then
+      recursive_type $aliased_command_output
+    fi
 
   elif [[ $(echo $type_output | grep "$command is a function") ]]; then
     echo
