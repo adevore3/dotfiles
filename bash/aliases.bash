@@ -80,10 +80,10 @@ alias xclipf='xclip -sel clip'
 
 # misc long names
 alias generic_for_loop=$'f(){ local count=$1; local exp_command=$2; for ((i=1; i<=$count; i++)); do eval $exp_command; done; unset -f f; }; f'
-alias kill_process=$'f(){ kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias kill_process=$'f(){ kill -9 $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
 alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
-alias sudo_kill_process=$'f(){ sudo kill $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
+alias sudo_kill_process=$'f(){ sudo kill -9 $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 
 # function aliases
 alias acg='all_commands_grep'
@@ -97,6 +97,7 @@ alias kp='kill_process'
 alias otp='open_time_picture'
 alias rls='rename_last_screenshot'
 alias rtype='recursive_type'
+alias rtypel=$'rtype $(fc -lnr | sed -n \'2p\' | awk \'{print $1}\')'
 alias sdf='source_dotfiles_file'
 alias sdmrf='source_dotfiles_most_recent_file'
 alias skp='sudo_kill_process'
