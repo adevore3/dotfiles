@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# List a set of profiles to make your default
+# Will exit if no profiles exist
+function aws_copy_profile() {
+  local cred_file="$HOME/.aws/credentials"
+
+  select_from_options "egrep '^\[.*\]$' $cred_file | sed 's/[][]//g' | sort"
+  local desired_profile=$(ret select_from_options)
+
+  local tmp_file="$HOME/.aws/tmp"
+
+  cat $cred_file | grep "$desired_profile" -w -A 5 > $tmp_file
+
+  cat $cred_file >> $tmp_file
+
+  local save_profile_as=$1
+  if ! [ -n "$1" ]; then
+    select_from_options "egrep '^\[.*\]$' $cred_file | grep -wv $desired_profile | sed 's/[][]//g' | sort"
+    save_profile_as=$(ret select_from_options)
+  fi
+
+  # Remove an existing default profile if it exists
+  local default_profile_line=$(cat $tmp_file | grep -n "$save_profile_as")
+  if [[ $default_profile_line =~ "$save_profile_as" ]]; then
+    local line_start=$(echo $default_profile_line | cut -d: -f1)
+    local line_end=$(expr $line_start + 5)
+    sed -i "$line_start,${line_end}d" $tmp_file
+  fi
+
+  sed -i "1s/$desired_profile/$save_profile_as/" $tmp_file
+
+  mv $tmp_file $cred_file
+
+  echo
+  echo "'$save_profile_as' profile has been set to match '$desired_profile'"
+}
+
