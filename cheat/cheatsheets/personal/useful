@@ -68,3 +68,14 @@ set -e
 # Remove color codes
 sed -r "s/\x1B\[(([0-9]{1,2})?(;)?([0-9]{1,2})?)?[m,K,H,f,J]//g" ,emr-legacy-index-salary-prod > ,tmp
 
+# Find missing numbers from a sequence of sorted numbers
+cat emr-cluster-service.log | grep SparkEnv | awk -F "SparkEnvMetrics: " '{print $2}' | transpose-log-entries | grep path= | cut -d_ -f3 | sort > ,app_ids
+
+seq $(head -n1 ,app_ids) $(tail -n1 ,app_ids) | grep -vwFf ,app_ids | wc -l
+
+# Find numbers in a list greater than 99
+cat emr-ibw-service.log | grep SparkEnv | awk -F "SparkEnvMetrics: " '{print $2}' | transpose-log-entries | grep timeEla | cut -d= -f2 | sort -n | awk -F: '{if($1>99)print$1}'
+
+# Get stats of a list of numbers, utilizes alias jqstats
+cat emr-ibw-service.log | grep SparkEnv | awk -F "SparkEnvMetrics: " '{print $2}' | transpose-log-entries | grep timeEla | cut -d= -f2 | tr -d ',' | jqstats
+

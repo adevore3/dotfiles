@@ -34,3 +34,6 @@ tail -f log_file | egrep -i 'error|exception|failed|failed to load translations|
 # Find lines not starting with a certain pattern (in this example 'alias')
 git grep alias | grep -P '^(?:(?!alias).)*$'
 
+# Grep all characters excluding whitespace
+cat ,tmp | egrep -o "spark.yarn.tags=[^ ]*"
+

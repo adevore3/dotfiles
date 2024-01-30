@@ -25,3 +25,6 @@ grep search_string file_of_json | head | \jq .[1].uow.duration | awk '{a+=$1} EN
 # Add line to file after specified text
 awk '/search text, escape special characters/ { print; print "new line"; next }1' input_file > ,tmp && cat ,tmp > input_file && rm ,tmp
 
+# Split on specific string
+log_entry=$(echo "$raw_log" | awk -F "$event_name" '{print $2}')
+
