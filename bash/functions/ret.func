@@ -9,6 +9,8 @@ Usage: ret [OPTIONS] <strings>
 
 OPTIONS:
   -h, --help                   Prints this message
+  -e, --exists                 Returns 'yes' if file exists or 'no' otherwise
+  -d, --date                   Returns modified date of the file
 
 EXAMPLES:
 
@@ -17,6 +19,18 @@ EXAMPLES:
 
   # outputs contents of custom named file /tmp/hello-world1.out
   ret hello world1
+
+  # if any files in /tmp match 'hello' then it will output the contents of that file
+  ret hello
+
+  # returns yes if default file exists
+  ret -e
+
+  # returns yes if /tmp/hello-world.out exists
+  ret -e hello world
+
+  # returns the modified date of /tmp/hello-world.out
+  ret -d hello world
 "
 
   while [[ "$1" =~ ^-{1,2}.* ]]; do
@@ -33,6 +47,12 @@ EXAMPLES:
         echo "$__usage"
         return 1
         ;;
+      "-e"|"--exists")
+        local check_exists="yes"
+        ;;
+      "-d"|"--date")
+        local return_date="yes"
+        ;;
       *)
         >&2 echo ERROR Invalid option: \"$opt\"
         return 1
@@ -40,22 +60,54 @@ EXAMPLES:
     esac
   done
 
-  local joined_arguments=$(join_by - $@)
 
-  if [ -z "$joined_arguments" ]; then
-    cat /tmp/capture.out
-  else
-    local file="/tmp/$joined_arguments.out"
-    if [ -f "$file" ]; then
-      cat "$file"
+  function determine_file() {
+    if [ -z "$joined_arguments" ]; then
+      echo /tmp/capture.out
+
     else
-      local partial_match_file=$(ls /tmp/*.out | grep $joined_arguments | head -n 1)
-      if [ -z "$partial_match_file" ]; then
-        echo ERROR Unable to find an output file in /tmp matching $joined_arguments
+      local file="/tmp/$joined_arguments.out"
+
+      if [ -f "$file" ]; then
+        echo "$file"
       else
-        cat $(ls /tmp/*.out | grep $joined_arguments | head -n 1)
+        local partial_match_file=$(ls /tmp/*.out | grep $joined_arguments | head -n 1)
+        if [ -z "$partial_match_file" ]; then
+          echo ERROR Unable to find an output file in /tmp matching $joined_arguments
+        else
+          echo $(ls /tmp/*.out | grep $joined_arguments | head -n 1)
+        fi
       fi
     fi
+  }
+
+  local joined_arguments=$(join_by - $@)
+
+  local file=$(determine_file $joined_arguments)
+
+  if [ "$check_exists" == "yes" ]; then
+    if [ -f "$file" ]; then
+      echo yes
+    else
+      echo no
+    fi
+
+    return 0
   fi
+
+  if [[ "$file" =~ ^ERROR ]]; then
+    echo $file
+    return 1
+  fi
+
+  if [ "$return_date" == "yes" ]; then
+    date -r $file
+
+    return 0
+  fi
+
+
+  cat $file
 }
+
 
