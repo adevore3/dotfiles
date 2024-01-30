@@ -102,6 +102,12 @@ alias rtypel=$'rtype $(fc -lnr | sed -n \'2p\' | awk \'{print $1}\')'
 alias sdf='source_dotfiles_file'
 alias sdmrf='source_dotfiles_most_recent_file'
 alias skp='sudo_kill_process'
+alias sta='save_to_all_clipboards'
+alias staq='save_to_all_clipboards -q'
+alias stc='save_to_clipboard'
+alias stcq='save_to_clipboard -q'
+alias stt='save_to_tmux_clipboard'
+alias sttq='save_to_tmux_clipboard -q'
 
 # bluetoothctl
 alias bluedev='bluetoothctl devices'
