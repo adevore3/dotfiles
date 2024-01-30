@@ -1,0 +1,69 @@
+#!/bin/bash
+
+function aws_ssm() {
+  local __usage="
+NAME:
+  aws_ssm - ssh into the master instance of a given AWS EMR cluster
+
+SYNOPSIS
+  aws_ssm [OPTIONS]... -c <cluster_name>
+
+OPTIONS:
+  -h, --help       Prints this message
+  -c, --cluster    REQUIRED: Name of the cluster to ssh into if exists in the account specified by profile
+  -p, --profile    Specifies an aws profile or defaults to di-prod-admin
+
+EXAMPLES:
+  aws_ssm -h
+
+  # Profile defaults to di-prod-admin
+  aws_ssm -c emr-di-index-builders
+
+  # Specify an aws profile
+  aws_ssm -p ibw-prod-admin -c emr-ibw
+"
+
+  while [[ "$1" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+    shift
+    current_arg="$1"
+
+    case "$opt" in
+      "-h"|"--help")
+        echo "$__usage"
+        return 0
+        ;;
+      "-p"|"--profile")
+        local aws_profile=$current_arg
+        shift
+        ;;
+      "-c"|"--cluster_name")
+        local cluster_name=$current_arg
+        shift
+        ;;
+      *)
+        >&2 echo ERROR Invalid option: \"$opt\"
+        return 1
+        ;;
+    esac
+  done
+
+  if ! [[ -n $cluster_name ]]; then
+    >&2 echo ERROR Must specify a cluster name
+    return 1
+  fi
+
+  local aws_profile=${aws_profile:-di-prod-admin}
+
+  if [[ $(ret $aws_profile instances | head -c1 | wc -c) -eq 0 ]] || [[ "$(ret $aws_profile instances)" =~ ^ERROR ]]; then
+    aws --profile $aws_profile ec2 describe-instances | cap -q $aws_profile instances
+  fi
+
+  # this is hacky but jq can't handle arguments with dashes and all cluster names have dashes in them
+  instanceIdCommand="ret $aws_profile instances | \jq '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$cluster_name\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\")' | jq -r .InstanceId"
+
+  instanceId=$(eval $instanceIdCommand)
+
+  aws --profile $aws_profile ssm start-session --target $instanceId
+}
+
