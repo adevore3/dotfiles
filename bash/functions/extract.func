@@ -3,7 +3,7 @@
 # Extract any file extension
 function extract() {
   if [ $# -ne 1 ]; then
-    echo ERROR: No file specified
+    echo ERROR No file specified
     return 1
   fi
 
