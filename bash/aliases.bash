@@ -111,7 +111,7 @@ alias sttq='save_to_tmux_clipboard -q'
 
 # bluetoothctl
 alias bluedev='bluetoothctl devices'
-alias bluecon=$'f(){ bluetoothctl connect $(bluetoothctl devices | grep -i "$1" | awk \'{print $2}\'); unset -f f; }; f'
+alias bluecon='bluetooth_connect'
 alias bluedis=$'f(){ bluetoothctl disconnect $(bluetoothctl devices | grep -i "$1" | awk \'{print $2}\'); unset -f f; }; f'
 alias bluecm='bluecon Mpow'
 alias bluedm='bluedis Mpow'
