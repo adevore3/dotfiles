@@ -28,3 +28,6 @@ cat <file> | jq '.jobs|=sort_by(.company) | .jobs[].company' | less
 # Sort all keys
 cat ,app_557345 | jq -S .SparkProperties | less
 
+# Get min, max, average & median of a list of numbers
+cat emr-cluster-service.log | grep SparkEnv | awk -F "SparkEnvMetrics: " '{print $2}' | transpose-log-entries | grep timeElasped | cut -d= -f2 | jq -s '{minimum:min,maximum:max,average:(add/length),median:(sort|if length%2==1 then.[length/2|floor]else[.[length/2-1,length/2]]|add/2 end)}'
+
