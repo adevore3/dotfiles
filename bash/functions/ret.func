@@ -29,8 +29,14 @@ EXAMPLES:
     fi
 
     case "$opt" in
-      "-h"|"--help"   ) echo "$__usage"; return 1;;
-      *               ) echo ERROR: Invalid option: \"$opt\" >&2; return 1;;
+      "-h"|"--help")
+        echo "$__usage"
+        return 1
+        ;;
+      *)
+        >&2 echo ERROR Invalid option: \"$opt\"
+        return 1
+        ;;
     esac
   done
 
