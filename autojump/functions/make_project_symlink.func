@@ -4,7 +4,7 @@
 function make_project_symlink() {
   local repo_file="repo.cfg"
   if [ ! -f $repo_file ]; then
-    echo "ERROR: '$repo_file' does NOT exist, exiting..."
+    echo ERROR '$repo_file' does NOT exist, exiting...
     return 1
   fi
 
@@ -16,7 +16,7 @@ function make_project_symlink() {
   # Create symlink in parent directory
   cd ..
   if [ -d $jira_project_lowercase ]; then
-    echo "ERROR: '$jira_project_lowercase' is already a directory, exiting..."
+    echo ERROR '$jira_project_lowercase' is already a directory, exiting...
     return 1
   fi
 

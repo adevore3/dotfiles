@@ -1,8 +1,10 @@
+#!/bin/bash
+
 # Extract any file extension
 function create_window_with_n_panes() {
   if [ $# -ne 1 ]
   then
-    echo "ERROR: Number of panes not specified."
+    echo ERROR Number of panes not specified.
     return 1
   fi
 
@@ -20,7 +22,7 @@ function create_window_with_n_panes() {
       tmux send-keys -t $i C-z "echo Pane $(expr $i + 1)" C-m
     }
   else
-    echo "ERROR: '$1' is not a valid number."
+    echo ERROR '$1' is not a valid number.
     return 1
   fi
 }

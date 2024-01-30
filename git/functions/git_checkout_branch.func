@@ -3,7 +3,7 @@
 # Git checkout branch containing specified pattern
 function git_checkout_branch() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: Must specifiy a pattern to match"
+    echo ERROR Must specifiy a pattern to match
     return 1
   fi
 

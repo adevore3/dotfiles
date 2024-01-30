@@ -3,7 +3,7 @@
 # List aliases matching grep and execute the selected alias
 function alias_grep_execute() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: Must specifiy a pattern to match"
+    echo ERROR Must specifiy a pattern to match
     return 1
   fi
 

@@ -24,7 +24,7 @@ EXAMPLES:
     shift;
     current_arg="$1"
     if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-      echo "WARN: You may have left an argument blank. Double check your command"
+      echo WARN You may have left an argument blank. Double check your command
       return 1
     fi
 
@@ -51,7 +51,7 @@ EXAMPLES:
     else
       local partial_match_file=$(ls /tmp/*.out | grep $joined_arguments | head -n 1)
       if [ -z "$partial_match_file" ]; then
-        echo ERROR: Unable to find an output file in /tmp matching $joined_arguments
+        echo ERROR Unable to find an output file in /tmp matching $joined_arguments
       else
         cat $(ls /tmp/*.out | grep $joined_arguments | head -n 1)
       fi

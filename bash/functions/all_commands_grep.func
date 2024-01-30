@@ -3,7 +3,7 @@
 # Search aliases, functions & commands for a given expression
 function all_commands_grep() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: Search expression not specified."
+    echo ERROR Search expression not specified.
     return 1
   fi
 

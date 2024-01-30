@@ -4,7 +4,7 @@
 # todo: replace with select_from_options when ready to test
 function execute_node_scripts_grep() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: Must specifiy a pattern to match"
+    echo ERROR Must specifiy a pattern to match
     return 1
   fi
 
@@ -42,7 +42,7 @@ function execute_node_scripts_grep() {
         desired_position=$number
         break
       else
-        echo "ERROR: Number out of range, please try again"
+        echo ERROR Number out of range, please try again
       fi
     done
 

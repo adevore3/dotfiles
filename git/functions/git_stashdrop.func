@@ -3,7 +3,7 @@
 # Drop a stash by index
 function git_stashdrop() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: Stash index not specified."
+    echo ERROR Stash index not specified.
     return 1
   fi
 
@@ -11,7 +11,7 @@ function git_stashdrop() {
   if [[ $1 =~ $regex ]]; then
     git stash drop stash@{$1}
   else
-    echo "ERROR: '$1' is not a valid number."
+    echo ERROR '$1' is not a valid number.
     return 1
   fi
 }

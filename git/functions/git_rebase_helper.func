@@ -3,7 +3,7 @@
 # Squash N commits into 1 commit
 function git_rebase_helper() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: Number of commits to rebase not specified."
+    echo ERROR Number of commits to rebase not specified.
     return 1
   fi
 
@@ -12,7 +12,7 @@ function git_rebase_helper() {
   if [[ $num_commits =~ $regex ]]; then
     git rebase -i HEAD~$num_commits
   else
-    echo "ERROR: '$num_commits' is not a valid number."
+    echo ERROR '$num_commits' is not a valid number.
     return 1
   fi
 }

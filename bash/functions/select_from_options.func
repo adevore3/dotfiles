@@ -25,7 +25,7 @@ function select_from_options() {
     shift;
     current_arg="$1"
     if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-      echo WARN: You may have left an argument blank. Double check your command
+      echo WARN You may have left an argument blank. Double check your command
       return 1
     fi
 
@@ -36,13 +36,13 @@ function select_from_options() {
       "-d"|"--default")
         local default=yes;;
       *)
-        echo ERROR: Invalid option: \"$opt\" >&2
+        echo ERROR Invalid option: \"$opt\" >&2
         return 1;;
     esac
   done
 
   if [ $# -ne 1 ]; then
-    echo ERROR: Must specifiy a command to run
+    echo ERROR Must specifiy a command to run
     return 1
   fi
 
@@ -54,7 +54,7 @@ function select_from_options() {
   local size=${#options[@]}
 
   if [ $size -eq 0 ]; then
-    echo "ERROR: No options found from running \"$command\""
+    echo ERROR No options found from running \"$command\"
     return 0
   fi
 
@@ -82,7 +82,7 @@ function select_from_options() {
         desired_position=$number
         break
       else
-        echo ERROR: Number out of range, please try again
+        echo ERROR Number out of range, please try again
       fi
     done
 

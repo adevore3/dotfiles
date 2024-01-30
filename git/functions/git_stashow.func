@@ -4,7 +4,7 @@
 function git_stashow() {
   if [ $# -ne 1 ]
   then
-    echo "ERROR: Stash index not specified."
+    echo ERROR Stash index not specified.
     return 1
   fi
 
@@ -12,7 +12,7 @@ function git_stashow() {
   if [[ $1 =~ $regex ]] ; then
     git stash show stash@{$1}
   else
-    echo "ERROR: '$1' is not a valid number."
+    echo ERROR '$1' is not a valid number.
     return 1
   fi
 }

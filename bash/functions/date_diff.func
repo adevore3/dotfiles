@@ -3,7 +3,7 @@
 # Get the diff between two dates in seconds
 function date_diff() {
   if [ $# -ne 2 ]; then
-    echo "ERROR: No dates specified"
+    echo ERROR No dates specified
     return 1
   fi
 

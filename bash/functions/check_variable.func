@@ -3,7 +3,7 @@
 # Check if the variable is set
 function check_variable() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: Column # not specified."
+    echo "ERROR Column # not specified."
     return 1
   fi
 

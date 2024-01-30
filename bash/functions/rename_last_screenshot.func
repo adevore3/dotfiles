@@ -9,7 +9,7 @@
 #
 function rename_last_screenshot() {
   if [ $# -lt 1 ]; then
-    echo "ERROR: Must specifiy a new name for the last screenshot"
+    echo ERROR Must specifiy a new name for the last screenshot
     return 1
   fi
 

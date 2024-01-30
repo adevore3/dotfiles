@@ -34,7 +34,7 @@ EXAMPLES:
       "-q"|"--quiet")
         local quiet=yes;;
       *)
-        echo ERROR: Invalid option: \"$opt\" >&2
+        echo ERROR Invalid option: \"$opt\" >&2
         return 1;;
     esac
   done

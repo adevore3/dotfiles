@@ -3,7 +3,7 @@
 # Check for existence of alias in a given file
 function check_aliases() {
   if [ $# -ne 1 ]; then
-    echo "ERROR: No file specified"
+    echo ERROR No file specified
     return 1
   fi
 

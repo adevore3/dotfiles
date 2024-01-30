@@ -3,7 +3,7 @@
 # Recursively runs type on a given command
 function recursive_type() {
   if [ $# -ne 1 ]; then
-    echo ERROR: Command not given
+    echo ERROR Command not given
     return 1
   fi
 

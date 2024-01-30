@@ -34,7 +34,7 @@ EXAMPLES:
       shift;
       current_arg="$1"
       if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-        echo WARN: You may have left an argument blank. Double check your command
+        echo WARN You may have left an argument blank. Double check your command
         return 1
       fi
 
@@ -46,7 +46,7 @@ EXAMPLES:
           tmux loadb - < /dev/stdin
           return 0;;
         *)
-          echo ERROR: Invalid option: \"$opt\" >&2
+          echo ERROR Invalid option: \"$opt\" >&2
           return 0;;
       esac
     done

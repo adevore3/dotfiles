@@ -26,14 +26,14 @@ EXAMPLES:
     shift;
     current_arg="$1"
     if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-      echo "WARN: You may have left an argument blank. Double check your command"
+      echo WARN You may have left an argument blank. Double check your command
       return 1
     fi
 
     case "$opt" in
       "-h"|"--help"   ) echo "$__usage"; return 1;;
       "-f"|"--format" ) local format="$1"; shift;;
-      *               ) echo ERROR: Invalid option: \"$opt\" >&2; return 1;;
+      *               ) echo ERROR Invalid option: \"$opt\" >&2; return 1;;
     esac
   done
 
@@ -42,7 +42,7 @@ EXAMPLES:
     if [[ -p /dev/stdin ]]; then # input from a pipe
         read -r p
     else
-        echo "ERROR: No timestamp given" >&2
+        echo ERROR No timestamp given >&2
         return 1
     fi
   else
@@ -57,7 +57,7 @@ EXAMPLES:
       13 ) unixtime_s=$(echo "($unixtime_clean + 500) / 1000" | bc);;
       16 ) unixtime_s=$(echo "($unixtime_clean + 500000) / 1000000" | bc);;
       19 ) unixtime_s=$(echo "($unixtime_clean + 500000000) / 1000000000" | bc);;
-      *  ) echo ERROR: This only supports Unix timestamps in seconds, milliseconds, microseconds and nanoseconds >&2; return 1;;
+      *  ) echo ERROR This only supports Unix timestamps in seconds, milliseconds, microseconds and nanoseconds >&2; return 1;;
     esac
   fi
 
@@ -67,7 +67,7 @@ EXAMPLES:
   case "$format" in
     "default" ) date -d @$unixtime_s;;
     "utc"     ) date -ud "@$unixtime_s" +'%Y-%m-%d %H:%M:%S';;
-    *         ) echo ERROR: Unrecognized unixtime format: \"$format\". Supported formats: ${supported_formats[*]} >&2; return 1;;
+    *         ) echo ERROR Unrecognized unixtime format: \"$format\". Supported formats: ${supported_formats[*]} >&2; return 1;;
   esac
 }
 

@@ -44,14 +44,14 @@ function cheat_helper() {
       "-x"|"--execute")
         local execute=yes;;
       *)
-        echo ERROR: Invalid option: \"$opt\" >&2
+        echo ERROR Invalid option: \"$opt\" >&2
         return 1;;
     esac
   done
 
 
   if [ $# -ne 1 ]; then
-    echo ERROR: Must specifiy a valid cheatsheet or pattern
+    echo ERROR Must specifiy a valid cheatsheet or pattern
     return 1
   fi
 
