@@ -72,7 +72,7 @@ EXAMPLES:
         echo "$file"
       else
         local partial_match_file=$(ls /tmp/*.out | grep $joined_arguments | head -n 1)
-        if [ -z "$partial_match_file" ]; then
+        if [ -z "$partial_match_file" ] || [ "$partial_match_file" == *"cannot access"* ]; then
           echo ERROR Unable to find an output file in /tmp matching $joined_arguments
         else
           echo $(ls /tmp/*.out | grep $joined_arguments | head -n 1)
