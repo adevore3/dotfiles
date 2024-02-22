@@ -6,17 +6,24 @@ NAME:
   aws_ssm - ssh into the master instance of a given AWS EMR cluster
 
 SYNOPSIS
-  aws_ssm [OPTIONS]... -c <cluster_name>
+  aws_ssm [OPTIONS]...
 
 OPTIONS:
   -h, --help       Prints this message
-  -c, --cluster    REQUIRED: Name of the cluster to ssh into if exists in the account specified by profile
+  -c, --cluster    Name of the cluster to ssh into if exists in the account specified by profile
   -p, --profile    Specifies an aws profile or defaults to di-prod-admin
+  -r, --refresh    Refreshes cache of active clusters' info
 
 EXAMPLES:
   aws_ssm -h
 
-  # Profile defaults to di-prod-admin
+  # Profile defaults to di-prod-admin. Prompts for selection of active cluster names
+  aws_ssm
+
+  # Refreshes cache of active clusters' info
+  aws_ssm -r
+
+  # Attempts to use given cluster name. If cluster not found, then it prompts a selection of active cluster names
   aws_ssm -c emr-di-index-builders
 
   # Specify an aws profile
@@ -37,9 +44,12 @@ EXAMPLES:
         local aws_profile=$current_arg
         shift
         ;;
-      "-c"|"--cluster_name")
-        local cluster_name=$current_arg
+      "-c"|"--cluster")
+        local cluster=$current_arg
         shift
+        ;;
+      "-r"|"--refresh")
+        local refresh="yes"
         ;;
       *)
         >&2 echo ERROR Invalid option: \"$opt\"
@@ -48,19 +58,22 @@ EXAMPLES:
     esac
   done
 
-  if ! [[ -n $cluster_name ]]; then
-    >&2 echo ERROR Must specify a cluster name
-    return 1
-  fi
-
   local aws_profile=${aws_profile:-di-prod-admin}
 
-  if [[ $(ret $aws_profile instances | head -c1 | wc -c) -eq 0 ]] || [[ "$(ret $aws_profile instances)" =~ ^ERROR ]]; then
+  if [[ $(ret -e $aws_profile instances) == "no" ]] || [[ "$refresh" == "yes" ]]; then
+    echo INFO Pulling info for $aws_profile instances
     aws --profile $aws_profile ec2 describe-instances | cap -q $aws_profile instances
   fi
 
+  local desired_cluster=$cluster
+  if [[ -z $(ret di-prod-admin instances | \jq -r '.Reservations[].Instances[] | select(.State.Name == "running" and .Tags[].Key == "aws:elasticmapreduce:instance-group-role" and .Tags[].Value == "MASTER") | .Tags[] | select(.Key == "emr-cluster-name") | .Value' | sort | egrep "^$cluster$") ]]; then
+    echo "WARN Cluster name '$cluster' not found in active clusters"
+    select_from_options "ret $aws_profile instances | \jq -r '.Reservations[].Instances[] | select(.State.Name == \"running\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\") | .Tags[] | select(.Key == \"emr-cluster-name\") | .Value' | sort"
+    desired_cluster=$(ret select_from_options)
+  fi
+
   # this is hacky but jq can't handle arguments with dashes and all cluster names have dashes in them
-  instanceIdCommand="ret $aws_profile instances | \jq '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$cluster_name\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\")' | jq -r .InstanceId"
+  instanceIdCommand="ret $aws_profile instances | \jq '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\")' | jq -r .InstanceId"
 
   instanceId=$(eval $instanceIdCommand)
 
