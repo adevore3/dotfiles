@@ -73,7 +73,8 @@ EXAMPLES:
   fi
 
   # this is hacky but jq can't handle arguments with dashes and all cluster names have dashes in them
-  instanceIdCommand="ret $aws_profile instances | \jq '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\")' | jq -r .InstanceId"
+  # we use head to grab the first cluster matching the name in case there are more than 1 active cluster
+  instanceIdCommand="ret $aws_profile instances | \jq -rc '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\") | .InstanceId' | head -n 1"
 
   instanceId=$(eval $instanceIdCommand)
 
