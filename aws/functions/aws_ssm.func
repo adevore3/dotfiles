@@ -13,6 +13,7 @@ OPTIONS:
   -c, --cluster    Name of the cluster to ssh into if exists in the account specified by profile
   -p, --profile    Specifies an aws profile or defaults to di-prod-admin
   -r, --refresh    Refreshes cache of active clusters' info
+  -t, --type       Specify the instance type, defaults to 'master'
 
 EXAMPLES:
   aws_ssm -h
@@ -25,6 +26,9 @@ EXAMPLES:
 
   # Attempts to use given cluster name. If cluster not found, then it prompts a selection of active cluster names
   aws_ssm -c emr-di-index-builders
+
+  # After selecting a cluster it will ssm into the first core node found
+  aws_ssm -t core
 
   # Specify an aws profile
   aws_ssm -p ibw-prod-admin -c emr-ibw
@@ -51,6 +55,10 @@ EXAMPLES:
       "-r"|"--refresh")
         local refresh="yes"
         ;;
+      "-t"|"--type")
+        local type=$current_arg
+        shift
+        ;;
       *)
         >&2 echo ERROR Invalid option: \"$opt\"
         return 1
@@ -59,6 +67,8 @@ EXAMPLES:
   done
 
   local aws_profile=${aws_profile:-di-prod-admin}
+  local type=${type:-master}
+  type=$(echo $type | tr '[:lower:]' '[:upper:]')
 
   if [[ $(ret -e $aws_profile instances) == "no" ]] || [[ "$refresh" == "yes" ]]; then
     echo INFO Pulling info for $aws_profile instances
@@ -74,9 +84,14 @@ EXAMPLES:
 
   # this is hacky but jq can't handle arguments with dashes and all cluster names have dashes in them
   # we use head to grab the first cluster matching the name in case there are more than 1 active cluster
-  instanceIdCommand="ret $aws_profile instances | \jq -rc '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\") | .InstanceId' | head -n 1"
+  instanceIdCommand="ret $aws_profile instances | \jq -rc '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"$type\") | .InstanceId' | head -n 1"
 
   instanceId=$(eval $instanceIdCommand)
+
+  if [ -z $instanceId ]; then
+    echo "Could not find an instance id for cluster '$desired_cluster' and instance type '$type'"
+    return 1
+  fi
 
   aws --profile $aws_profile ssm start-session --target $instanceId
 }
