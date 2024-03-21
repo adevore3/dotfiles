@@ -82,17 +82,17 @@ EXAMPLES:
     desired_cluster=$(ret select_from_options)
   fi
 
-  # this is hacky but jq can't handle arguments with dashes and all cluster names have dashes in them
-  # we use head to grab the first cluster matching the name in case there are more than 1 active cluster
-  instanceIdCommand="ret $aws_profile instances | \jq -rc '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"$type\") | .InstanceId' | head -n 1"
+  # jq can't handle arguments with dashes and all cluster names have dashes in them
+  # we use select_from_options which gets around this and is useful for choosing core instances
+  select_from_options -d "ret $aws_profile instances | \jq -rc '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"$type\") | .InstanceId'"
 
-  instanceId=$(eval $instanceIdCommand)
+  desired_instance_id=$(ret select_from_options)
 
-  if [ -z $instanceId ]; then
+  if [ -z $desired_instance_id ]; then
     echo "Could not find an instance id for cluster '$desired_cluster' and instance type '$type'"
     return 1
   fi
 
-  aws --profile $aws_profile ssm start-session --target $instanceId
+  aws --profile $aws_profile ssm start-session --target $desired_instance_id
 }
 
