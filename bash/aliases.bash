@@ -2,11 +2,9 @@
 alias l='ls -a'
 alias la='ls -AF'
 alias ll.='ls -ld .[!.]?*' # list hidden files
-alias ll='ls -al'
-alias llh='ls -alh'
+alias ll='ls -alh'
 alias llsym='ls -ld .?* | grep "\->"' # list symlinks
 alias ls='ls -G'
-alias sl=ls
 
 if [ $(uname) = "Linux" ]; then
   alias ls="ls --color=always"
