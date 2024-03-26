@@ -56,6 +56,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
+#Enable kubectl completion
+source <(kubectl completion bash)
+
 # set up for autojump
 [[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
