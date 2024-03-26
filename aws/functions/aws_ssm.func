@@ -72,19 +72,19 @@ EXAMPLES:
 
   if [[ $(ret -e $aws_profile instances) == "no" ]] || [[ "$refresh" == "yes" ]]; then
     echo INFO Pulling info for $aws_profile instances
-    aws --profile $aws_profile ec2 describe-instances | cap -q $aws_profile instances
+    aws --profile $aws_profile ec2 describe-instances --filters "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].{InstanceId:InstanceId,Tags:Tags[*]}" | cap -q $aws_profile instances
   fi
 
   local desired_cluster=$cluster
-  if [[ -z $(ret di-prod-admin instances | \jq -r '.Reservations[].Instances[] | select(.State.Name == "running" and .Tags[].Key == "aws:elasticmapreduce:instance-group-role" and .Tags[].Value == "MASTER") | .Tags[] | select(.Key == "emr-cluster-name") | .Value' | sort | egrep "^$cluster$") ]]; then
+  if [[ -z $(ret $aws_profile instances | \jq .[][] | \jq -rs '.[] | select(.Tags[].Key == "aws:elasticmapreduce:instance-group-role" and .Tags[].Value == "MASTER") | .Tags[] | select(.Key == "emr-cluster-name") | .Value' | sort | egrep "^$cluster$") ]]; then
     echo "WARN Cluster name '$cluster' not found in active clusters"
-    select_from_options "ret $aws_profile instances | \jq -r '.Reservations[].Instances[] | select(.State.Name == \"running\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\") | .Tags[] | select(.Key == \"emr-cluster-name\") | .Value' | sort"
+    select_from_options -d "ret $aws_profile instances | \jq .[][] | \jq -rs '.[] | select(.Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\") | .Tags[] | select(.Key == \"emr-cluster-name\") | .Value' | sort"
     desired_cluster=$(ret select_from_options)
   fi
 
   # jq can't handle arguments with dashes and all cluster names have dashes in them
   # we use select_from_options which gets around this and is useful for choosing core instances
-  select_from_options -d "ret $aws_profile instances | \jq -rc '.Reservations[].Instances[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"$type\") | .InstanceId'"
+  select_from_options -d "ret $aws_profile instances | \jq .[][] | \jq -rs '.[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"$type\") | .InstanceId'"
 
   desired_instance_id=$(ret select_from_options)
 
