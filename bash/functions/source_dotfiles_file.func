@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# todo
+# Choose from a list of modified files in the DOTFILES & INDEED_DOTFILES repo and source it
 function source_dotfiles_file() {
   local commands=(
     "(cd $DOTFILES && git status --porcelain --ignore-submodules | egrep -v \"(cheatsheets|scripts|vimrc)\" | awk '{print \$2}' | sed \"s|^|$DOTFILES/|\") | sort"

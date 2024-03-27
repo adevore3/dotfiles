@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# todo
+# Sources the most recently modified file in the DOTFILES & INDEED_DOTFILES repo
 function source_dotfiles_most_recent_file() {
   local most_recent_file=$(
     (
@@ -12,6 +12,7 @@ function source_dotfiles_most_recent_file() {
     | head -n1 \
     | awk '{print $4}')
 
+  echo INFO source $most_recent_file
   source $most_recent_file
 }
 
