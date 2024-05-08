@@ -53,6 +53,11 @@ EXAMPLES:
       "-d"|"--date")
         local return_date="yes"
         ;;
+      "-f"|"--files") # recently modified files
+        local return_n_files="yes"
+        local num_files="$1"
+        shift
+        ;;
       *)
         >&2 echo ERROR Invalid option: \"$opt\"
         return 1
@@ -106,6 +111,11 @@ EXAMPLES:
     return 0
   fi
 
+  if [ "$return_n_files" == "yes" ]; then
+    cat $(ls -lt /tmp/*.out | sed -n 1,${num_files}p | awk '{print $9}')
+
+    return 0
+  fi
 
   cat $file
 }
