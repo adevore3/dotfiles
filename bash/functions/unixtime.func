@@ -27,9 +27,18 @@ EXAMPLES:
       echo WARN You may have left an argument blank. Double check your command
     fi
     case "$opt" in
-      "-h"|"--help"   ) echo "$__usage"; return 1;;
-      "-f"|"--format" ) local format="$1"; shift;;
-      *               ) echo ERROR Invalid option: \"$opt\" >&2; return 1;;
+      "-h"|"--help"   )
+        echo "$__usage"
+        return 1
+        ;;
+      "-f"|"--format" )
+        local format="$1"
+        shift
+        ;;
+      *)
+        echo ERROR Invalid option: \"$opt\" >&2
+        return 1
+        ;;
     esac
   done
 
