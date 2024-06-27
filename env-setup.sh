@@ -62,7 +62,7 @@ apt_install_template "tree"
 apt_install_template "vim"
 apt_install_template "wget"
 
-export DOTFILES=${DOTFILES:-/home/$(whoami)/dotfiles}
+DOTFILES=${DOTFILES:-$HOME/dotfiles}
 
 installing_template "autojump" install_autojump
 installing_template "cheat" install_cheat
