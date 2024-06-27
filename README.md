@@ -13,8 +13,21 @@ Includes:
 
 This repo contains submodules and an easy way to clone those along with this repo is using the following command
 
+Old way that doesn't seem to work anymore
 ```
-git clone --recurse-submodules <this repo>
+git clone --recurse-submodules git@github.com:adevore3/dotfiles.git
+
+```
+
+New way requires `gh` package. clone command doesn't have an option for submodules
+```
+gh repo clone adevore3/dotfiles
+git submodule update --init --recursive
+```
+
+If submodules don't initialize properly
+```
+git submodule update --init --force --remote
 ```
 
 ## Inspiration
@@ -34,3 +47,4 @@ Dotbot (or this repository) to help other people discover Dotbot.
 [dotbot]: https://github.com/anishathalye/dotbot
 [anishathalye_dotfiles_templates]: https://github.com/anishathalye/dotfiles_template
 [managing_your_dotfiles]: http://www.anishathalye.com/2014/08/03/managing-your-dotfiles/
+
