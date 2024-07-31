@@ -1,0 +1,225 @@
+#!/bin/bash
+
+function modify_partition() {
+  local __usage="
+NAME:
+  modify_partition - Modify the start & end date in a file by the specified
+                     partition. By default it increments the partition value
+                     by 1 for a file named run.sh
+
+SYNOPSIS
+  modify_partition [OPTIONS]...
+
+OPTIONS:
+  -h, --help       Prints this message
+  -y, --year       Modify the year of the start/end date
+  -m, --month      Modify the month of the start/end date
+  -d, --day        Modify the day of the start/end date
+  -hh, --hour      Modify the hour of the start/end date
+  --increase       Increase the selected partition of the start/end date by a given amount
+  --decrease       Decrease the selected partition of the start/end date by a given amount
+
+EXAMPLES:
+  modify_partition -h
+
+  # List start and end date, 1 at a time, and let user specify which partition to increment by 1
+  modify_partition
+
+  # Increment the year by 1 for both the start/end date
+  modify_partition -y
+
+  # Increase hour partition by a given amount
+  modify_partition -hh --increase 10
+
+  # Decrease partition by a given amount, lets user specify which partition
+  modify_partition --decrease 10
+"
+
+  local modify_operator=increase
+  local update_amount=1
+  local file=run.sh
+  while [[ "$1" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+
+    case "$opt" in
+      "-h"|"--help")
+        echo "$__usage"
+        return 0
+        ;;
+      "-y"|"--year")
+        local selected_partition=year
+        shift
+        ;;
+      "-m"|"--month")
+        local selected_partition=month
+        shift
+        ;;
+      "-d"|"--day")
+        local selected_partition=day
+        shift
+        ;;
+      "-hh"|"--hour")
+        local selected_partition=hour
+        shift
+        ;;
+      "--increase")
+        shift
+        local update_amount=$1
+        shift
+        ;;
+      "--decrease")
+        modify_operator=decrease
+        shift
+        local update_amount=$1
+        shift
+        ;;
+      "-f"|"--file")
+        shift
+        file=$1
+        shift
+        ;;
+      *)
+        >&2 echo ERROR Invalid option: \"$opt\"
+        return 1
+        ;;
+    esac
+  done
+
+
+  if [ ! -f "$file" ]; then
+    echo "ERROR Expected file '$file' to exist"
+    return 1
+  fi
+
+  function modify_value() {
+    local operator=$1
+    local value=$2
+    local amount=$3
+    case "$operator" in
+      "increase")
+        echo $(expr $value + $amount)
+        ;;
+      "decrease")
+        echo $(expr $value - $amount)
+        ;;
+      *)
+        >&2 echo ERROR Invalid operator: \"$opt\"
+        return 1
+        ;;
+    esac
+  }
+
+  function leading_zero_fill() {
+    # print the number as a string with a given number of leading zeros
+    printf "%0$1d" "$2"
+  }
+
+  function update_date() {
+    local search_str=$1
+
+    date_str=$(cat $file | fgrep "$search_str" | cut -d= -f2)
+    regex="([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):[0-9]{2}:[0-9]{2}"
+
+    if [[ "$date_str" =~ $regex ]]; then
+      local original_date="${BASH_REMATCH[0]}"
+
+      local partitions=( year month day hour )
+      local partition_values=()
+      local max_length=0
+      local desired_index=-1
+      for index in "${!partitions[@]}"; do
+        # save partition values
+        partition_values+=(${BASH_REMATCH[$(( $index + 1 ))]})
+
+        local current_partition="${partitions[$index]}"
+        if [ "$current_partition" == "$selected_partition" ]; then
+          desired_index=$index
+        fi
+
+        local previous=$max_length
+        local current=$(expr length "${partitions[$index]}")
+        max_length=$(( $previous > $current ? $previous : $current ))
+      done
+
+      local desired_partition="no partition selected"
+      if [ $desired_index == -1 ]; then
+        local size=${#partitions[@]}
+        echo Found $size partition options.
+
+        # Check if an option has already been selected via arguments
+        local number_regex='^[0-9]+$'
+        local desired_position=0
+        if [[ $1 =~ $number_regex ]]; then
+          echo Option $1 selected.
+          desired_position=$1
+        fi
+
+        for index in "${!partitions[@]}"; do
+          local position=$(( $index + 1 ))
+          local current_partition=${partitions[$index]}
+          local partition_value=${partition_values[$index]}
+          printf "\t%2s) %-${max_length}s %s\n" "$position" "$current_partition" "$partition_value"
+        done
+
+        while [ $desired_position -eq 0 ]; do
+          echo
+          read -p "Please enter a number between 1 and $size for the desired partition: " number
+          [[ $number =~ $number_regex ]] || {
+            echo Please enter a valid number
+            continue
+          }
+          if ((number >= 1 && number <= $size)); then
+            desired_position=$number
+            break
+          else
+            echo WARN Number out of range, please try again
+          fi
+        done
+
+        desired_index=$(( $desired_position - 1 ))
+      fi
+
+      # select desired partition & partition value
+      desired_partition=${partitions[$desired_index]}
+
+      local partition_value=${partition_values[$desired_index]}
+
+      # increment partition value
+      local updated_partition_value=$(modify_value $modify_operator $partition_value $update_amount)
+
+      # create new date w/ update partition value
+      local new_date=""
+      for index in "${!partitions[@]}"; do
+        if [[ $index == $desired_index ]]; then
+          # only concerned with adding leading zeros to partition values that are single digit
+          # e.g. not year value
+          new_date+=$(leading_zero_fill 2 $updated_partition_value)
+        else
+          new_date+=${partition_values[$index]}
+        fi
+
+        if [[ $index < 2 ]]; then
+          new_date+="-"
+        elif [[ $index == 2 ]]; then
+          new_date+="T"
+        else
+          new_date+=":"
+        fi
+
+      done
+      new_date+="00:00"
+
+      echo old $search_str $original_date
+      echo new $search_str $new_date
+
+      #echo sed -i "s/$search_str\"$original_date/$search_str\"$new_date/g" $file
+      sed -i "s/$search_str\"$original_date/$search_str\"$new_date/g" $file
+
+    else
+      echo "ERROR Could not find a '$search_str' string"
+    fi
+  }
+
+  update_date "start="
+  update_date "end="
+}
