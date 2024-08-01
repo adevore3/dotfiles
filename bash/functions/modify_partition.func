@@ -18,6 +18,7 @@ OPTIONS:
   -hh, --hour      Modify the hour of the start/end date
   --increase       Increase the selected partition of the start/end date by a given amount
   --decrease       Decrease the selected partition of the start/end date by a given amount
+  -f, --file       Specify file, defaults to run.sh
 
 EXAMPLES:
   modify_partition -h
@@ -33,6 +34,9 @@ EXAMPLES:
 
   # Decrease partition by a given amount, lets user specify which partition
   modify_partition --decrease 10
+
+  # Specify file name
+  modify_partition -d -f run_custom.sh
 "
 
   local modify_operator=increase
