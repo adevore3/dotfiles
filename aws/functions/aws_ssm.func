@@ -59,12 +59,22 @@ EXAMPLES:
         local type=$current_arg
         shift
         ;;
+      "-v"|"--verbose")
+        local verbose="yes"
+        ;;
       *)
         >&2 echo ERROR Invalid option: \"$opt\"
         return 1
         ;;
     esac
   done
+
+  function log_debug() {
+    local msg=$1
+    if [[ "$verbose" == "yes" ]]; then
+      echo DEBUG $msg
+    fi
+  }
 
   local aws_profile=${aws_profile:-di-prod-admin}
   local type=${type:-master}
@@ -89,10 +99,11 @@ EXAMPLES:
   desired_instance_id=$(ret select_from_options)
 
   if [ -z $desired_instance_id ]; then
-    echo "Could not find an instance id for cluster '$desired_cluster' and instance type '$type'"
+    echo "ERROR Could not find an instance id for cluster '$desired_cluster' and instance type '$type'"
     return 1
   fi
 
+  log_debug "aws --profile $aws_profile ssm start-session --target $desired_instance_id"
   aws --profile $aws_profile ssm start-session --target $desired_instance_id
 }
 
