@@ -75,6 +75,7 @@
   rebase = false
 [push]
   default = current
+  autoSetupRemote = true
 [stat]
   stat = 200,120
 [status]
