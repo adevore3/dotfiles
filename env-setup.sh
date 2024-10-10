@@ -2,14 +2,16 @@
 
 function installing_template() {
   local program_name=$1;
-  local installation_function=$2;
+  shift
+  local installation_function=$1;
+  shift
 
   echo "Checking for the existence of '$program_name'"
-  if hash $program_name 2>/dev/null; then
+  if hash "$program_name" 2>/dev/null; then
     echo "  '$program_name' already installed, skipping"
   else
     echo "  Installing '$program_name'..."
-    $2 $3
+    $installation_function "$@"
     echo "  Successfully installed '$program_name'"
   fi
 }
@@ -23,27 +25,27 @@ function install_cheat() {
     && chmod +x cheat-linux-amd64 \
     && sudo mv cheat-linux-amd64 /usr/local/bin/cheat
 
-  cd $DOTFILES/cheat/cheatsheets/
+  cd "$DOTFILES/cheat/cheatsheets/" || return 1
   git clone https://github.com/cheat/cheatsheets community
 }
 
 function install_autojump() {
-  cd $DOTFILES/autojump/autojump
+  cd "$DOTFILES/autojump/autojump" || return 1
   ./install.py
 }
 
 function install_tmux_plugins() {
   # Start a session to install plugins
   tmux new -d -s test
-  $DOTFILES/tmux/plugins/tpm/bindings/install_plugins
+  "$DOTFILES/tmux/plugins/tpm/bindings/install_plugins"
   tmux kill-session -t test
 }
 
 function apt_install_template() {
   f() {
-    sudo apt install $1
+    sudo apt install "$1"
   }
-  installing_template $1 f $1
+  installing_template "$1" f "$1"
 }
 
 echo "Installing various commands"
@@ -57,6 +59,7 @@ apt_install_template "jq"
 apt_install_template "net-tools"
 apt_install_template "pv"
 apt_install_template "rename"
+apt_install_template "shellcheck"
 apt_install_template "silversearcher-ag"
 apt_install_template "tmux"
 apt_install_template "tree"
@@ -73,6 +76,7 @@ install_tmux_plugins
 
 echo 'Things that may manually need installing/updating:'
 echo '  * Brave Browser: https://brave.com/linux/'
+echo '  ** Enable Uphold Wallet'
 echo '  * Update gitignore: concat_multiple_gitignores'
 echo '  * Set .localrc per host'
 echo '  * Verify autojump, cheat & tmux works'
