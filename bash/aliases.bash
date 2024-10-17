@@ -3,7 +3,7 @@ alias l='ls -a'
 alias la='ls -AF'
 alias ll.='ls -ld .[!.]?*' # list hidden files
 alias ll='ls -alh'
-alias llsym='ls -ld .?* | grep "\->"' # list symlinks
+alias llsym='ls -lA | grep "\->"' # list symlinks
 alias ls='ls -G'
 
 if [ $(uname) = "Linux" ]; then
