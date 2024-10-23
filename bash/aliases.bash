@@ -116,8 +116,10 @@ alias sttq='save_to_tmux_clipboard -q'
 alias bluedev='bluetoothctl devices'
 alias bluecon='bluetooth_connect'
 alias bluedis=$'f(){ bluetoothctl disconnect $(bluetoothctl devices | grep -i "$1" | awk \'{print $2}\'); unset -f f; }; f'
-alias bluecm='bluecon Mpow'
-alias bluedm='bluedis Mpow'
+alias bluecm='bluecon mpow'
+alias bluecf='bluecon force'
+alias bluedm='bluedis mpow'
+alias bluedf='bluedis force'
 
 
 if [ -x /usr/bin/dircolors ]; then
