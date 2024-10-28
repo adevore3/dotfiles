@@ -15,7 +15,7 @@ function rename_last_screenshot() {
 
   local new_filename=$(IFS=_ ; echo "$*")
 
-  local picture_dir="$HOME/Pictures"
+  local picture_dir="$HOME/Pictures/Screenshots"
 
   # `ls` is aliased so we explicitly use the original `ls` command
   local last_screenshot_filename=$(\ls -t $picture_dir | head -n1)
