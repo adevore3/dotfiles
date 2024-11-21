@@ -66,12 +66,12 @@ EXAMPLES:
         local selected_partition=hour
         shift
         ;;
-      "--increase")
+      "--inc"|"--increase")
         shift
         local update_amount=$1
         shift
         ;;
-      "--decrease")
+      "--dec"|"--decrease")
         modify_operator=decrease
         shift
         local update_amount=$1
@@ -95,128 +95,34 @@ EXAMPLES:
     return 1
   fi
 
-  function modify_value() {
-    local operator=$1
-    local value=$2
-    local amount=$3
-    case "$operator" in
-      "increase")
-        echo $(expr $value + $amount)
-        ;;
-      "decrease")
-        echo $(expr $value - $amount)
-        ;;
-      *)
-        >&2 echo ERROR Invalid operator: \"$opt\"
-        return 1
-        ;;
-    esac
-  }
-
-  function leading_zero_fill() {
-    # print the number as a string with a given number of leading zeros
-    printf "%0$1d" "$2"
-  }
-
   function update_date() {
     local search_str=$1
 
     date_str=$(cat $file | fgrep "$search_str" | cut -d= -f2)
-    regex="([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):[0-9]{2}:[0-9]{2}"
+    regex="([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):[0-9]{2}:[0-9]{2}-[0-9]{2}:[0-9]{2}"
+
 
     if [[ "$date_str" =~ $regex ]]; then
       local original_date="${BASH_REMATCH[0]}"
 
-      local partitions=( year month day hour )
-      local partition_values=()
-      local max_length=0
-      local desired_index=-1
-      for index in "${!partitions[@]}"; do
-        # save partition values
-        partition_values+=(${BASH_REMATCH[$(( $index + 1 ))]})
+      case "$modify_operator" in
+        "increase")
+          local operator_symbol="+"
+          ;;
+        "decrease")
+          local operator_symbol="-"
+          ;;
+        *)
+          >&2 echo ERROR Invalid operator: \"$modify_operator\"
+          return 1
+          ;;
+      esac
 
-        local current_partition="${partitions[$index]}"
-        if [ "$current_partition" == "$selected_partition" ]; then
-          desired_index=$index
-        fi
-
-        local previous=$max_length
-        local current=$(expr length "${partitions[$index]}")
-        max_length=$(( $previous > $current ? $previous : $current ))
-      done
-
-      local desired_partition="no partition selected"
-      if [ $desired_index == -1 ]; then
-        local size=${#partitions[@]}
-        echo Found $size partition options.
-
-        # Check if an option has already been selected via arguments
-        local number_regex='^[0-9]+$'
-        local desired_position=0
-        if [[ $1 =~ $number_regex ]]; then
-          echo Option $1 selected.
-          desired_position=$1
-        fi
-
-        for index in "${!partitions[@]}"; do
-          local position=$(( $index + 1 ))
-          local current_partition=${partitions[$index]}
-          local partition_value=${partition_values[$index]}
-          printf "\t%2s) %-${max_length}s %s\n" "$position" "$current_partition" "$partition_value"
-        done
-
-        while [ $desired_position -eq 0 ]; do
-          echo
-          read -p "Please enter a number between 1 and $size for the desired partition: " number
-          [[ $number =~ $number_regex ]] || {
-            echo Please enter a valid number
-            continue
-          }
-          if ((number >= 1 && number <= $size)); then
-            desired_position=$number
-            break
-          else
-            echo WARN Number out of range, please try again
-          fi
-        done
-
-        desired_index=$(( $desired_position - 1 ))
-      fi
-
-      # select desired partition & partition value
-      desired_partition=${partitions[$desired_index]}
-
-      local partition_value=${partition_values[$desired_index]}
-
-      # increment partition value
-      local updated_partition_value=$(modify_value $modify_operator $partition_value $update_amount)
-
-      # create new date w/ update partition value
-      local new_date=""
-      for index in "${!partitions[@]}"; do
-        if [[ $index == $desired_index ]]; then
-          # only concerned with adding leading zeros to partition values that are single digit
-          # e.g. not year value
-          new_date+=$(leading_zero_fill 2 $updated_partition_value)
-        else
-          new_date+=${partition_values[$index]}
-        fi
-
-        if [[ $index < 2 ]]; then
-          new_date+="-"
-        elif [[ $index == 2 ]]; then
-          new_date+="T"
-        else
-          new_date+=":"
-        fi
-
-      done
-      new_date+="00:00"
+      local new_date=$(TZ=UTC+6 date +"%Y-%m-%dT%H:%M:%S%:z" -d "$original_date $operator_symbol $update_amount $selected_partition")
 
       echo old $search_str $original_date
       echo new $search_str $new_date
 
-      #echo sed -i "s/$search_str\"$original_date/$search_str\"$new_date/g" $file
       sed -i "s/$search_str\"$original_date/$search_str\"$new_date/g" $file
 
     else
@@ -227,3 +133,4 @@ EXAMPLES:
   update_date "start="
   update_date "end="
 }
+
