@@ -70,6 +70,8 @@ alias gst='git status'
 alias gsti='git status --ignore-submodules'
 alias gsu='git submodule update'
 alias gsua='git_submodule_update_all'
+alias gtl='git tag -l'
+alias gtlg='git tag -l | grep'
 alias gup='git pull --rebase --autostash'
 
 alias og='open_git_base_url'
