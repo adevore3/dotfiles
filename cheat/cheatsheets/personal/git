@@ -179,3 +179,6 @@ git reset --soft HEAD~N &&
 git commit
 git push -f
 
+# Show git tags sorted by creation date w/ most recent tags at the bottom
+git for-each-ref --sort=creatordate refs/tags --format '%(creatordate:iso) %(refname:short)' | tail
+
