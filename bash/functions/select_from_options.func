@@ -74,7 +74,7 @@ function select_from_options() {
     local number_regex='^[0-9]+$'
     while :; do
       echo
-      read -p "Please enter a number between 1 and $size for the desired alias: " number
+      read -p "Please enter a number between 1 and $size for the desired option: " number
 
       [[ $number =~ $number_regex ]] || { echo Please enter a valid number; continue; }
 
