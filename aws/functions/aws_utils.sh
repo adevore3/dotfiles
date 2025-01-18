@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Source bash utilities for logging
-# shellcheck source=bash_utils.sh
-source "${DOTFILES}/bash/functions/bash_utils.sh"
+# Source log utilities for logging
+source "${DOTFILES}/bash/functions/log_utils.sh"
 
 # Cache directory for storing instance information
 if [[ ! ${CACHE_DIR+x} ]]; then
