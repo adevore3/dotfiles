@@ -1,5 +1,6 @@
 #!/bin/bash
-#source "${HOME}/dotfiles/bash/functions/bash_utils.sh"
+
+source "${DOTFILES}/aws/functions/aws_utils.sh"
 
 function aws_ssm() {
   local __usage="
@@ -71,8 +72,12 @@ EXAMPLES:
   done
 
   local aws_profile=${aws_profile:-di-prod-admin}
+  if ! validate_aws_profile "$aws_profile"; then
+      return 1
+  fi
+
   local type=${type:-master}
-  type=$(echo $type | tr '[:lower:]' '[:upper:]')
+  type=$(echo "$type" | tr '[:lower:]' '[:upper:]')
 
   if [[ $(ret -e $aws_profile instances) == "no" ]] || [[ "$refresh" == "yes" ]]; then
     log_info "Pulling info for $aws_profile instances"
