@@ -76,12 +76,19 @@ EXAMPLES:
       return 1
   fi
 
+  local valid_types=("MASTER" "CORE" "TASK")
   local type=${type:-master}
   type=$(echo "$type" | tr '[:lower:]' '[:upper:]')
 
+  # Add this validation block
+  if [[ ! " ${valid_types[*]} " =~ " ${type} " ]]; then
+      log_error "Invalid instance type: '$type'. Must be one of: ${valid_types[*],,}"
+      return 1
+  fi
+
   if [[ $(ret -e $aws_profile instances) == "no" ]] || [[ "$refresh" == "yes" ]]; then
     log_info "Pulling info for $aws_profile instances"
-    aws --profile $aws_profile ec2 describe-instances --filters "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].{InstanceId:InstanceId,Tags:Tags[*]}" | cap -q $aws_profile instances
+    aws --profile "$aws_profile" ec2 describe-instances --filters "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].{InstanceId:InstanceId,Tags:Tags[*]}" | cap -q "$aws_profile" instances
   fi
 
   local desired_cluster=$cluster
@@ -103,6 +110,5 @@ EXAMPLES:
   fi
 
   log_debug "aws --profile $aws_profile ssm start-session --target $desired_instance_id"
-  aws --profile $aws_profile ssm start-session --target $desired_instance_id
+  aws --profile "$aws_profile" ssm start-session --target "$desired_instance_id"
 }
-
