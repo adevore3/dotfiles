@@ -71,6 +71,10 @@ EXAMPLES:
     esac
   done
 
+  if [[ "$verbose" == "yes" ]]; then
+    set_log_level_debug
+  fi
+
   local aws_profile=${aws_profile:-di-prod-admin}
   if ! validate_aws_profile "$aws_profile"; then
       return 1
@@ -80,7 +84,6 @@ EXAMPLES:
   local type=${type:-master}
   type=$(echo "$type" | tr '[:lower:]' '[:upper:]')
 
-  # Add this validation block
   if [[ ! " ${valid_types[*]} " =~ " ${type} " ]]; then
       log_error "Invalid instance type: '$type'. Must be one of: ${valid_types[*],,}"
       return 1
@@ -96,13 +99,13 @@ EXAMPLES:
   local desired_cluster=$cluster
   if [[ -z $(ret $aws_profile instances | \jq .[][] | \jq -rs '.[] | select(.Tags[].Key == "aws:elasticmapreduce:instance-group-role" and .Tags[].Value == "MASTER") | .Tags[] | select(.Key == "emr-cluster-name") | .Value' | sort | egrep "^$cluster$") ]]; then
     log_warn "Cluster name '$cluster' not found in active clusters"
-    select_from_options -d "ret $aws_profile instances | \jq .[][] | \jq -rs '.[] | select(.Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\") | .Tags[] | select(.Key == \"emr-cluster-name\") | .Value' | sort"
+    select_from_options -q -d "ret $aws_profile instances | \jq .[][] | \jq -rs '.[] | select(.Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"MASTER\") | .Tags[] | select(.Key == \"emr-cluster-name\") | .Value' | sort"
     desired_cluster=$(ret select_from_options)
   fi
 
   # jq can't handle arguments with dashes and all cluster names have dashes in them
   # we use select_from_options which gets around this and is useful for choosing core instances
-  select_from_options -d "ret $aws_profile instances | \jq .[][] | \jq -rs '.[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"$type\") | .InstanceId' | sort -u"
+  select_from_options -q -d "ret $aws_profile instances | \jq .[][] | \jq -rs '.[] | select(.Tags[].Key == \"emr-cluster-name\" and .Tags[].Value == \"$desired_cluster\" and .Tags[].Key == \"aws:elasticmapreduce:instance-group-role\" and .Tags[].Value == \"$type\") | .InstanceId' | sort -u"
 
   desired_instance_id=$(ret select_from_options)
 
