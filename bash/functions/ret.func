@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2155
 function ret() {
   local __usage="
 This will return the output of a command that was captured by cap either from
@@ -8,9 +9,11 @@ the default output file or a custom output file
 Usage: ret [OPTIONS] <strings>
 
 OPTIONS:
-  -h, --help                   Prints this message
-  -e, --exists                 Returns 'yes' if file exists or 'no' otherwise
-  -d, --date                   Returns modified date of the file
+  -h, --help         Prints this message
+  -e, --exists       Returns 'yes' if file exists or 'no' otherwise
+  -d, --date         Returns modified date of the file
+  -f, --files        Returns the output of N most recently modified outputs of cap command
+  --expired          Returns 'yes' if file is older than the number of seconds provided or 'no' otherwise
 
 EXAMPLES:
 
@@ -31,6 +34,12 @@ EXAMPLES:
 
   # returns the modified date of /tmp/hello-world.out
   ret -d hello world
+
+  # returns output of the first 5 recently modified outputs of cap command
+  ret -f 5
+
+  # returns yes if /tmp/hello-world.out is older than 300 seconds
+  ret --expired 300 hello world
 "
 
   while [[ "$1" =~ ^-{1,2}.* ]]; do
@@ -58,6 +67,11 @@ EXAMPLES:
         local num_files="$1"
         shift
         ;;
+      "--expired")
+        local check_expired="yes"
+        local ttl_sec="$1"
+        shift
+        ;;
       *)
         >&2 echo ERROR Invalid option: \"$opt\"
         return 1
@@ -80,7 +94,7 @@ EXAMPLES:
         if [ -z "$partial_match_file" ] || [ "$partial_match_file" == *"cannot access"* ]; then
           echo ERROR Unable to find an output file in /tmp matching $joined_arguments
         else
-          echo $(ls /tmp/*.out | grep $joined_arguments | head -n 1)
+          ls /tmp/*.out | grep $joined_arguments | head -n 1
         fi
       fi
     fi
@@ -113,6 +127,20 @@ EXAMPLES:
 
   if [ "$return_n_files" == "yes" ]; then
     cat $(ls -lt /tmp/*.out | sed -n 1,${num_files}p | awk '{print $9}')
+
+    return 0
+  fi
+
+  if [ "$check_expired" == "yes" ]; then
+    local cache_time=$(stat -c "%Y" "$file")
+    local current_time=$(date +%s)
+    local age=$((current_time - cache_time))
+
+    if [[ ${age} -lt ${ttl_sec} ]]; then
+      echo no # File has not expired
+    else
+      echo yes
+    fi
 
     return 0
   fi
