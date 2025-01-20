@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Check if a command exists in the system PATH
 #
 # Arguments:
@@ -19,10 +21,11 @@ function check_command_exists() {
   local message=${2:-""}
 
   if [ ! -x "$(command -v $command)" ]; then
-    echo "ERROR '$command' not found"
+    log_error "'$command' not found"
     [ ! -z "$message" ] && echo "$message"
     return 1
   fi
+
   return 0
 }
 
@@ -34,3 +37,4 @@ function check_command_tokentamer_exists() {
 # Export functions
 export -f check_command_exists
 export -f check_command_tokentamer_exists
+

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Import the function to test
+source "${DOTFILES}/bash/functions/log_utils.sh"
 source "${DOTFILES}/bash/functions/select_from_options.func"
 source "${DOTFILES}/bash/functions/test/test_utils.sh"
 
@@ -60,12 +61,12 @@ test_missing_command() {
 }
 
 # Run all tests
-echo "Running select_from_options tests..."
+log_info_test "Running select_from_options tests"
 test_help_flag
 test_invalid_option
 test_default_option
 test_quiet_mode
 test_no_options
 test_missing_command
-echo "All tests passed!"
+log_info_test "All tests passed!"
 

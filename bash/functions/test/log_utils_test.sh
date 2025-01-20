@@ -9,7 +9,7 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 
 # Test functions
 test_log_level_setting() {
-    echo "Testing log level setting..."
+    echo "[INFO] === Testing log level setting ==="
 
     set_log_level 1
     assert_equals "1" "$LOG_LEVEL" "Setting log level to DEBUG (1)"
@@ -30,7 +30,7 @@ test_log_level_setting() {
 }
 
 test_log_formatting() {
-    echo "Testing log message formatting..."
+    echo "[INFO] === Testing log message formatting ==="
 
     local output
 
@@ -57,7 +57,7 @@ test_log_formatting() {
 }
 
 test_log_level_filtering() {
-    echo "Testing log level filtering..."
+    echo "[INFO] === Testing log level filtering ==="
 
     # Test INFO level (should hide debug)
     set_log_level 2
@@ -78,7 +78,7 @@ test_log_level_filtering() {
 }
 
 test_helper_functions() {
-    echo "Testing helper functions..."
+    echo "[INFO] === Testing helper functions ==="
 
     set_log_level_debug
     assert_equals "1" "$LOG_LEVEL" "set_log_level_debug should set level to 1"
@@ -95,7 +95,7 @@ test_helper_functions() {
 
 # Run all tests
 run_tests() {
-    echo "=== Running log_utils.sh tests ==="
+    log_info "=== Running log_utils.sh tests ==="
     echo
 
     test_log_level_setting
@@ -107,8 +107,9 @@ run_tests() {
     test_helper_functions
     echo
 
-    echo "All tests completed successfully!"
+    log_info "All tests completed successfully!"
 }
 
 # Execute tests
 run_tests
+

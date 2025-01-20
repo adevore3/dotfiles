@@ -33,6 +33,21 @@ log_info() {
     fi
 }
 
+# Print informational message for unit tests
+# Arguments:
+#   $1 - Message to print
+log_info_test() {
+    local message="$1"
+    if [[ -z "$message" ]]; then
+        log_error "log_info_test requires a message parameter" >&2
+        return 1
+    fi
+
+    if [[ $LOG_LEVEL -le $INFO ]]; then
+        log_info "=== $message ==="
+    fi
+}
+
 # Print warning message
 # Arguments:
 #   $1 - Message to print
@@ -121,6 +136,7 @@ set_log_level_error() {
 
 # Export functions
 export -f log_info
+export -f log_info_test
 export -f log_warn
 export -f log_error
 export -f log_debug
