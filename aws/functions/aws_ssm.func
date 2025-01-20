@@ -86,7 +86,9 @@ EXAMPLES:
       return 1
   fi
 
-  if [[ $(ret -e $aws_profile instances) == "no" ]] || [[ "$refresh" == "yes" ]]; then
+  if [[ $(ret -e $aws_profile instances) == "no" ]] \
+   || [[ "$refresh" == "yes" ]] \
+   || [[ $(ret --expired 300 $aws_profile instances) == "yes" ]]; then
     log_info "Pulling info for $aws_profile instances"
     aws --profile "$aws_profile" ec2 describe-instances --filters "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].{InstanceId:InstanceId,Tags:Tags[*]}" | cap -q "$aws_profile" instances
   fi
