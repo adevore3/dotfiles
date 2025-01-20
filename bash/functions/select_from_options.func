@@ -1,6 +1,11 @@
 #!/bin/bash
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
+source "${DOTFILES}/bash/functions/save_to_all_clipboards.func"
+source "${DOTFILES}/bash/functions/save_to_clipboard.func"
+source "${DOTFILES}/bash/functions/save_to_tmux_clipboard.func"
+source "${DOTFILES}/bash/functions/cap.func"
+source "${DOTFILES}/bash/functions/join_by.func"
 
 function select_from_options() {
   local __usage="
@@ -38,7 +43,7 @@ function select_from_options() {
       "-q"|"--quiet")
         local quiet=yes;;
       *)
-        log_error Invalid option: \"$opt\" >&2
+        log_error "Invalid option: \"$opt\"" >&2
         return 1;;
     esac
   done

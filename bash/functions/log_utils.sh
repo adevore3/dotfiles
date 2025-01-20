@@ -24,7 +24,7 @@ declare LOG_LEVEL=${LOG_LEVEL:-2}  # Default to INFO level
 log_info() {
     local message="$1"
     if [[ -z "$message" ]]; then
-        echo "ERROR: log_info requires a message parameter" >&2
+        log_error "log_info requires a message parameter" >&2
         return 1
     fi
 
@@ -39,7 +39,7 @@ log_info() {
 log_warn() {
     local message="$1"
     if [[ -z "$message" ]]; then
-        echo "ERROR: log_warn requires a message parameter" >&2
+        log_error "log_warn requires a message parameter" >&2
         return 1
     fi
 
@@ -54,7 +54,7 @@ log_warn() {
 log_error() {
     local message="$1"
     if [[ -z "$message" ]]; then
-        echo "ERROR: log_error requires a message parameter" >&2
+        log_error "log_error requires a message parameter" >&2
         return 1
     fi
 
@@ -69,7 +69,7 @@ log_error() {
 log_debug() {
     local message="$1"
     if [[ -z "$message" ]]; then
-        echo "ERROR: log_debug requires a message parameter" >&2
+        log_error "log_debug requires a message parameter" >&2
         return 1
     fi
 
@@ -85,19 +85,19 @@ log_debug() {
 #   0 if successful, 1 if invalid input
 set_log_level() {
     local level="$1"
-    
+
     # Check if input is a number
     if ! [[ "$level" =~ ^[0-9]+$ ]]; then
-        echo "ERROR: Log level must be a number" >&2
+        log_error "Log level must be a number" >&2
         return 1
     fi
-    
+
     # Validate range
     if (( level < 1 || level > 4 )); then
-        echo "ERROR: Log level must be between 1 and 4" >&2
+        log_error "Log level must be between 1 and 4" >&2
         return 1
     fi
-    
+
     LOG_LEVEL=$level
     return 0
 }
@@ -124,8 +124,8 @@ export -f log_info
 export -f log_warn
 export -f log_error
 export -f log_debug
-export -f set_log_level
 export -f set_log_level_debug
 export -f set_log_level_info
 export -f set_log_level_warn
 export -f set_log_level_error
+
