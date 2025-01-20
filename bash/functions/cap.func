@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
+# shellcheck disable=SC2155
 function cap() {
   local __usage="
 NAME
@@ -34,7 +37,7 @@ EXAMPLES:
       "-q"|"--quiet")
         local quiet=yes;;
       *)
-        echo ERROR Invalid option: \"$opt\" >&2
+        log_error "Invalid option: \"$opt\" >&2"
         return 1;;
     esac
   done
