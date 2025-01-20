@@ -38,7 +38,7 @@ validate_aws_profile() {
         return 1
     fi
 
-    log_info "Successfully validated AWS profile '$profile'"
+    log_debug "Successfully validated AWS profile '$profile'"
     return 0
 }
 
