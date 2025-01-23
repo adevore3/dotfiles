@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Using date, convert unixtime to datetime
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
+# shellcheck disable=SC2155
 function from_unixtime() {
   local __usage="
 NAME:
@@ -12,6 +14,7 @@ SYNOPSIS:
 OPTIONS:
   -f, --format <string>        The format of the datetime, defaults to whatever date's default is
   -h, --help                   Prints this message
+  -v, --verbose                Outputs verbose information
 
 EXAMPLES:
   from_unixtime -h
@@ -19,37 +22,71 @@ EXAMPLES:
   from_unixtime 1678255821
 
   from_unixtime -f utc 1678255821
+
+  from_unixtime -f date_time 1678255821
+
+  from_unixtime -v -f date_time 1678255821
 "
 
   while [[ $# -gt 1 ]] || [[ "$1" =~ ^-{1,2}.* ]]; do
     opt="$1"
     shift;
     current_arg="$1"
-    if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-      echo WARN You may have left an argument blank. Double check your command
+    if [[ ! "$opt" =~ ^(-h|--help|-v|--verbose)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+      log_warn "You may have left an argument blank. Double check your command"
       return 1
     fi
 
     case "$opt" in
-      "-h"|"--help"   ) echo "$__usage"; return 1;;
-      "-f"|"--format" ) local format="$1"; shift;;
-      *               ) echo ERROR Invalid option: \"$opt\" >&2; return 1;;
+      "-h"|"--help")
+       echo "$__usage"
+       return 0
+       ;;
+      "-f"|"--format")
+       local format="$current_arg"
+       shift
+       ;;
+      "-v"|"--verbose")
+        local -r verbose="yes"
+        ;;
+      *)
+        log_error "Invalid option: \"$opt\""
+        return 1
+        ;;
     esac
   done
 
-  local unixtime_raw=$1
-  if [[ -z "$unixtime_raw" ]]; then
-    if [[ -p /dev/stdin ]]; then # input from a pipe
-        read -r p
-    else
-        echo ERROR No timestamp given >&2
-        return 1
-    fi
-  else
-    local unixtime_clean=$(echo $unixtime_raw | sed 's/,//g')
+  if [[ "$verbose" == "yes" ]]; then
+    set_log_level_debug
   fi
 
-  local length=${#unixtime_clean}
+  local -r format=${format:-default}
+  local -r VALID_TIME_FORMATS=(
+    "default"
+    "utc"
+    "date"
+    "date_utc"
+    "datetime"
+    "datetime_utc"
+    "date_time"
+    "date_time_utc"
+  )
+  if [[ ! " ${VALID_TIME_FORMATS[*]} " =~ " ${format} " ]]; then
+      log_error "Invalid format: '$format'. Must be one of: ${VALID_TIME_FORMATS[*],,}"
+      return 1
+  fi
+
+  local -r unixtime_raw=$1
+  log_debug "unixtime_raw: $unixtime_raw"
+
+  [[ -n "$unixtime_raw" ]] || { log_error "No unixtime given"; return 1; }
+  [[ "$unixtime_raw" =~ ^[0-9,]+$ ]] || { log_error "Invalid unixtime format"; return 1; }
+
+  local -r unixtime_clean=$(echo $unixtime_raw | sed 's/,//g')
+  log_debug "unixtime_clean: $unixtime_clean"
+
+  # Convert to seconds
+  local -r length=${#unixtime_clean}
   local unixtime_s=$unixtime_clean
   if [[ $length -ge 10 ]]; then
     case $length in
@@ -57,17 +94,30 @@ EXAMPLES:
       13 ) unixtime_s=$(echo "($unixtime_clean + 500) / 1000" | bc);;
       16 ) unixtime_s=$(echo "($unixtime_clean + 500000) / 1000000" | bc);;
       19 ) unixtime_s=$(echo "($unixtime_clean + 500000000) / 1000000000" | bc);;
-      *  ) echo ERROR This only supports Unix timestamps in seconds, milliseconds, microseconds and nanoseconds >&2; return 1;;
+      *  )
+        log_error "Function only supports Unix timestamps in seconds, milliseconds, microseconds and nanoseconds";
+        return 1;;
     esac
   fi
+  log_debug "unixtime_s: $unixtime_s"
 
-  local format=${format:-default}
-  local supported_formats=["default","utc"]
+  if [[ "$verbose" == "yes" ]]; then
+    set_log_level_info
+  fi
 
   case "$format" in
-    "default" ) date -d @$unixtime_s;;
-    "utc"     ) date -ud "@$unixtime_s" +'%Y-%m-%d %H:%M:%S';;
-    *         ) echo ERROR Unrecognized unixtime format: \"$format\". Supported formats: ${supported_formats[*]} >&2; return 1;;
+    "default"       ) date -d @$unixtime_s;;
+    "utc"           ) date -ud "@$unixtime_s" +'%Y-%m-%d %H:%M:%S';;
+    "date"          ) date -d "@$unixtime_s" +'%Y%m%d';;
+    "date_utc"      ) date -ud "@$unixtime_s" +'%Y%m%d';;
+    "datetime"      ) date -d "@$unixtime_s" +'%Y%m%d%H%M%S';;
+    "datetime_utc"  ) date -ud "@$unixtime_s" +'%Y%m%d%H%M%S';;
+    "date_time"     ) date -d "@$unixtime_s" +'%Y%m%d_%H%M%S';;
+    "date_time_utc" ) date -ud "@$unixtime_s" +'%Y%m%d_%H%M%S';;
+    *)
+      log_error "Should never happen because we validate earlier"
+      return 1
+      ;;
   esac
 }
 
