@@ -7,5 +7,8 @@
 #  0 3 * * 0
 
 # Every day at 13:00
-0 13 * * * /home/dotfiles/bash/scripts/trim-ssd.sh
+0 13 * * * /home/dotfiles/bash/scripts/trim-ssd.sh >> /var/log/trim-ssd.log 2>$1
+
+# Every day at 07:00
+0 7 * * * /home/dotfiles/bash/scripts/backup_bash_history.sh >> /var/log/backup_bash_history.log 2>&1
 
