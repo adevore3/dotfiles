@@ -2,6 +2,21 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
+declare -p SECONDS_LENGTH &>/dev/null || declare -r SECONDS_LENGTH=10
+declare -p MILLISECONDS_LENGTH &>/dev/null || declare -r MILLISECONDS_LENGTH=13
+declare -p MICROSECONDS_LENGTH &>/dev/null || declare -r MICROSECONDS_LENGTH=16
+declare -p NANOSECONDS_LENGTH &>/dev/null || declare -r NANOSECONDS_LENGTH=19
+declare -p VALID_TIME_FORMATS &>/dev/null || declare -r VALID_TIME_FORMATS=(
+  "default"
+  "utc"
+  "date"
+  "date_utc"
+  "datetime"
+  "datetime_utc"
+  "date_time"
+  "date_time_utc"
+)
+
 # shellcheck disable=SC2155
 function from_unixtime() {
   local __usage="
@@ -12,9 +27,9 @@ SYNOPSIS:
   from_unixtime [OPTIONS]...
 
 OPTIONS:
-  -f, --format <string>        The format of the datetime, defaults to whatever date's default is
-  -h, --help                   Prints this message
-  -v, --verbose                Outputs verbose information
+  -f, --format <string>   The format of the datetime, defaults to whatever date's default is
+  -h, --help              Prints this message
+  -v, --verbose           Outputs verbose information
 
 EXAMPLES:
   from_unixtime -h
@@ -61,16 +76,6 @@ EXAMPLES:
   fi
 
   local -r format=${format:-default}
-  local -r VALID_TIME_FORMATS=(
-    "default"
-    "utc"
-    "date"
-    "date_utc"
-    "datetime"
-    "datetime_utc"
-    "date_time"
-    "date_time_utc"
-  )
   if [[ ! " ${VALID_TIME_FORMATS[*]} " =~ " ${format} " ]]; then
       log_error "Invalid format: '$format'. Must be one of: ${VALID_TIME_FORMATS[*],,}"
       return 1
@@ -90,11 +95,18 @@ EXAMPLES:
   local unixtime_s=$unixtime_clean
   if [[ $length -ge 10 ]]; then
     case $length in
-      10 ) ;;
-      13 ) unixtime_s=$(echo "($unixtime_clean + 500) / 1000" | bc);;
-      16 ) unixtime_s=$(echo "($unixtime_clean + 500000) / 1000000" | bc);;
-      19 ) unixtime_s=$(echo "($unixtime_clean + 500000000) / 1000000000" | bc);;
-      *  )
+      $SECONDS_LENGTH)
+        ;;
+      $MILLISECONDS_LENGTH)
+        unixtime_s=$(echo "($unixtime_clean + 500) / 1000" | bc)
+        ;;
+      $MICROSECONDS_LENGTH)
+        unixtime_s=$(echo "($unixtime_clean + 500000) / 1000000" | bc)
+        ;;
+      $NANOSECONDS_LENGTH)
+        unixtime_s=$(echo "($unixtime_clean + 500000000) / 1000000000" | bc)
+        ;;
+      *)
         log_error "Function only supports Unix timestamps in seconds, milliseconds, microseconds and nanoseconds";
         return 1;;
     esac
