@@ -1,0 +1,11 @@
+#  ┌───────────── minute (0)
+#  │ ┌───────────── hour (3)
+#  │ │ ┌───────────── day of month (*)
+#  │ │ │ ┌───────────── month (*)
+#  │ │ │ │ ┌───────────── day of week (0 or 7 = Sunday)
+#  │ │ │ │ │
+#  0 3 * * 0
+
+# Every day at 13:00
+0 13 * * * /home/dotfiles/bash/scripts/trim-ssd.sh
+
