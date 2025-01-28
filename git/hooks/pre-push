@@ -1,10 +1,10 @@
 #!/bin/bash
 
-protected_branch='master'
+default_branch=$(git symbolic-ref refs/remotes/origin/HEAD | rev | cut -d/ -f1 | rev)
 current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 
-if [ $protected_branch = $current_branch ]; then
-    read -p "You're about to push to master. Are you sure? > " -n 2 -r < /dev/tty
+if [ $default_branch = $current_branch ]; then
+    read -p "You're about to push to '$default_branch'. Are you sure? > " -n 2 -r < /dev/tty
     echo
     if echo $REPLY | grep -E '^[Yy]$' > /dev/null
     then
@@ -14,3 +14,4 @@ if [ $protected_branch = $current_branch ]; then
 else
     exit 0
 fi
+
