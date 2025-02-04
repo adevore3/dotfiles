@@ -76,13 +76,17 @@ function git_smart_commit_message() {
 
   if [ "$modified_count" -eq 1 ]; then
     # Extract first word up to '/'
-    local -r dir_name=$(ret "$output_filename" | grep modified | awk -F'/' '{print $1}' | awk '{print $NF}')
-    local -r filename=$(ret "$output_filename" | grep modified | awk -F'/' '{print $NF}')
+    local -r filepath=$(ret "$output_filename" | grep modified | awk '{print $2}')
+    local -r dir_name=$(echo "$filepath" | awk -F'/' '{print $1}')
+    local -r filename=$(echo "$filepath" | awk -F'/' '{print $NF}')
+
+    log_debug "filepath=$filepath"
+    log_debug "dir_name=$dir_name"
+    log_debug "filename=$filename"
 
     case "$dir_name" in
       *"cheat"*)
-        local -r cheatsheet_name=$(ret "$output_filename" | grep modified | awk -F'/' '{print $NF}')
-        execute_git_commit "Update cheatsheet $cheatsheet_name"
+        execute_git_commit "Update cheatsheet $filename"
         ;;
       *)
         # Get the full line for checking contents
@@ -93,8 +97,11 @@ function git_smart_commit_message() {
             execute_git_commit "Update $dir_name $filename"
             ;;
           *"alias"*)
-            #todo - determine aliases modified in file by using git diff
-            execute_git_commit "Update $dir_name aliases ..."
+            mapfile -t modified_aliases < <(git diff --cached --unified=0 --color-words=. "$filepath" | \
+              awk '/^alias/{p=1} p' | \
+              cut -d= -f1 | \
+              awk '{print $2}')
+            execute_git_commit "Update $dir_name aliases $(join_by ", " "${modified_aliases[@]}")"
             ;;
           *"config"*)
             execute_git_commit "Update $dir_name config"
