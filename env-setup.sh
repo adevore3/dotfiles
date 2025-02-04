@@ -57,7 +57,8 @@ apt_install_template "htop"
 apt_install_template "httpie"
 apt_install_template "jq"
 apt_install_template "net-tools"
-apt_install_template "pv"
+apt_install_template "preload" # will move binaries/dependencies of your most-used apps in to the memory by predicting as per your usage
+apt_install_template "pv" # monitor the progress of data through a pipe
 apt_install_template "rename"
 apt_install_template "shellcheck"
 apt_install_template "silversearcher-ag"
