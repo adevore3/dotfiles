@@ -19,6 +19,5 @@ function tre() {
   echo
 
   tree -aC -I "$(join_by "|" "${ignored_dirs[@]}")" --dirsfirst "$@" | less -FRNX;
-#  tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
 
