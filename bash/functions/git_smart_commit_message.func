@@ -1,0 +1,114 @@
+#!/bin/bash
+
+source "${DOTFILES}/bash/functions/cap.func"
+source "${DOTFILES}/bash/functions/join_by.func"
+source "${DOTFILES}/bash/functions/log_utils.sh"
+source "${DOTFILES}/bash/functions/save_to_all_clipboards.func"
+source "${DOTFILES}/bash/functions/save_to_clipboard.func"
+source "${DOTFILES}/bash/functions/save_to_tmux_clipboard.func"
+
+function git_smart_commit_message() {
+  local __usage="
+  NAME:
+    git_smart_commit_message - generate a commit message from the staged files
+
+  SYNOPSIS
+    git_smart_commit_message [OPTIONS]...
+
+  OPTIONS:
+    -h, --help      Prints this message
+    -v, --verbose   Outputs verbose information
+
+  EXAMPLES:
+    git_smart_commit_message -h
+
+    git_smart_commit_message 'ls -l'
+
+    git_smart_commit_message -d 'ls -l | grep very_specific_file_name'
+
+    git_smart_commit_message -q 'ls -l'
+  "
+
+  while [[ "$1" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+    shift;
+
+    case "$opt" in
+      "-h"|"--help")
+        echo "$__usage"
+        return 1;;
+      "-v"|"--verbose")
+        local verbose=yes;;
+      "-d"|"--dry-run")
+        local dryrun=yes;;
+      *)
+        log_error "Invalid option: \"$opt\"" >&2
+        return 1;;
+    esac
+  done
+
+  if [ $# -ne 0 ]; then
+    log_warn "No arguments required"
+  fi
+
+  if [[ "$verbose" == "yes" ]]; then
+    set_log_level_debug
+  fi
+
+  function execute_git_commit() {
+    local -r commit_message="$1"
+
+    if [[ "$dryrun" == "yes" ]]; then
+      echo "git commit -m \"$commit_message\""
+    else
+      git commit -m "$commit_message"
+    fi
+  }
+
+
+  local -r output_filename="committed_files"
+  git status | awk '/Changes to be committed/{p=1;print;next} p{if(NF){print}else{p=0}}' | cap -q "$output_filename"
+
+  ret "$output_filename" | grep modified
+
+  # Get number of modified lines
+  local -r modified_count=$(ret "$output_filename" | grep modified | wc -l)
+
+  if [ "$modified_count" -eq 1 ]; then
+    # Extract first word up to '/'
+    local -r dir_name=$(ret "$output_filename" | grep modified | awk -F'/' '{print $1}' | awk '{print $NF}')
+    local -r filename=$(ret "$output_filename" | grep modified | awk -F'/' '{print $NF}')
+
+    case "$dir_name" in
+      *"cheat"*)
+        local -r cheatsheet_name=$(ret "$output_filename" | grep modified | awk -F'/' '{print $NF}')
+        execute_git_commit "Update cheatsheet $cheatsheet_name"
+        ;;
+      *)
+        # Get the full line for checking contents
+        local -r modified_line=$(ret "$output_filename" | grep modified)
+
+        case "$modified_line" in
+          *"function"*)
+            execute_git_commit "Update $dir_name $filename"
+            ;;
+          *"alias"*)
+            #todo - determine aliases modified in file by using git diff
+            execute_git_commit "Update $dir_name aliases ..."
+            ;;
+          *"config"*)
+            execute_git_commit "Update $dir_name config"
+            ;;
+          *)
+            execute_git_commit "Update $dir_name $filename"
+            ;;
+        esac
+        ;;
+    esac
+  fi
+
+  if [[ "$verbose" == "yes" ]]; then
+    set_log_level_info
+  fi
+}
+
