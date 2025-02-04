@@ -42,3 +42,16 @@ kubectl logs -f $(kubectl get pods | grep spark-app-ui | awkp 1)
 
 kubectl exec -it $(kubectl get pods | grep spark-app-ui | awkp 1) -- bash
 
+# Trino
+# Check deploy/workers
+kubectl -n trino--interactive get pods | grep worker | wc -l
+watch -n 10 -d "kubectl -n trino--interactive get pods"
+
+# Config maps
+kubectl -n trino--interactive get configmaps
+kubectl -n trino--interactive describe configmaps trino-awsinteractive-coordinator | tee ,trino-awsinteractive-coordinator | less
+
+# Check for configuration on pod e.g. terminationGracePeriodSeconds
+kubectl -n trino--interactive get pods
+kubectl -n trino--interactive get pod trino-awsinteractive-worker-6448b6885-2tvqw -o yaml > ,trino-awsinteractive-worker-6448b6885-2tvqw
+
