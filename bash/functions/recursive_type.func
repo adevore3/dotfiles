@@ -11,8 +11,10 @@ function recursive_type() {
 
   local -r command="$1"
   local -r type_output=$(type $command 2>&1)
+  echo
   log_info "type $command 2>&1"
   if [[ $(echo $type_output | grep "$command is aliased to") ]]; then
+    echo
     echo "$type_output"
 
     local -r aliased_command_output=$(echo $type_output | grep aliased | awk '{print $5}' | sed "s/['\`]//g")

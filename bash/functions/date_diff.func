@@ -3,6 +3,7 @@
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
 # Get the diff between two dates in seconds
+# todo: what format is expected
 function date_diff() {
   if [ $# -ne 2 ]; then
     log_error "No dates specified"

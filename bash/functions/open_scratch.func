@@ -11,8 +11,8 @@ function open_scratch() {
   local -r general_scratches_dir="$HOME/scratches"
 
   local -r possible_scratch_dirs=("$jetbrains_scratches_dir" "$general_scratches_dir")
-  local -r scratch_dirs=()
-  for dir in ${possible_scratch_dirs[@]}; do
+  local scratch_dirs=()
+  for dir in "${possible_scratch_dirs[@]}"; do
     if [ ! -d "$dir" ]; then
       log_warn "No scratch directory found for '$dir'"
     else
@@ -20,9 +20,9 @@ function open_scratch() {
     fi
   done
 
-  select_from_options -d "find "${scratch_dirs[@]}" -type f | sort"
+  select_from_options -d "find ${scratch_dirs[@]} -type f | sort"
   local -r desired_file=$(ret select_from_options)
 
-  vi $desired_file
+  vi "$desired_file"
 }
 

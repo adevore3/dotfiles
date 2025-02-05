@@ -9,19 +9,19 @@ function alias_grep_execute() {
     return 1
   fi
 
-  local pattern=$1
+  local -r pattern="$1"
 
   # Builds an array from output of command
-  select_from_options "alias | grep -i $pattern"
+  select_from_options "alias | grep -i '$pattern' | egrep '^alias'"
 
-  local desired_alias=$(ret select_from_options)
+  local -r desired_alias=$(ret select_from_options)
 
-  local alias_name=$(echo $desired_alias | cut -d = -f 1 | cut -c 7-)
+  local -r alias_name=$(echo "$desired_alias" | cut -d = -f 1 | cut -c 7-)
 
   echo
   log_info "Executing '$alias_name'"
   echo
 
-  eval $alias_name
+  eval "$alias_name"
 }
 
