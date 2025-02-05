@@ -1,12 +1,14 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Git add files that match a grep expression
 function git_add_files() {
   if [ $# -ne 1 ]; then
-    echo ERROR Must provide a pattern that grep will recognize
+    log_error "Must provide a pattern that grep will recognize"
     return 1
   fi
 
-  git diff --name-only | grep $1 | xargs git add
+  git diff --name-only | grep "$1" | xargs git add
 }
 

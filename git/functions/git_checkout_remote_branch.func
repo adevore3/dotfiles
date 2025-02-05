@@ -1,21 +1,23 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Git checkout remote branch containing specified pattern
 function git_checkout_remote_branch() {
   if [ $# -ne 1 ]; then
-    echo ERROR Must specifiy a pattern to match
+    log_error "Must specify a pattern to match"
     return 1
   fi
 
-  local pattern=$1
+  local -r pattern="$1"
 
-  local current_branch_origin="origin/$(git branch --show-current)"
+  local -r current_branch_origin="origin/$(git branch --show-current)"
 
   select_from_options -d "git branch -r | grep -i $pattern | grep -v '$current_branch_origin' | sed -e 's/^[ \t]*//'"
 
-  local desired_branch=$(ret select_from_options)
-  local desired_branch_name=$(echo $desired_branch | cut -c 8-)
+  local -r desired_branch=$(ret select_from_options)
+  local -r desired_branch_name=$(echo "$desired_branch" | cut -c 8-)
 
-  git checkout -b $desired_branch_name $desired_branch
+  git checkout -b "$desired_branch_name" "$desired_branch"
 }
 

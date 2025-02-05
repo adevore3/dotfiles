@@ -1,18 +1,20 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Sources the most recently modified file in the DOTFILES & INDEED_DOTFILES repo
 function source_dotfiles_most_recent_file() {
-  local most_recent_file=$(
+  local -r most_recent_file=$(
     (
       (cd $DOTFILES && git status -s --ignore-submodules | awk '{print $2}' | sed "s|^|$DOTFILES/|g"); \
       (cd $INDEED_DOTFILES && git status -s --ignore-submodules | awk '{print $2}' | sed "s|^|$INDEED_DOTFILES/|g")
     ) \
-    | while read file; do echo $(stat -c %y $file) $file; done \
+    | while read file; do echo "$(stat -c %y $file) $file"; done \
     | sort -r \
     | head -n1 \
     | awk '{print $4}')
 
-  echo INFO source $most_recent_file
-  source $most_recent_file
+  log_info "source $most_recent_file"
+  source "$most_recent_file"
 }
 

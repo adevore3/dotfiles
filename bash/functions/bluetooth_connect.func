@@ -1,20 +1,23 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Connect to a bluetooth device by name
 function bluetooth_connect() {
   if [ $# -ne 1 ]; then
-    echo ERROR No bluetooth device name specified
+    log_error "No bluetooth device name specified"
     return 1
   fi
 
   device_id=$(bluetoothctl devices | grep -i "$1" | awk '{print $2}')
 
   for i in $(seq 1 3); do
-    local output=$( bluetoothctl connect $device_id)
-    echo $output
+    local output=$(bluetoothctl connect "$device_id")
+    log_info "$output"
     if [[ "$output" != *"Failed"* ]]; then
       break
     fi
+    sleep 1000
   done
 }
 

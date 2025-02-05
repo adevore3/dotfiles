@@ -1,20 +1,21 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Extract any file extension
 function create_window_with_n_panes() {
-  if [ $# -ne 1 ]
-  then
-    echo ERROR Number of panes not specified.
+  if [ $# -ne 1 ]; then
+    log_error "Number of panes not specified"
     return 1
   fi
 
   local regex='^[0-9]+$'
   if [[ $1 =~ $regex ]] ; then
     tmux new-window -n 'many panes'
-    echo "number of panes is $1"
+    log_info "Number of panes is $1"
     for ((i=$1;i>1;i--))
     {
-      tmux splitw -h -p $(expr 100 - 100 / $1)
+      tmux splitw -h -p "$(expr 100 - 100 / $1)"
     }
     tmux select-layout tiled
     for ((i=0;i<$1;i++))
@@ -22,7 +23,7 @@ function create_window_with_n_panes() {
       tmux send-keys -t $i C-z "echo Pane $(expr $i + 1)" C-m
     }
   else
-    echo ERROR '$1' is not a valid number.
+    log_error "'$1' is not a valid number"
     return 1
   fi
 }

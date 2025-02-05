@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 function save_to_all_clipboards() {
   local __usage="
 NAME:
@@ -30,7 +32,7 @@ EXAMPLES:
       shift;
       current_arg="$1"
       if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-        echo WARN You may have left an argument blank. Double check your command
+        log_warn "You may have left an argument blank. Double check your command"
         return 1
       fi
 
@@ -43,7 +45,7 @@ EXAMPLES:
           cat $output_file | save_to_tmux_clipboard -q
           return 1;;
         *)
-          echo ERROR Invalid option: \"$opt\" >&2
+          log_error "Invalid option: \"$opt\""
           return 1;;
       esac
     done

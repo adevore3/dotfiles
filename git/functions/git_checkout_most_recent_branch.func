@@ -1,16 +1,18 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Git checkout most recent branch containing specified pattern
 function git_checkout_most_recent_branch() {
   if [ $# -ne 1 ]; then
-    echo ERROR Must specifiy a pattern to match
+    log_error "Must specify a pattern to match"
     return 1
   fi
 
-  local pattern=$1
+  local -r pattern="$1"
 
-  local branch=$(gbrlt | grep $1 | hd1 | awkp 7 | cut -c 8-)
+  local -r branch=$(gbrlt | grep $1 | hd1 | awkp 7 | cut -c 8-)
 
-  git checkout $branch
+  git checkout "$branch"
 }
 

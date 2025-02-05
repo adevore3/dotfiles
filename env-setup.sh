@@ -1,23 +1,25 @@
 #!/bin/env bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 function installing_template() {
   local program_name=$1;
   shift
   local installation_function=$1;
   shift
 
-  echo "Checking for the existence of '$program_name'"
+  log_info "Checking for the existence of '$program_name'"
   if hash "$program_name" 2>/dev/null; then
-    echo "  '$program_name' already installed, skipping"
+    log_info "  '$program_name' already installed, skipping"
   else
-    echo "  Installing '$program_name'..."
+    log_info "  Installing '$program_name'..."
     $installation_function "$@"
-    echo "  Successfully installed '$program_name'"
+    log_info "  Successfully installed '$program_name'"
   fi
 }
 
 function install_cheat() {
-  echo "  Installing cheat version 4.4.0. For latest version check out https://github.com/cheat/cheat/blob/master/INSTALLING.md"
+  log_info "  Installing cheat version 4.4.0. For latest version check out https://github.com/cheat/cheat/blob/master/INSTALLING.md"
 
   cd /tmp \
     && wget https://github.com/cheat/cheat/releases/download/4.4.0/cheat-linux-amd64.gz \
@@ -48,7 +50,7 @@ function apt_install_template() {
   installing_template "$1" f "$1"
 }
 
-echo "Installing various commands"
+log_info "Installing various commands"
 apt_install_template "cowsay"
 apt_install_template "diodon"
 apt_install_template "figlet"
@@ -72,13 +74,13 @@ DOTFILES=${DOTFILES:-$HOME/dotfiles}
 installing_template "autojump" install_autojump
 installing_template "cheat" install_cheat
 
-echo "Installing tmux plugins"
+log_info "Installing tmux plugins"
 install_tmux_plugins
 
-echo 'Things that may manually need installing/updating:'
-echo '  * Brave Browser: https://brave.com/linux/'
-echo '  ** Enable Uphold Wallet'
-echo '  * Update gitignore: concat_multiple_gitignores'
-echo '  * Set .localrc per host'
-echo '  * Verify autojump, cheat & tmux works'
+log_info 'Things that may manually need installing/updating:'
+log_info '  * Brave Browser: https://brave.com/linux/'
+log_info '  ** Enable Uphold Wallet'
+log_info '  * Update gitignore: concat_multiple_gitignores'
+log_info '  * Set .localrc per host'
+log_info '  * Verify autojump, cheat & tmux works'
 

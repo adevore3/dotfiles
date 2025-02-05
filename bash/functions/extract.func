@@ -1,9 +1,11 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Extract any file extension
 function extract() {
   if [ $# -ne 1 ]; then
-    echo ERROR No file specified
+    log_error "No file specified"
     return 1
   fi
 
@@ -24,10 +26,10 @@ function extract() {
       *.tbz2)    tar xvjf $1   ;;
       *.tgz)     tar xvzf $1   ;;
       *.zip)     unzip $1      ;;
-      *)         echo "'$1' cannot be extracted via extract" ;;
+      *)         log_error "'$1' cannot be extracted via extract" ;;
     esac
   else
-    echo "'$1' is not a valid file"
+    log_error "'$1' is not a valid file"
   fi
 }
 

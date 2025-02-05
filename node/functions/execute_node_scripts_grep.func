@@ -1,10 +1,12 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # List node scripts matching grep and execute the selected script
 # todo: replace with select_from_options when ready to test
 function execute_node_scripts_grep() {
   if [ $# -ne 1 ]; then
-    echo ERROR Must specifiy a pattern to match
+    log_error "Must specify a pattern to match"
     return 1
   fi
 
@@ -17,13 +19,13 @@ function execute_node_scripts_grep() {
   local size=${#scripts[@]}
 
   if [ $size -eq 0 ]; then
-    echo "No scripts found containing \"$pattern\""
+    log_warn "No scripts found containing \"$pattern\""
     return 0
   fi
 
   local desired_script="no script selected"
   if [ $size -gt 1 ]; then
-    echo "Found $size scripts."
+    log_info "Found $size scripts"
 
     for index in "${!scripts[@]}"; do
       local position=$(( $index + 1 ))
@@ -42,7 +44,7 @@ function execute_node_scripts_grep() {
         desired_position=$number
         break
       else
-        echo ERROR Number out of range, please try again
+        log_error "Number out of range, please try again"
       fi
     done
 
@@ -57,7 +59,7 @@ function execute_node_scripts_grep() {
   local command="npm run ${script_name}"
 
   echo
-  echo "Running \"$command\""
+  log_info "Running \"$command\""
 
   eval $command
 }

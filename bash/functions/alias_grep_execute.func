@@ -1,9 +1,11 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # List aliases matching grep and execute the selected alias
 function alias_grep_execute() {
   if [ $# -ne 1 ]; then
-    echo ERROR Must specifiy a pattern to match
+    log_error "Must specify a pattern to match"
     return 1
   fi
 
@@ -17,7 +19,7 @@ function alias_grep_execute() {
   local alias_name=$(echo $desired_alias | cut -d = -f 1 | cut -c 7-)
 
   echo
-  echo "Executing '$alias_name'"
+  log_info "Executing '$alias_name'"
   echo
 
   eval $alias_name

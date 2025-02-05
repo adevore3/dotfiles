@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 function save_to_tmux_clipboard() {
   if { [ -z "$TMUX" ] || [ -z "$TMUX_PANE" ]; } then
     #>&2 echo WARN: Not in a tmux session
@@ -34,7 +36,7 @@ EXAMPLES:
       shift;
       current_arg="$1"
       if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-        echo WARN You may have left an argument blank. Double check your command
+        log_warn "You may have left an argument blank. Double check your command"
         return 1
       fi
 
@@ -46,7 +48,7 @@ EXAMPLES:
           tmux loadb - < /dev/stdin
           return 0;;
         *)
-          echo ERROR Invalid option: \"$opt\" >&2
+          log_error "Invalid option: \"$opt\""
           return 0;;
       esac
     done

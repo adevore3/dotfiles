@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Using awk, print the specified column
+# Using awk, print the specified field
 function awkp() {
   if [ $# -ne 1 ]; then
-    echo "ERROR Column # not specified."
+    log_error "Field # not specified"
     return 1
   fi
 
@@ -12,7 +12,7 @@ function awkp() {
   if [[ $desired_position =~ $regex ]]; then
     awk -vfield="$desired_position" '{print $field}'
   else
-    echo ERROR '$desired_position' is not a valid number.
+    log_error "'$desired_position' is not a valid number"
     return 1
   fi
 }

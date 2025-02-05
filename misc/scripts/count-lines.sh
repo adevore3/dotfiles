@@ -1,7 +1,9 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 if ! [ -x "$(command -v cloc)" ]; then
-  echo "'cloc' command needed to calculate lines"
+  log_info "'cloc' command needed to calculate lines"
 fi
 
 # This is not accurate because it checks the file at the current version
@@ -13,6 +15,6 @@ for commit in $(git log --reverse --format="%H,%as" origin/master); do
 
   git checkout $git_hash
 
-  echo "$date_time,$(cloc --quiet --diff-timeout 20 $(git ls-tree --name-only -r $git_hash) | grep SUM | awk -vfield="5" '{print $field}')"
+  log_info "$date_time,$(cloc --quiet --diff-timeout 20 $(git ls-tree --name-only -r $git_hash) | grep SUM | awk -vfield="5" '{print $field}')"
 done
 

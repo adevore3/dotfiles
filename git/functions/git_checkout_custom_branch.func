@@ -1,34 +1,37 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Git checkout with customized branch name
 function git_checkout_custom_branch() {
   if [ $# -lt 2 ]; then
-    echo ERROR Must specifiy a Jira ticket and a description
+    log_error "Must specify a Jira ticket and a description"
     return 1
   fi
 
-  local jira_ticket=${1^^}
+  local -r jira_ticket="${1^^}"
   if [[ ! ${jira_ticket} =~ [a-zA-Z]+-[0-9]+ ]]; then
-    echo ERROR Jira ticket must be in the format of '<project name>-<ticket number>'
+    log_error "Jira ticket must be in the format of '<project name>-<ticket number>'"
     return 1
   fi
 
   shift;
-  local args=($jira_ticket "${@}")
-  local joined_arguments=$(IFS=- ; echo "${args[*]}")
+  local -r args=($jira_ticket "${@}")
+  local -r joined_arguments=$(IFS=- ; echo "${args[*]}")
 
-  local git_branch=jira/$(whoami)/$joined_arguments
-  local branch_name_length=$(expr length $git_branch)
+  local -r git_branch="jira/$(whoami)/$joined_arguments"
+  local -r branch_name_length=$(expr length $git_branch)
 
-  local hostname_max_length=100 # Marvin sets it to 63 but haven't run into this issue in a while
-  local prefix_length=13 # multibranch hostname is prepended w/ "branch-build-" which is 13 chars
-  local max_length=$(expr $hostname_max_length - $prefix_length)
+  local -r hostname_max_length=100 # Marvin sets it to 63 but haven't run into this issue in a while
+  local -r prefix_length=13 # multibranch hostname is prepended w/ "branch-build-" which is 13 chars
+  local -r max_length=$(expr $hostname_max_length - $prefix_length)
 
+  # Validate this is still a restriction in lemma
   if [ $branch_name_length -gt $max_length ]; then
-    echo ERROR '$git_branch' is $branch_name_length chars long. The restriction is $max_length chars
+    log_error "'$git_branch' is $branch_name_length chars long. The restriction is $max_length chars"
     return 1
   fi
 
-  git checkout -b $git_branch
+  git checkout -b "$git_branch"
 }
 

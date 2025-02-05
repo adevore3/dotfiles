@@ -10,16 +10,15 @@
 #
 # best to wrap the command in quotes so the filename and command are run correctly
 function teh() {
-  local date=$(date +"%Y_%m_%d_%T")
-  local first_arg_escaped=$(echo "$1" | sed 's/\//_/g')
-  local filename=",$(join_by '_' $first_arg_escaped $date)"
+  local -r date=$(date +"%Y_%m_%d_%T")
+  local -r first_arg_escaped=$(echo "$1" | sed 's/\//_/g')
+  local -r filename=",$(join_by '_' $first_arg_escaped $date)"
 
   # Needs to handle slashes (and ideally pipes)
-  echo Command: "$*" >> $filename
-  echo >> $filename
+  echo Command: "$*" >> "$filename"
+  echo >> "$filename"
 
-  eval "$*" 2>&1 | tee -a $filename
+  eval "$*" 2>&1 | tee -a "$filename"
 
-  sed -i -r "s/[[:cntrl:]]\[([0-9]{1,3};)*[0-9]{1,3}m//g" $filename
+  sed -i -r "s/[[:cntrl:]]\[([0-9]{1,3};)*[0-9]{1,3}m//g" "$filename"
 }
-

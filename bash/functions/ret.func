@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # shellcheck disable=SC2155
 function ret() {
   local __usage="
@@ -47,7 +49,7 @@ EXAMPLES:
     shift;
     current_arg="$1"
     if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-      echo WARN You may have left an argument blank. Double check your command
+      log_warn "You may have left an argument blank. Double check your command"
       return 1
     fi
 
@@ -73,7 +75,7 @@ EXAMPLES:
         shift
         ;;
       *)
-        >&2 echo ERROR Invalid option: \"$opt\"
+        log_error "Invalid option: \"$opt\""
         return 1
         ;;
     esac
@@ -92,7 +94,7 @@ EXAMPLES:
       else
         local partial_match_file=$(ls /tmp/*.out | grep $joined_arguments | head -n 1)
         if [ -z "$partial_match_file" ] || [ "$partial_match_file" == *"cannot access"* ]; then
-          echo ERROR Unable to find an output file in /tmp matching $joined_arguments
+          log_error "Unable to find an output file in /tmp matching $joined_arguments"
         else
           ls /tmp/*.out | grep $joined_arguments | head -n 1
         fi
@@ -126,7 +128,7 @@ EXAMPLES:
   fi
 
   if [ "$return_n_files" == "yes" ]; then
-    cat $(ls -lt /tmp/*.out | sed -n 1,${num_files}p | awk '{print $9}')
+    cat "$(ls -lt /tmp/*.out | sed -n 1,${num_files}p | awk '{print $9}')"
 
     return 0
   fi

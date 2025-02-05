@@ -1,23 +1,25 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Search aliases, functions & commands for a given expression
 function all_commands_grep() {
   if [ $# -ne 1 ]; then
-    echo ERROR Search expression not specified.
+    log_error Search expression not specified.
     return 1
   fi
 
   local search_expr=$1
 
-  echo "Searching aliases:"
+  log_info "Searching aliases:"
   alias | grep -i "$search_expr"
 
   echo
-  echo "Searching functions:"
+  log_info "Searching functions:"
   compgen -A function | grep -i "$search_expr"
 
   echo
-  echo "Searching commands:"
+  log_info "Searching commands:"
   compgen -c | grep -i "$search_expr"
 }
 

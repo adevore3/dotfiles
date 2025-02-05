@@ -1,28 +1,30 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Recursively runs type on a given command
 function recursive_type() {
   if [ $# -ne 1 ]; then
-    echo ERROR Command not given
+    log_error "Command not given"
     return 1
   fi
 
-  local command=$1
-  local type_output=$(type $command 2>&1)
+  local -r command="$1"
+  local -r type_output=$(type $command 2>&1)
+  log_info "type $command 2>&1"
   if [[ $(echo $type_output | grep "$command is aliased to") ]]; then
-    echo
-    echo $type_output
+    echo "$type_output"
 
-    local aliased_command_output=$(echo $type_output | grep aliased | awk '{print $5}' | sed "s/['\`]//g")
+    local -r aliased_command_output=$(echo $type_output | grep aliased | awk '{print $5}' | sed "s/['\`]//g")
 
     # avoid infinite loop e.g. ls is aliased to `ls --color=always'
-    if ! [[ $command == $aliased_command_output ]]; then
-      recursive_type $aliased_command_output
+    if ! [[ "$command" == "$aliased_command_output" ]]; then
+      recursive_type "$aliased_command_output"
     fi
 
   elif [[ $(echo $type_output | grep "$command is a function") ]]; then
     echo
-    type $command
+    type "$command"
 
   else
     return 0

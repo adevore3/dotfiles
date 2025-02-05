@@ -1,18 +1,20 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Squash N commits into 1 commit
 function git_rebase_helper() {
   if [ $# -ne 1 ]; then
-    echo ERROR Number of commits to rebase not specified.
+    log_error "Number of commits to rebase not specified"
     return 1
   fi
 
-  local num_commits=$1
-  local regex='^[0-9]+$'
+  local -r num_commits=$1
+  local -r regex='^[0-9]+$'
   if [[ $num_commits =~ $regex ]]; then
     git rebase -i HEAD~$num_commits
   else
-    echo ERROR '$num_commits' is not a valid number.
+    log_error "'$num_commits' is not a valid number"
     return 1
   fi
 }

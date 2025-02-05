@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # urlencode a given string
 function urlencode() {
   usage() {
@@ -11,7 +13,7 @@ EOF
   }
 
   if [[ $# -ne 1 ]]; then
-    echo ERROR Expected 1 argument
+    log_error "Expected 1 argument"
     usage
     return 1
   fi

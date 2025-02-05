@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Print commits for all your repos under basedir (defaults to /site)
+# todo: out of date, maybe delete
 function standup() {
   local days=${1-1}
   local user=${2-$(whoami)}

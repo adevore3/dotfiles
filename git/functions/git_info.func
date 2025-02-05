@@ -1,35 +1,37 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 function git_info() {
   if [ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]; then
     # print informations
-    echo "git repo overview"
-    echo "-----------------"
+    log_info "git repo overview"
+    log_info "-----------------"
     echo
 
     # print all remotes and thier details
     for remote in $(git remote show); do
-      echo $remote:
+      log_info $remote:
       git remote show $remote
       echo
     done
 
     # print status of working repo
-    echo "status:"
+    log_info "status:"
     if [ -n "$(git status -s 2> /dev/null)" ]; then
       git status -s
     else
-      echo "working directory is clean"
+      log_info "working directory is clean"
     fi
 
     # print at least 5 last log entries
     echo
-    echo "log:"
+    log_info "log:"
     git log -5 --oneline
     echo
 
   else
-    echo "you're currently not in a git repository"
+    log_info "you're currently not in a git repository"
 
   fi
 }

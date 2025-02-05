@@ -1,9 +1,11 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # This script
 
 if ! [ -x "$(command -v cloc)" ]; then
-  echo "'cloc' command needed to calculate lines"
+  log_info "'cloc' command needed to calculate lines"
 fi
 
 desired_num_files=5
@@ -19,7 +21,7 @@ desired_files=$(git ls-files | rev | cut -d'.' -f1 | rev \
   | egrep -v "($undesired_file_types)" | head -n $desired_num_files \
   | awk '{print $2}' | sed -e 's/$/\$/' | sed -e 's/^/\./' | sed ':a; N; $!ba; s/\n/|/g')
 
-echo "desired files: '$desired_files'"
+log_info "desired files: '$desired_files'"
 
 desired_git_files=$(git ls-files | egrep "($desired_files)")
 

@@ -1,20 +1,22 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Open up the given url in firefox as a new tab.
 # Checks for a valid url
 function open_in_firefox() {
   if [ $# -ne 1 ]; then
-    echo ERROR Must provide a url to open
+    log_error "Must provide a url to open"
     return 1
   fi
-  local url=$1
+  local -r url="$1"
 
-  local regex='^(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]$'
+  local -r regex='^(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]$'
   if ! [[ $url =~ $regex ]]; then
-    echo ERROR Link not valid
+    log_error "Link not valid"
     return 1
   fi
 
-  DISPLAY=:0 firefox -new-tab -url $url
+  DISPLAY=:0 firefox -new-tab -url "$url"
 }
 

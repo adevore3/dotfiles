@@ -1,11 +1,13 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 function git_push_set_upstream() {
   if [ ! -d ".git" ]; then
-    echo ERROR Must be in a git directory
+    log_error "Must be in a git directory"
     return 1
   fi
 
-  git push --set-upstream origin $(git symbolic-ref --short HEAD)
+  git push --set-upstream origin "$(git symbolic-ref --short HEAD)"
 }
 

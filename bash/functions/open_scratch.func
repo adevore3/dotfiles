@@ -1,25 +1,27 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Open a scratch file sourced from various places
 function open_scratch() {
-  local jetbrains_config_dir="$HOME/.config/JetBrains"
-  local intellij_version="$(\ls $jetbrains_config_dir/ | grep IntelliJ | sort | tail -n 1)"
-  local jetbrains_scratches_dir="$jetbrains_config_dir/$intellij_version/scratches"
+  local -r jetbrains_config_dir="$HOME/.config/JetBrains"
+  local -r intellij_version="$(\ls $jetbrains_config_dir/ | grep IntelliJ | sort | tail -n 1)"
+  local -r jetbrains_scratches_dir="$jetbrains_config_dir/$intellij_version/scratches"
 
-  local general_scratches_dir="$HOME/scratches"
+  local -r general_scratches_dir="$HOME/scratches"
 
-  local possible_scratch_dirs=("$jetbrains_scratches_dir" "$general_scratches_dir")
-  local scratch_dirs=()
+  local -r possible_scratch_dirs=("$jetbrains_scratches_dir" "$general_scratches_dir")
+  local -r scratch_dirs=()
   for dir in ${possible_scratch_dirs[@]}; do
     if [ ! -d "$dir" ]; then
-      echo WARN No scratch directory found for '$dir'
+      log_warn "No scratch directory found for '$dir'"
     else
       scratch_dirs+=("$dir")
     fi
   done
 
   select_from_options -d "find "${scratch_dirs[@]}" -type f | sort"
-  local desired_file=$(ret select_from_options)
+  local -r desired_file=$(ret select_from_options)
 
   vi $desired_file
 }

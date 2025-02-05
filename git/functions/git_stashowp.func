@@ -1,17 +1,19 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # Show a stash's patch by index
 function git_stashowp() {
   if [ $# -ne 1 ]; then
-    echo ERROR Stash index not specified.
+    log_error "Stash index not specified"
     return 1
   fi
 
-  local regex='^[0-9]+$'
+  local -r regex='^[0-9]+$'
   if [[ $1 =~ $regex ]] ; then
     git stash show -p stash@{$1}
   else
-    echo ERROR '$1' is not a valid number.
+    log_error "'$1' is not a valid number"
     return 1
   fi
 }

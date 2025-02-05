@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
 # List a set of profiles to make your default
 # Will exit if no profiles exist
 function aws_copy_profile() {
@@ -33,6 +35,6 @@ function aws_copy_profile() {
   mv $tmp_file $cred_file
 
   echo
-  echo "'$save_profile_as' profile has been set to match '$desired_profile'"
+  log_info "'$save_profile_as' profile has been set to match '$desired_profile'"
 }
 
