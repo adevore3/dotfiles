@@ -83,4 +83,5 @@ log_info '  ** Enable Uphold Wallet'
 log_info '  * Update gitignore: concat_multiple_gitignores'
 log_info '  * Set .localrc per host'
 log_info '  * Verify autojump, cheat & tmux works'
+log_info '  * Modify swappiness in /etc/sysctl.conf, vm.swappiness=10'
 
