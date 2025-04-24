@@ -17,6 +17,7 @@ function git_smart_commit_message() {
 
   OPTIONS:
     -h, --help      Prints this message
+    -d, --dry-run   Does NOT commit, only outputs commit message
     -v, --verbose   Outputs verbose information
 
   EXAMPLES:
