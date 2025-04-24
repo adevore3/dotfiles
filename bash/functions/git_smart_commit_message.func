@@ -98,8 +98,8 @@ function git_smart_commit_message() {
             execute_git_commit "Update $dir_name $filename"
             ;;
           *"alias"*)
-            mapfile -t modified_aliases < <(git diff --cached --unified=0 --color-words=. "$filepath" | \
-              awk '/^alias/{p=1} p' | \
+            mapfile -t modified_aliases < <(git diff --cached --unified=0 "$filepath" | \
+              awk '/^+alias/{p=1} p' | \
               cut -d= -f1 | \
               awk '{print $2}')
             execute_git_commit "Update $dir_name aliases $(join_by ", " "${modified_aliases[@]}")"
