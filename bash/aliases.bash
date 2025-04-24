@@ -24,15 +24,20 @@ alias xq='xrandr -q' # Display monitor info
 
 # history commands
 alias h='history'
+alias ha='history -a'
 alias hclr='history -c'
 alias hdel='history -d'
 alias hg='history | grep'
-alias ht='history | tail'
+alias hgt=$'f(){ history | grep "$1" | tail; unset -f f; }; f'
+alias hist_append_reload='history -a; history -r'
 alias hist_delete_all=$'f(){ sed -i "/$1/d" ~/.bash_history; unset -f f; }; f'
 alias hist_disable='set +o history'
 alias hist_enable='set -o history'
-alias hist_top_uniq=$'history | awk -F "PST|PDT" \'{print $2}\' | sort | uniq -c | sort -rn | head'
 alias hist_top=$'history | awk \'{a[$6]++}END{for(i in a){print a[i] " " i}}\' | sort -rn | head'
+alias hist_top_uniq=$'history | awk -F "PST|PDT" \'{print $2}\' | sort | uniq -c | sort -rn | head'
+alias hr='history -r'
+alias hist_top_uniq_no_aliases=$'f(){ history | awk -F "PST|PDT" \'{print $2}\' | sort | uniq -c | sort -rn | while read -r line; do cmd=$(echo "$line" | awk \'{print $2}\'); if ! type "$cmd" 2>/dev/null | grep -q "is aliased to"; then echo "$line"; fi; done | head -n ${1:-10}; unset -f f; }; f'
+
 
 
 # misc
