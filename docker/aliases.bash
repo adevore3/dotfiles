@@ -3,6 +3,9 @@ alias dps='docker ps'
 alias dkp='docker_kill_process'
 alias dcomp='docker-compose'
 alias dose='docker-compose'
+alias dc='docker-compose'
+alias dcud='docker-compose up -d'
+alias dcd='docker-compose down'
 
 # short aliases
 alias dkac=docker_kill_all_containers
