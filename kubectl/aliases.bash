@@ -21,6 +21,18 @@ alias ktdcr='kube_trino_coordinator_restart dev'
 alias ktdgp='kube_trino_get_pods dev'
 alias ktdlc='kube_trino_list_containers dev'
 
+# Aliases for trino--dev2
+alias ktd2cbc='kube_trino_coordinator_bash_command dev2'
+alias ktd2ccbs='kube_trino_coordinator_container_bash_shell dev2'
+alias ktd2cbs='kube_trino_coordinator_bash_shell dev2'
+alias ktd2ccl='kube_trino_coordinator_container_logs dev2'
+alias ktd2cd='kube_trino_coordinator_describe dev2'
+alias ktd2cgp='kube_trino_coordinator_get_pod dev2'
+alias ktd2cl='kube_trino_coordinator_logs dev2'
+alias ktd2cr='kube_trino_coordinator_restart dev2'
+alias ktd2gp='kube_trino_get_pods dev2'
+alias ktd2lc='kube_trino_list_containers dev2'
+
 # Aliases for trino--stage
 alias ktscbc='kube_trino_coordinator_bash_command stage'
 alias ktsccbs='kube_trino_coordinator_container_bash_shell stage'
