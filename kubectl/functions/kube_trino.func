@@ -1,0 +1,262 @@
+#!/bin/bash
+
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
+# shellcheck disable=SC2155
+# shellcheck disable=SC2076
+function kube_trino() {
+  local __usage="
+NAME:
+  kube_trino - Interact with Trino clusters in Kubernetes
+
+SYNOPSIS:
+  kube_trino [OPTIONS]...
+
+OPTIONS:
+  -h, --help           Prints this message
+  -n, --namespace      Namespace suffix (e.g., dev, dev2, stage, interactive, prod)
+  -a, --action         Action to perform (bash-shell, bash-command, logs, describe, get-pod,
+                       container-logs, container-bash-shell, restart, list-containers, get-pods)
+  -c, --container      Container name for container-specific actions
+  -t, --type           Node type (coordinator, worker), defaults to 'coordinator'
+  -i, --index          Index of the pod when multiple pods exist (0-based), defaults to 0
+  -v, --verbose        Outputs verbose information
+  -cmd, --command      Command to execute (for bash-command action)
+
+EXAMPLES:
+  kube_trino -h
+
+  # Get pods in trino--dev namespace
+  kube_trino -n dev -a get-pods
+
+  # Get into bash shell of coordinator in trino--prod
+  kube_trino -n prod -a bash-shell
+
+  # Get logs from a specific container in the coordinator
+  kube_trino -n stage -a container-logs -c prometheus-jmx-exporter
+
+  # Execute a command in the coordinator
+  kube_trino -n dev -a bash-command -cmd 'ls -la /etc/trino'
+
+  # Describe the first worker node
+  kube_trino -n prod -a describe -t worker
+
+  # Get into bash shell of the second worker node (index 1)
+  kube_trino -n prod -a bash-shell -t worker -i 1
+"
+
+  while [[ "$1" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+    shift
+    current_arg="$1"
+
+    case "$opt" in
+      "-h"|"--help")
+        echo "$__usage"
+        return 0
+        ;;
+      "-n"|"--namespace")
+        local namespace=$current_arg
+        shift
+        ;;
+      "-a"|"--action")
+        local action=$current_arg
+        shift
+        ;;
+      "-c"|"--container")
+        local container=$current_arg
+        shift
+        ;;
+      "-t"|"--type")
+        local type=$current_arg
+        shift
+        ;;
+      "-i"|"--index")
+        local pod_index=$current_arg
+        shift
+        ;;
+      "-v"|"--verbose")
+        local verbose="yes"
+        ;;
+      "-cmd"|"--command")
+        local command=$current_arg
+        shift
+        ;;
+      *)
+        log_error "Invalid option: \"$opt\""
+        return 1
+        ;;
+    esac
+  done
+
+  if [[ "$verbose" == "yes" ]]; then
+    set_log_level_debug
+  fi
+
+  # Validate and set defaults
+  local namespace=${namespace:-}
+  local action=${action:-}
+  local type=${type:-coordinator}
+  local pod_index=${pod_index:-0}
+
+  local default_container_name=""
+  # Set default container name based on pod type
+  if [[ "$type" == "worker" ]]; then
+    default_container_name="indeed-trino-worker"
+  elif [[ "$type" == "coordinator" ]]; then
+    default_container_name="indeed-trino-coordinator"
+  fi
+  local container=${container:-$default_container_name}
+
+  # Validate required parameters
+  if [[ -z "$namespace" ]]; then
+    log_info "No namespace specified, showing available namespaces:"
+    select_from_options -q -d "kubectl get namespaces | grep trino-- | awk '{print \$1}' | sed 's/trino--//g' | sort"
+    namespace=$(ret select_from_options)
+    if [[ -z "$namespace" ]]; then
+      log_error "No namespace selected"
+      return 1
+    fi
+  fi
+
+# Define available commands as an array
+  local valid_actions=(
+    "bash-command"
+    "bash-shell"
+    "container-bash-shell"
+    "container-logs"
+    "describe"
+    "get-pod"
+    "get-pods"
+    "list-containers"
+    "logs"
+    "restart"
+  )
+  if [[ -z "$action" ]]; then
+    log_info "No action specified, please select one:"
+
+    # Convert array to string and capture
+    echo -e "$(printf '%s\n' "${valid_actions[@]}")" | cap -q valid_actions
+
+    # ret captured actions
+    select_from_options -q -d "ret valid_actions"
+    action=$(ret select_from_options)
+    if [[ -z "$action" ]]; then
+      log_error "No action selected"
+      return 1
+    fi
+  fi
+
+  # Validate action
+  if [[ ! " ${valid_actions[*]} " =~ " ${action} " ]]; then
+    log_error "Invalid action: '$action'. Must be one of: ${valid_actions[*]}"
+    return 1
+  fi
+
+  # Validate type
+  local valid_types=("coordinator" "worker")
+  if [[ ! " ${valid_types[*]} " =~ " ${type} " ]]; then
+    log_error "Invalid type: '$type'. Must be one of: ${valid_types[*]}"
+    return 1
+  fi
+
+  local actions_not_requiring_pod_name=("get-pods" "list-containers" "restart")
+  local pod_name
+  if [[ ! " ${actions_not_requiring_pod_name[*]} " =~ " ${action} " ]]; then
+    # Get pod name based on type and pod_index
+    local pod_selector
+    if [[ "$type" == "coordinator" ]]; then
+      pod_selector="coordinator"
+    else
+      pod_selector="worker"
+    fi
+
+    local pod_count=$(kubectl -n "trino--$namespace" get pods | grep "$pod_selector" | wc -l)
+
+    if [[ $pod_count -eq 0 ]]; then
+      log_error "No $type pods found in namespace trino--$namespace"
+      return 1
+    fi
+
+    if [[ $pod_count -gt 1 && "$action" != "get-pods" ]]; then
+      log_info "Found $pod_count $type pods. Using pod_index $pod_index."
+      if [[ $pod_index -ge $pod_count ]]; then
+        log_error "Index $pod_index is out of range. Max pod_index is $((pod_count-1))"
+        return 1
+      fi
+    fi
+
+    pod_name=$(kubectl -n "trino--$namespace" get pods | grep "$pod_selector" | awk '{print $1}' | sed -n "$((pod_index+1))p")
+    log_debug "Selected pod: $pod_name"
+  fi
+
+  log_debug "action=$action"
+  log_debug "container=$container"
+  log_debug "namespace=$namespace"
+  log_debug "pod_index=$pod_index"
+  log_debug "pod_count=$pod_count"
+  log_debug "pod_selector=$pod_selector"
+  log_debug "type=$type"
+
+  # Execute the requested action
+  case "$action" in
+    "bash-command")
+      if [[ -z "$command" ]]; then
+        log_error "No command specified for bash-command action"
+        return 1
+      fi
+      log_debug "kubectl exec -n \"trino--$namespace\" $pod_name -c $container -- bash -c \"$command\""
+      kubectl exec -n "trino--$namespace" "$pod_name" -c "$container" -- bash -c "$command"
+      ;;
+    "bash-shell")
+      log_debug "kubectl exec -it -n \"trino--$namespace\" $pod_name -c $container -- /bin/bash"
+      kubectl exec -it -n "trino--$namespace" "$pod_name" -c "$container" -- /bin/bash
+      ;;
+    "container-bash-shell")
+      if [[ -z "$container" ]]; then
+        log_error "No container specified for container-bash-shell action"
+        return 1
+      fi
+      log_debug "kubectl exec -it -n \"trino--$namespace\" $pod_name -c $container -- /bin/bash"
+      kubectl exec -it -n "trino--$namespace" "$pod_name" -c "$container" -- /bin/bash
+      ;;
+    "container-logs")
+      if [[ -z "$container" ]]; then
+        log_error "No container specified for container-logs action"
+        return 1
+      fi
+      log_debug "kubectl -n \"trino--$namespace\" logs -f $pod_name -c $container"
+      kubectl -n "trino--$namespace" logs -f "$pod_name" -c "$container"
+      ;;
+    "describe")
+      log_debug "kubectl -n \"trino--$namespace\" describe pod $pod_name"
+      kubectl -n "trino--$namespace" describe pod "$pod_name"
+      ;;
+    "get-pod")
+      log_debug "kubectl -n \"trino--$namespace\" get pod $pod_name -o yaml"
+      kubectl -n "trino--$namespace" get pod "$pod_name" -o yaml
+      ;;
+    "get-pods")
+      log_debug "kubectl -n \"trino--$namespace\" get pods"
+      kubectl -n "trino--$namespace" get pods
+      ;;
+    "list-containers")
+      log_debug "kubectl -n \"trino--$namespace\" get pods -o jsonpath='{.items[*].spec.containers[*].name}'"
+      kubectl -n "trino--$namespace" get pods -o jsonpath='{.items[*].spec.containers[*].name}'
+      echo # Add newline for better readability
+      ;;
+    "logs")
+      log_debug "kubectl -n \"trino--$namespace\" logs -f $pod_name -c $container"
+      kubectl -n "trino--$namespace" logs -f "$pod_name" -c "$container"
+      ;;
+    "restart")
+      local deployment_name="trino-aws$namespace-$type"
+      log_debug "kubectl -n \"trino--$namespace\" rollout restart deployment \"$deployment_name\""
+      kubectl -n "trino--$namespace" rollout restart deployment "$deployment_name"
+      ;;
+  esac
+
+  if [[ "$verbose" == "yes" ]]; then
+    set_log_level_info
+  fi
+}
