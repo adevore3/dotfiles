@@ -121,25 +121,25 @@ EXAMPLES:
 
 # Define available commands as an array
   local valid_actions=(
-    "bash-command"
-    "bash-shell"
-    "container-bash-shell"
-    "container-logs"
-    "describe"
-    "get-pod"
-    "get-pods"
-    "list-containers"
-    "logs"
+    "bash-command" "bc"
+    "bash-shell" "bs"
+    "container-bash-shell" "cbs"
+    "container-logs" "cl"
+    "describe" "desc"
+    "get-pod" "gp"
+    "get-pods" "gps"
+    "list-containers" "lc"
+    "logs" "l"
     "restart"
   )
   if [[ -z "$action" ]]; then
     log_info "No action specified, please select one:"
 
     # Convert array to string and capture
-    echo -e "$(printf '%s\n' "${valid_actions[@]}")" | cap -q valid_actions
+    echo -e "$(printf '%s\n' "${valid_actions[@]}")" | cap -q kube_trino_func_valid_actions
 
     # ret captured actions
-    select_from_options -q -d "ret valid_actions"
+    select_from_options -q -d "ret kube_trino_func_valid_actions"
     action=$(ret select_from_options)
     if [[ -z "$action" ]]; then
       log_error "No action selected"
@@ -200,7 +200,7 @@ EXAMPLES:
 
   # Execute the requested action
   case "$action" in
-    "bash-command")
+    "bc"|"bash-command")
       if [[ -z "$command" ]]; then
         log_error "No command specified for bash-command action"
         return 1
@@ -208,11 +208,11 @@ EXAMPLES:
       log_debug "kubectl exec -n \"trino--$namespace\" $pod_name -c $container -- bash -c \"$command\""
       kubectl exec -n "trino--$namespace" "$pod_name" -c "$container" -- bash -c "$command"
       ;;
-    "bash-shell")
+    "bs"|"bash-shell")
       log_debug "kubectl exec -it -n \"trino--$namespace\" $pod_name -c $container -- /bin/bash"
       kubectl exec -it -n "trino--$namespace" "$pod_name" -c "$container" -- /bin/bash
       ;;
-    "container-bash-shell")
+    "cbs"|"container-bash-shell")
       if [[ -z "$container" ]]; then
         log_error "No container specified for container-bash-shell action"
         return 1
@@ -220,7 +220,7 @@ EXAMPLES:
       log_debug "kubectl exec -it -n \"trino--$namespace\" $pod_name -c $container -- /bin/bash"
       kubectl exec -it -n "trino--$namespace" "$pod_name" -c "$container" -- /bin/bash
       ;;
-    "container-logs")
+    "cl"|"container-logs")
       if [[ -z "$container" ]]; then
         log_error "No container specified for container-logs action"
         return 1
@@ -228,24 +228,24 @@ EXAMPLES:
       log_debug "kubectl -n \"trino--$namespace\" logs -f $pod_name -c $container"
       kubectl -n "trino--$namespace" logs -f "$pod_name" -c "$container"
       ;;
-    "describe")
+    "desc"|"describe")
       log_debug "kubectl -n \"trino--$namespace\" describe pod $pod_name"
       kubectl -n "trino--$namespace" describe pod "$pod_name"
       ;;
-    "get-pod")
+    "gp"|"get-pod")
       log_debug "kubectl -n \"trino--$namespace\" get pod $pod_name -o yaml"
       kubectl -n "trino--$namespace" get pod "$pod_name" -o yaml
       ;;
-    "get-pods")
+    "gps"|"get-pods")
       log_debug "kubectl -n \"trino--$namespace\" get pods"
       kubectl -n "trino--$namespace" get pods
       ;;
-    "list-containers")
+    "lc"|"list-containers")
       log_debug "kubectl -n \"trino--$namespace\" get pods -o jsonpath='{.items[*].spec.containers[*].name}'"
       kubectl -n "trino--$namespace" get pods -o jsonpath='{.items[*].spec.containers[*].name}'
       echo # Add newline for better readability
       ;;
-    "logs")
+    "l"|"logs")
       log_debug "kubectl -n \"trino--$namespace\" logs -f $pod_name -c $container"
       kubectl -n "trino--$namespace" logs -f "$pod_name" -c "$container"
       ;;
