@@ -79,3 +79,6 @@ cat emr-ibw-service.log | grep SparkEnv | awk -F "SparkEnvMetrics: " '{print $2}
 # Get stats of a list of numbers, utilizes alias jqstats
 cat emr-ibw-service.log | grep SparkEnv | awk -F "SparkEnvMetrics: " '{print $2}' | transpose-log-entries | grep timeEla | cut -d= -f2 | tr -d ',' | jqstats
 
+# Upgrade firmware
+sudo fwupdmgr update
+
