@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Calculate the given expresiion e.g. 12 / (5 - 2) = 4
-calculate() {
-  printf "%s\n" "$@" | bc -l
-}
-

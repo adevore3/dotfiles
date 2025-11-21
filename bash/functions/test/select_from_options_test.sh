@@ -2,7 +2,7 @@
 
 # Import the function to test
 source "${DOTFILES}/bash/functions/log_utils.sh"
-source "${DOTFILES}/bash/functions/select_from_options.func"
+source "${DOTFILES}/bash/functions/interactive/select_from_options.func"
 source "${DOTFILES}/bash/functions/test/test_utils.sh"
 
 # Test 1: Help flag shows usage

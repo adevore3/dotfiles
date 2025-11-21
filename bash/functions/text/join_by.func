@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+#==============================================================================
+# Description: Join a list of strings with a delimiter
+#
+# Usage: join_by <delimiter> <string1> [string2 ...]
+#
+# Arguments:
+#   $1 - Delimiter (can be single or multi-character)
+#   $@ - Strings to join
+#
+# Returns:
+#   0 - Success
+#
+# Output:
+#   Joined string with delimiter between elements
+#
+# Example:
+#   join_by ', ' a b c  # outputs: "a, b, c"
+#   join_by '|' foo bar baz  # outputs: "foo|bar|baz"
+#==============================================================================
+function join_by {
+  local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}";
+}
+

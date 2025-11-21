@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+source "${DOTFILES}/bash/functions/text/join_by.func"
+
+#==============================================================================
+# Description: Enhanced tree command that ignores .git, node_modules, and
+#              submodule directories, with color output piped to less
+#
+# Usage: tre [tree_options]
+#
+# Arguments:
+#   $@ - Optional arguments passed to tree command
+#
+# Returns:
+#   0 - Success
+#   Exit code from tree/less on failure
+#
+# Example:
+#   tre           # show tree of current directory
+#   tre -L 2      # show tree with max depth of 2
+#==============================================================================
+function tre() {
+  mapfile -t ignored_dirs < <(cat .git/config | \
+    grep -E '^\[submodule ".+"\]$' | \
+    awk '{print $2}' | \
+    tr -d '"' | \
+    tr -d ']' | \
+    awk -F'/' '{print $1}' | \
+    sort -u)
+  ignored_dirs+=(".git" "node_modules" "bower_components")
+
+  echo
+
+  tree -aC -I "$(join_by "|" "${ignored_dirs[@]}")" --dirsfirst "$@" | less -FRNX;
+}
+

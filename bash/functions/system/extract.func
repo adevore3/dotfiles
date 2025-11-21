@@ -2,7 +2,22 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Extract any file extension
+#==============================================================================
+# Description: Extract any archive file (tar, zip, gz, bz2, etc.)
+#
+# Usage: extract <archive_file>
+#
+# Arguments:
+#   $1 - Archive file to extract
+#
+# Returns:
+#   0 - Success
+#   1 - Invalid file or unsupported format
+#
+# Example:
+#   extract file.tar.gz
+#   extract archive.zip
+#==============================================================================
 function extract() {
   if [ $# -ne 1 ]; then
     log_error "No file specified"

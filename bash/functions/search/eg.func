@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+#==============================================================================
+# Description: Extended grep (egrep) shorthand for searching multiple patterns
+#              (case-insensitive with line numbers)
+#
+# Usage: <command> | eg <pattern1> [pattern2 ...]
+#
+# Arguments:
+#   $* - One or more patterns to search for (OR'd together)
+#
+# Returns:
+#   0 - Matches found
+#   1 - No matches found
+#
+# Output:
+#   Lines containing any of the patterns (with line numbers)
+#
+# Example:
+#   cat config.properties | eg port host throttle
+#   grep -r . | eg error warning exception
+#==============================================================================
+function eg() {
+  egrep -in "$(IFS=\| ; echo "$*")"
+}
+

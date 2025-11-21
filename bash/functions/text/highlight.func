@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#==============================================================================
+# Description: Highlight all patterns in input (case-insensitive)
+#
+# Usage: <command> | highlight <pattern1> [pattern2 ...]
+#
+# Arguments:
+#   $* - One or more patterns to highlight (OR'd together)
+#
+# Returns:
+#   0 - Success
+#   Exit code from egrep on failure
+#
+# Output:
+#   Input with all matching patterns highlighted in color
+#
+# Example:
+#   cat file.txt | highlight error warning
+#   ls -la | highlight "\.txt" "\.sh"
+#==============================================================================
+function highlight() {
+  egrep --color=auto -i "$(IFS=\| ; echo "$*")|\$"
+}
+

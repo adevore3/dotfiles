@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Highlight all patterns ignoring case
-function highlight() {
-  egrep --color=auto -i "$(IFS=\| ; echo "$*")|\$"
-}
-

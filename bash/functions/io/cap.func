@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${DOTFILES}/bash/functions/join_by.func"
+source "${DOTFILES}/bash/functions/text/join_by.func"
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
 # shellcheck disable=SC2155

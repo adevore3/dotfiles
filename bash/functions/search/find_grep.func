@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#==============================================================================
+# Description: Find files in a directory and filter by pattern (case-insensitive)
+#
+# Usage: find_grep <directory> <pattern>
+#
+# Arguments:
+#   $1 - Directory to search in
+#   $2 - Pattern to grep for in file paths
+#
+# Returns:
+#   0 - Success
+#   1 - Invalid arguments
+#
+# Output:
+#   File paths matching the pattern
+#
+# Example:
+#   find_grep /var/log "error"
+#   find_grep ~/projects "test"
+#==============================================================================
+function find_grep() {
+  if [ $# -ne 2 ]; then
+    printf "ERROR Must specify:\n1) directory\n2) name to grep for\n"
+    return 1
+  fi
+
+  local dir=$1
+  local name=$2
+
+  find $dir | grep -i $name
+}
+

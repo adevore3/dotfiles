@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#==============================================================================
+# Description: Calculate a mathematical expression using bc
+#
+# Usage: calculate <expression>
+#
+# Arguments:
+#   $@ - Mathematical expression to calculate
+#
+# Returns:
+#   0 - Success
+#   Exit code from bc on failure
+#
+# Output:
+#   Result of the calculation
+#
+# Example:
+#   calculate "12 / (5 - 2)"  # outputs: 4
+#   calculate "scale=2; 10 / 3"  # outputs: 3.33
+#==============================================================================
+calculate() {
+  printf "%s\n" "$@" | bc -l
+}
+

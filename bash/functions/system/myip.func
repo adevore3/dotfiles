@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#==============================================================================
+# Description: Display your public IP address
+#
+# Usage: myip
+#
+# Arguments:
+#   None
+#
+# Returns:
+#   0 - Success
+#   Exit code from curl on failure
+#
+# Output:
+#   Your public IP address
+#
+# Example:
+#   myip  # outputs: "Your public IP is: 1.2.3.4"
+#==============================================================================
+function myip() {
+  local res=$(curl -s checkip.dyndns.org | grep -Eo '[0-9\.]+')
+  echo -e "Your public IP is: ${echo_bold_green} $res ${echo_normal}"
+}
+

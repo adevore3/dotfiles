@@ -1,0 +1,37 @@
+#!/bin/bash
+
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
+#==============================================================================
+# Description: Check if an environment variable is set and display its value
+#
+# Usage: check_variable <variable_name>
+#
+# Arguments:
+#   $1 - Name of the variable to check (without $)
+#
+# Returns:
+#   0 - Success
+#   1 - Invalid arguments
+#
+# Output:
+#   Status message indicating if variable is set and its value
+#
+# Example:
+#   check_variable HOME  # outputs: "HOME is set to '/home/user'"
+#   check_variable UNDEFINED_VAR  # outputs: "UNDEFINED_VAR is unset"
+#==============================================================================
+function check_variable() {
+  if [ $# -ne 1 ]; then
+    log_error "Must pass a variable name"
+    return 1
+  fi
+
+  local var="$1"
+  if [ -z ${!var+x} ]; then
+    log_info "$var is unset"
+  else
+    log_info "$var is set to '${!var}'"
+  fi
+}
+

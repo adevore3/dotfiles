@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#==============================================================================
+# Description: Create a directory and change into it
+#
+# Usage: mkcd <directory_path>
+#
+# Arguments:
+#   $* - Path of directory to create
+#
+# Returns:
+#   0 - Success
+#   Exit code from mkdir or cd on failure
+#
+# Example:
+#   mkcd ~/projects/new-project
+#   mkcd /tmp/test/nested/dirs
+#==============================================================================
+function mkcd() {
+  mkdir -p "$*"
+  cd "$*"
+}
+

@@ -2,7 +2,22 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Go up [n] directories
+#==============================================================================
+# Description: Navigate up N directories in the file system
+#
+# Usage: up [n]
+#
+# Arguments:
+#   $1 - Number of directories to go up (default: 1)
+#
+# Returns:
+#   0 - Success
+#   1 - Invalid argument (must be positive number)
+#
+# Example:
+#   up      # go up one directory (same as cd ..)
+#   up 3    # go up three directories
+#==============================================================================
 function up() {
     local cdir="$(pwd)"
     if [[ "${1}" == "" ]]; then

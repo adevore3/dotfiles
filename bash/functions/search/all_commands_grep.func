@@ -1,0 +1,43 @@
+#!/bin/bash
+
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
+#==============================================================================
+# Description: Search through all aliases, functions, and commands for a pattern
+#
+# Usage: all_commands_grep <pattern>
+#
+# Arguments:
+#   $1 - Search expression (case-insensitive)
+#
+# Returns:
+#   0 - Success
+#   1 - Invalid arguments
+#
+# Output:
+#   Matching aliases, functions, and commands grouped by type
+#
+# Example:
+#   all_commands_grep git
+#   all_commands_grep docker
+#==============================================================================
+function all_commands_grep() {
+  if [ $# -ne 1 ]; then
+    log_error Search expression not specified.
+    return 1
+  fi
+
+  local search_expr=$1
+
+  log_info "Searching aliases:"
+  alias | grep -i "$search_expr"
+
+  echo
+  log_info "Searching functions:"
+  compgen -A function | grep -i "$search_expr"
+
+  echo
+  log_info "Searching commands:"
+  compgen -c | grep -i "$search_expr"
+}
+

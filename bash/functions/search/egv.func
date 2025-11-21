@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+#==============================================================================
+# Description: Extended grep inverse (egrep -v) for excluding multiple patterns
+#              (case-insensitive with line numbers)
+#
+# Usage: <command> | egv <pattern1> [pattern2 ...]
+#
+# Arguments:
+#   $* - One or more patterns to exclude (OR'd together)
+#
+# Returns:
+#   0 - Success
+#   1 - No lines remain after exclusion
+#
+# Output:
+#   Lines NOT containing any of the patterns (with line numbers)
+#
+# Example:
+#   cat config.properties | egv port host throttle
+#   ls -la | egv ".git" "node_modules"
+#==============================================================================
+function egv() {
+  egrep -v -in "$(IFS=\| ; echo "$*")"
+}
+

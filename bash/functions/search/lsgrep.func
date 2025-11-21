@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#==============================================================================
+# Description: List files in current directory filtered by grep pattern
+#
+# Usage: lsgrep <pattern>
+#
+# Arguments:
+#   $* - Pattern to match against filenames
+#
+# Returns:
+#   0 - Success (matches found)
+#   1 - No matches found
+#
+# Output:
+#   Filtered list of files matching the pattern
+#
+# Example:
+#   lsgrep "\.txt"  # list all .txt files
+#   lsgrep config  # list files containing 'config'
+#==============================================================================
+function lsgrep() {
+  ls | grep "$*"
+}
+

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-source "${DOTFILES}/bash/functions/cap.func"
-source "${DOTFILES}/bash/functions/join_by.func"
+source "${DOTFILES}/bash/functions/io/cap.func"
+source "${DOTFILES}/bash/functions/text/join_by.func"
 source "${DOTFILES}/bash/functions/log_utils.sh"
-source "${DOTFILES}/bash/functions/save_to_all_clipboards.func"
-source "${DOTFILES}/bash/functions/save_to_clipboard.func"
-source "${DOTFILES}/bash/functions/save_to_tmux_clipboard.func"
+source "${DOTFILES}/bash/functions/clipboard/save_to_all_clipboards.func"
+source "${DOTFILES}/bash/functions/clipboard/save_to_clipboard.func"
+source "${DOTFILES}/bash/functions/clipboard/save_to_tmux_clipboard.func"
 
 function git_smart_commit_message() {
   local __usage="

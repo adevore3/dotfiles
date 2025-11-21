@@ -1,0 +1,49 @@
+#!/bin/bash
+
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
+#==============================================================================
+# Description: URL-encode a string (percent-encoding for URLs)
+#
+# Usage: urlencode <string>
+#
+# Arguments:
+#   $1 - String to URL-encode
+#
+# Returns:
+#   0 - Success
+#   1 - Invalid arguments
+#
+# Output:
+#   URL-encoded string
+#
+# Example:
+#   urlencode "hello world"  # outputs: hello%20world
+#   urlencode "foo&bar=baz"  # outputs: foo%26bar%3Dbaz
+#==============================================================================
+function urlencode() {
+  usage() {
+     echo
+     read -r -d '' VAR <<'EOF'
+     usage: urlencode <string>
+EOF
+     echo "$VAR"
+  }
+
+  if [[ $# -ne 1 ]]; then
+    log_error "Expected 1 argument"
+    usage
+    return 1
+  fi
+
+  local LANG=C
+  local length="${#1}"
+  for (( i = 0; i < length; i++ )); do
+      local c="${1:i:1}"
+      case $c in
+          [a-zA-Z0-9.~_-]) printf "$c" ;;
+          *) printf '%%%02X' "'$c" ;; 
+      esac
+  done
+}
+

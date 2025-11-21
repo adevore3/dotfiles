@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#==============================================================================
+# Description: Trim leading and trailing whitespace from a string
+#
+# Usage: trim <string>
+#
+# Arguments:
+#   $* - String to trim
+#
+# Returns:
+#   0 - Success
+#
+# Output:
+#   Trimmed string without leading/trailing whitespace
+#
+# Example:
+#   trim "  hello world  "  # outputs: "hello world"
+#==============================================================================
+function trim() {
+    local var="$*"
+    # remove leading whitespace characters
+    var="${var#"${var%%[![:space:]]*}"}"
+    # remove trailing whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"
+    printf '%s' "$var"
+}
+
