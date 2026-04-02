@@ -2,8 +2,47 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Connect to a bluetooth device by name
+#==============================================================================
+# Description: Connect to a Bluetooth device by name (retries up to 3 times)
+#
+# Usage: bluetooth_connect <device_name>
+#
+# Arguments:
+#   $1 - Bluetooth device name (case-insensitive partial match)
+#
+# Returns:
+#   0 - Success
+#   1 - No device name specified
+#
+# Example:
+#   bluetooth_connect "AirPods"
+#   bluetooth_connect "JBL"
+#==============================================================================
 function bluetooth_connect() {
+  local __usage="
+NAME:
+  bluetooth_connect - Connect to a Bluetooth device by name (retries up to 3 times)
+
+SYNOPSIS
+  bluetooth_connect [OPTIONS] <device_name>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+ARGUMENTS:
+  device_name      Bluetooth device name (case-insensitive partial match)
+
+EXAMPLES:
+  bluetooth_connect -h
+  bluetooth_connect \"AirPods\"
+  bluetooth_connect \"JBL\"
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "No bluetooth device name specified"
     return 1

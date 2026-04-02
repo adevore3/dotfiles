@@ -19,6 +19,30 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   extract archive.zip
 #==============================================================================
 function extract() {
+  local __usage="
+NAME:
+  extract - Extract any archive file (tar, zip, gz, bz2, etc.)
+
+SYNOPSIS
+  extract [OPTIONS] <archive_file>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+ARGUMENTS:
+  archive_file     Archive file to extract
+
+EXAMPLES:
+  extract -h
+  extract file.tar.gz
+  extract archive.zip
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "No file specified"
     return 1
