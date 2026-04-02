@@ -2,8 +2,45 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Recursively runs type on a given command
+#==============================================================================
+# Description: Recursively resolve a command through aliases and functions,
+#              showing the full chain of definitions
+#
+# Usage: recursive_type <command>
+#
+# Arguments:
+#   $1 - Command name to resolve
+#
+# Returns:
+#   0 - Success
+#   1 - No command given
+#
+# Example:
+#   recursive_type ll    # shows ll -> ls --color=always -> /usr/bin/ls
+#   recursive_type git   # shows git is /usr/bin/git
+#==============================================================================
 function recursive_type() {
+  local __usage="
+NAME:
+  recursive_type - Recursively resolve a command through aliases and functions
+
+SYNOPSIS
+  recursive_type [OPTIONS] <command>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  recursive_type -h
+  recursive_type ll    # shows ll -> ls --color=always -> /usr/bin/ls
+  recursive_type git   # shows git is /usr/bin/git
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Command not given"
     return 1

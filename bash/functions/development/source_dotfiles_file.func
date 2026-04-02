@@ -1,7 +1,41 @@
 #!/bin/bash
 
-# Choose from a list of modified files in the DOTFILES & INDEED_DOTFILES repo and source it
+#==============================================================================
+# Description: Interactively select and source a modified file from the
+#              DOTFILES or INDEED_DOTFILES repo (useful for reloading changes)
+#
+# Usage: source_dotfiles_file
+#
+# Arguments:
+#   None
+#
+# Returns:
+#   0 - Success
+#
+# Example:
+#   source_dotfiles_file  # lists modified dotfiles, sources the selected one
+#==============================================================================
 function source_dotfiles_file() {
+  local __usage="
+NAME:
+  source_dotfiles_file - Interactively select and source a modified dotfile
+
+SYNOPSIS
+  source_dotfiles_file [OPTIONS]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  source_dotfiles_file -h
+  source_dotfiles_file  # lists modified dotfiles, sources the selected one
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   local commands=(
     "(cd $DOTFILES && git status --porcelain --ignore-submodules | egrep -v \"(cheatsheets|scripts|vimrc)\" | awk '{print \$2}' | sed \"s|^|$DOTFILES/|\") | sort"
     "(cd $INDEED_DOTFILES && git status --porcelain --ignore-submodules | egrep -v \"(cheatsheets|scripts)\" | awk '{print \$2}' | sed \"s|^|$INDEED_DOTFILES/|\") | sort"

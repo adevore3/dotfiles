@@ -2,8 +2,42 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Open a scratch file sourced from various places
+#==============================================================================
+# Description: Interactively select and open a scratch file in vi from
+#              JetBrains or ~/scratches directories
+#
+# Usage: open_scratch
+#
+# Arguments:
+#   None
+#
+# Returns:
+#   0 - Success
+#
+# Example:
+#   open_scratch    # lists scratch files and opens selected one in vi
+#==============================================================================
 function open_scratch() {
+  local __usage="
+NAME:
+  open_scratch - Interactively select and open a scratch file in vi
+
+SYNOPSIS
+  open_scratch [OPTIONS]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  open_scratch -h
+  open_scratch    # lists scratch files and opens selected one in vi
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   local -r jetbrains_config_dir="$HOME/.config/JetBrains"
   local -r intellij_version="$(\ls $jetbrains_config_dir/ | grep IntelliJ | sort | tail -n 1)"
   local -r jetbrains_scratches_dir="$jetbrains_config_dir/$intellij_version/scratches"

@@ -1,7 +1,43 @@
 #!/bin/bash
 
-# Using awk, print the specified field
+#==============================================================================
+# Description: Print a specific field from piped input using awk
+#
+# Usage: <command> | awkp <field_number>
+#
+# Arguments:
+#   $1 - Field number to print (must be a positive integer)
+#
+# Returns:
+#   0 - Success
+#   1 - Invalid or missing argument
+#
+# Example:
+#   ls -l | awkp 5       # print file sizes
+#   ps aux | awkp 2      # print PIDs
+#==============================================================================
 function awkp() {
+  local __usage="
+NAME:
+  awkp - Print a specific field from piped input using awk
+
+SYNOPSIS
+  <command> | awkp [OPTIONS] <field_number>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  awkp -h
+  ls -l | awkp 5       # print file sizes
+  ps aux | awkp 2      # print PIDs
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Field # not specified"
     return 1

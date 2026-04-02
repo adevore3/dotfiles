@@ -1,8 +1,47 @@
 #!/usr/bin/env bash
 
-# Print commits for all your repos under basedir (defaults to /site)
-# todo: out of date, maybe delete
+#==============================================================================
+# Description: Print recent git commits across all repos under a base
+#              directory, grouped by repo (for standup reports)
+#              NOTE: May be out of date — consider deleting
+#
+# Usage: standup [days] [username]
+#
+# Arguments:
+#   $1 - Number of days to look back (default: 1)
+#   $2 - Git username to filter by (default: current user)
+#
+# Returns:
+#   0 - Success
+#
+# Example:
+#   standup         # show today's commits for current user
+#   standup 3       # show last 3 days of commits
+#   standup 7 jane  # show jane's commits from the last week
+#==============================================================================
 function standup() {
+  local __usage="
+NAME:
+  standup - Print recent git commits across repos for standup reports
+
+SYNOPSIS
+  standup [OPTIONS] [days] [username]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  standup -h
+  standup         # show today's commits for current user
+  standup 3       # show last 3 days of commits
+  standup 7 jane  # show jane's commits from the last week
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   local days=${1-1}
   local user=${2-$(whoami)}
   local basedir="/site"

@@ -2,8 +2,42 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Sources the most recently modified file in the DOTFILES & INDEED_DOTFILES repo
+#==============================================================================
+# Description: Automatically source the most recently modified file across
+#              DOTFILES and INDEED_DOTFILES repos
+#
+# Usage: source_dotfiles_most_recent_file
+#
+# Arguments:
+#   None
+#
+# Returns:
+#   0 - Success
+#
+# Example:
+#   source_dotfiles_most_recent_file  # sources whatever you last edited
+#==============================================================================
 function source_dotfiles_most_recent_file() {
+  local __usage="
+NAME:
+  source_dotfiles_most_recent_file - Source the most recently modified dotfile
+
+SYNOPSIS
+  source_dotfiles_most_recent_file [OPTIONS]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  source_dotfiles_most_recent_file -h
+  source_dotfiles_most_recent_file  # sources whatever you last edited
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   local -r most_recent_file=$(
     (
       (cd $DOTFILES && git status -s --ignore-submodules | awk '{print $2}' | sed "s|^|$DOTFILES/|g"); \
