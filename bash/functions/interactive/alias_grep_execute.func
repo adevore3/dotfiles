@@ -2,8 +2,45 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# List aliases matching grep and execute the selected alias
+#==============================================================================
+# Description: Search aliases by pattern, present matches, and execute the
+#              selected one
+#
+# Usage: alias_grep_execute <pattern>
+#
+# Arguments:
+#   $1 - Pattern to match against aliases (case-insensitive)
+#
+# Returns:
+#   0 - Success
+#   1 - No pattern specified
+#
+# Example:
+#   alias_grep_execute git    # list git-related aliases, run the chosen one
+#   alias_grep_execute docker # list docker aliases, run the chosen one
+#==============================================================================
 function alias_grep_execute() {
+  local __usage="
+NAME:
+  alias_grep_execute - Search aliases by pattern, present matches, and execute the selected one
+
+SYNOPSIS
+  alias_grep_execute [OPTIONS] <pattern>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  alias_grep_execute -h
+  alias_grep_execute git
+  alias_grep_execute docker
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Must specify a pattern to match"
     return 1
