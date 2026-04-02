@@ -21,6 +21,27 @@
 #   ls -la | egv ".git" "node_modules"
 #==============================================================================
 function egv() {
+  local __usage="
+NAME:
+  egv - extended grep inverse (egrep -v), excluding patterns (case-insensitive with line numbers)
+
+SYNOPSIS
+  <command> | egv [OPTIONS] <pattern1> [pattern2 ...]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  egv -h
+  cat config.properties | egv port host throttle
+  ls -la | egv \".git\" \"node_modules\"
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   egrep -v -in "$(IFS=\| ; echo "$*")"
 }
 

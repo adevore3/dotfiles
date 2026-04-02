@@ -22,6 +22,27 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   all_commands_grep docker
 #==============================================================================
 function all_commands_grep() {
+  local __usage="
+NAME:
+  all_commands_grep - search through all aliases, functions, and commands for a pattern
+
+SYNOPSIS
+  all_commands_grep [OPTIONS] <pattern>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  all_commands_grep -h
+  all_commands_grep git
+  all_commands_grep docker
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error Search expression not specified.
     return 1

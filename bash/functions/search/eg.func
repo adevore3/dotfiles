@@ -21,6 +21,27 @@
 #   grep -r . | eg error warning exception
 #==============================================================================
 function eg() {
+  local __usage="
+NAME:
+  eg - extended grep (egrep) shorthand, case-insensitive with line numbers
+
+SYNOPSIS
+  <command> | eg [OPTIONS] <pattern1> [pattern2 ...]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  eg -h
+  cat config.properties | eg port host throttle
+  grep -r . | eg error warning exception
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   egrep -in "$(IFS=\| ; echo "$*")"
 }
 

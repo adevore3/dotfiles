@@ -20,6 +20,27 @@
 #   lsgrep config  # list files containing 'config'
 #==============================================================================
 function lsgrep() {
+  local __usage="
+NAME:
+  lsgrep - list files in current directory filtered by grep pattern
+
+SYNOPSIS
+  lsgrep [OPTIONS] <pattern>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  lsgrep -h
+  lsgrep \".txt\"
+  lsgrep config
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   ls | grep "$*"
 }
 

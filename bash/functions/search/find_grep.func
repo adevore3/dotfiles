@@ -21,6 +21,27 @@
 #   find_grep ~/projects "test"
 #==============================================================================
 function find_grep() {
+  local __usage="
+NAME:
+  find_grep - find files in a directory and filter by pattern (case-insensitive)
+
+SYNOPSIS
+  find_grep [OPTIONS] <directory> <pattern>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  find_grep -h
+  find_grep /var/log \"error\"
+  find_grep ~/projects \"test\"
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 2 ]; then
     printf "ERROR Must specify:\n1) directory\n2) name to grep for\n"
     return 1
