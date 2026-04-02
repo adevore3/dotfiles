@@ -1,15 +1,44 @@
 #!/usr/bin/env bash
 
-# `teh` is a shorthand for tee helper
+#==============================================================================
+# Description: Tee helper — run a command, display output, and save it to a
+#              timestamped file (,<command>_<timestamp>) with ANSI codes stripped
 #
-# outputs command to a file ',<first argument>_<timestamp>'
+# Usage: teh "<command>"
 #
-# usage:
+# Arguments:
+#   $* - Command to execute (wrap in quotes for pipes/special chars)
 #
-#   `teh "ls | wc -l"`
+# Returns:
+#   0 - Success
+#   Exit code from the executed command
 #
-# best to wrap the command in quotes so the filename and command are run correctly
+# Example:
+#   teh "ls | wc -l"         # saves to ,ls_wc_-l_2023_01_01_12:00:00
+#   teh "grep error app.log" # saves output to timestamped file
+#==============================================================================
 function teh() {
+  local __usage="
+NAME:
+  teh - run a command, display output, and save it to a timestamped file
+
+SYNOPSIS
+  teh [OPTIONS] <command>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  teh -h
+  teh \"ls | wc -l\"
+  teh \"grep error app.log\"
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   local -r date=$(date +"%Y_%m_%d_%T")
   local -r first_arg_escaped=$(echo "$1" | sed 's/\//_/g')
   local -r filename=",$(join_by '_' $first_arg_escaped $date)"

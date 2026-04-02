@@ -1,11 +1,41 @@
 #!/usr/bin/env bash
 
-# backup a list of files by appending a suffix to each file
+#==============================================================================
+# Description: Backup files by renaming them with a _bak suffix
 #
-# usage:
+# Usage: backup_files <file1> [file2 ...]
 #
-#   `backup_files .profile .bashrc .localrc`
+# Arguments:
+#   $@ - One or more file paths to backup
+#
+# Returns:
+#   0 - Success
+#   Exit code from mv on failure
+#
+# Example:
+#   backup_files .profile .bashrc .localrc
+#==============================================================================
 function backup_files() {
+  local __usage="
+NAME:
+  backup_files - backup files by renaming them with a _bak suffix
+
+SYNOPSIS
+  backup_files [OPTIONS] <file1> [file2 ...]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  backup_files -h
+  backup_files .profile .bashrc .localrc
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   for filename in "$@"; do
     mv "$filename" "${filename}_bak"
   done

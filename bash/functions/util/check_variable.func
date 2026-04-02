@@ -22,6 +22,27 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   check_variable UNDEFINED_VAR  # outputs: "UNDEFINED_VAR is unset"
 #==============================================================================
 function check_variable() {
+  local __usage="
+NAME:
+  check_variable - check if an environment variable is set and display its value
+
+SYNOPSIS
+  check_variable [OPTIONS] <variable_name>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  check_variable -h
+  check_variable HOME
+  check_variable UNDEFINED_VAR
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Must pass a variable name"
     return 1

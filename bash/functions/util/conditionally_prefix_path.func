@@ -20,6 +20,27 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   conditionally_prefix_path /usr/local/bin
 #==============================================================================
 function conditionally_prefix_path() {
+  local __usage="
+NAME:
+  conditionally_prefix_path - add a directory to the beginning of PATH if it exists
+
+SYNOPSIS
+  conditionally_prefix_path [OPTIONS] <directory>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  conditionally_prefix_path -h
+  conditionally_prefix_path ~/bin
+  conditionally_prefix_path /usr/local/bin
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Usage: conditionally_prefix_path <path-to-directory>"
     return 1

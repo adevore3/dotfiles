@@ -2,9 +2,44 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Open up the given url in firefox as a new tab.
-# Checks for a valid url
+#==============================================================================
+# Description: Open a URL in Firefox as a new tab (validates URL format first)
+#
+# Usage: open_in_firefox <url>
+#
+# Arguments:
+#   $1 - URL to open (must be http, https, ftp, or file protocol)
+#
+# Returns:
+#   0 - Success
+#   1 - Invalid URL or missing argument
+#
+# Example:
+#   open_in_firefox https://example.com
+#   open_in_firefox file:///tmp/report.html
+#==============================================================================
 function open_in_firefox() {
+  local __usage="
+NAME:
+  open_in_firefox - open a URL in Firefox as a new tab
+
+SYNOPSIS
+  open_in_firefox [OPTIONS] <url>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  open_in_firefox -h
+  open_in_firefox https://example.com
+  open_in_firefox file:///tmp/report.html
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Must provide a url to open"
     return 1
