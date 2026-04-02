@@ -2,8 +2,42 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Find a git tracked file matching the given input. Excludes paths including `test`
+#==============================================================================
+# Description: Find a git-tracked file by name (excludes test paths)
+#
+# Usage: git_find_file <name>
+#
+# Arguments:
+#   $1 - Case-sensitive filename or partial path to search for
+#
+# Returns:
+#   0 - Success (prints matching file paths to stdout)
+#   1 - No argument provided or too many arguments
+#
+# Example:
+#   git_find_file Application.java
+#==============================================================================
 function git_find_file() {
+  local __usage="
+NAME:
+  git_find_file - find a git-tracked file by name
+
+SYNOPSIS
+  git_find_file [OPTIONS] <name>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_find_file -h
+  git_find_file Application.java
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Must provide a case-sensitive name to search git files. Only 1 argument allowed"
     return 1

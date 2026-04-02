@@ -2,8 +2,45 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Git checkout with customized branch name
+#==============================================================================
+# Description: Create a custom branch with Jira ticket format
+#              (jira/username/TICKET-description)
+#
+# Usage: git_checkout_custom_branch <jira_ticket> <description...>
+#
+# Arguments:
+#   $1 - Jira ticket identifier (e.g., PROJ-123)
+#   $* - Remaining args form the branch description, joined by hyphens
+#
+# Returns:
+#   0 - Success
+#   1 - Missing arguments, invalid ticket format, or branch name too long
+#
+# Example:
+#   git_checkout_custom_branch PROJ-123 add login page
+#   # creates branch: jira/username/PROJ-123-add-login-page
+#==============================================================================
 function git_checkout_custom_branch() {
+  local __usage="
+NAME:
+  git_checkout_custom_branch - create custom branch with Jira ticket format
+
+SYNOPSIS
+  git_checkout_custom_branch [OPTIONS] <jira_ticket> <description...>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_checkout_custom_branch -h
+  git_checkout_custom_branch PROJ-123 add login page
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -lt 2 ]; then
     log_error "Must specify a Jira ticket and a description"
     return 1

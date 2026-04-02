@@ -2,8 +2,42 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Apply a stash by index
+#==============================================================================
+# Description: Apply a stash by index number
+#
+# Usage: git_stashapply <index>
+#
+# Arguments:
+#   $1 - Stash index number to apply
+#
+# Returns:
+#   0 - Success
+#   1 - Missing argument or argument is not a valid number
+#
+# Example:
+#   git_stashapply 2
+#==============================================================================
 function git_stashapply() {
+  local __usage="
+NAME:
+  git_stashapply - apply a stash by index number
+
+SYNOPSIS
+  git_stashapply [OPTIONS] <index>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_stashapply -h
+  git_stashapply 2
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Stash index not specified"
     return 1

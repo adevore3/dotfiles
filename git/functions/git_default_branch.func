@@ -1,7 +1,40 @@
 #!/bin/bash
 
-# Find the default branch for a given repo
+#==============================================================================
+# Description: Find the default branch for the current repo
+#
+# Usage: git_default_branch
+#
+# Arguments:
+#   None
+#
+# Returns:
+#   0 - Success (prints branch name to stdout)
+#
+# Example:
+#   git_default_branch  # prints "main" or "master"
+#==============================================================================
 function git_default_branch() {
+  local __usage="
+NAME:
+  git_default_branch - find the default branch for the current repo
+
+SYNOPSIS
+  git_default_branch [OPTIONS]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_default_branch -h
+  git_default_branch
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   echo $(git symbolic-ref refs/remotes/origin/HEAD | rev | cut -d/ -f1 | rev)
 }
 

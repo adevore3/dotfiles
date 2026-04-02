@@ -2,9 +2,48 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# clean up any branches merged to master that are over a year over
-# requires -f to actually run
+#==============================================================================
+# Description: Delete remote branches merged to master that are over 1 month
+#              old (dry-run by default, use -f to execute)
+#
+# Usage: git_cleanup [-f] [filter]
+#
+# Arguments:
+#   -f     - Force mode; actually delete branches (omit for dry-run)
+#   filter - Optional pattern to filter branch names
+#
+# Returns:
+#   0 - Success
+#
+# Example:
+#   git_cleanup              # dry-run, shows what would be deleted
+#   git_cleanup -f           # actually delete merged branches
+#   git_cleanup -f feature   # delete only merged branches matching "feature"
+#==============================================================================
 function git_cleanup() {
+  local __usage="
+NAME:
+  git_cleanup - delete remote branches merged to master over 1 month old
+
+SYNOPSIS
+  git_cleanup [OPTIONS] [filter]
+
+OPTIONS:
+  -h, --help       Prints this message
+  -f               Force mode; actually delete branches (omit for dry-run)
+
+EXAMPLES:
+  git_cleanup -h
+  git_cleanup              # dry-run, shows what would be deleted
+  git_cleanup -f           # actually delete merged branches
+  git_cleanup -f feature   # delete only merged branches matching \"feature\"
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [[ -z $(sed --version 2>/dev/null) ]]; then
     local sed_flags='-E'
   else

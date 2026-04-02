@@ -2,7 +2,49 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
+#==============================================================================
+# Description: Display commit statistics per author with file and line change
+#              counts
+#
+# Usage: git_stats [-w] [-M] [-C]
+#
+# Arguments:
+#   -w - Ignore whitespace changes
+#   -M - Detect renames
+#   -C - Detect copies (includes --find-copies-harder)
+#
+# Returns:
+#   0 - Success
+#
+# Example:
+#   git_stats
+#   git_stats -w -M -C
+#==============================================================================
 function git_stats() {
+  local __usage="
+NAME:
+  git_stats - display commit statistics per author
+
+SYNOPSIS
+  git_stats [OPTIONS] [-w] [-M] [-C]
+
+OPTIONS:
+  -h, --help       Prints this message
+  -w               Ignore whitespace changes
+  -M               Detect renames
+  -C               Detect copies (includes --find-copies-harder)
+
+EXAMPLES:
+  git_stats -h
+  git_stats
+  git_stats -w -M -C
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   # awesome work from https://github.com/esc/git-stats
   # including some modifications
 

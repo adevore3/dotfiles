@@ -1,7 +1,44 @@
 #!/bin/bash
 
-# Squash all commits on branch into 1 commit
+#==============================================================================
+# Description: Squash all commits on current branch into one commit
+#
+# Usage: git_squash_commits
+#
+# Arguments:
+#   None
+#
+# Dependencies:
+#   git_branch_commit_count - Used to determine number of commits on branch
+#
+# Returns:
+#   0 - Success
+#   Exit code from git rebase on failure
+#
+# Example:
+#   git_squash_commits
+#==============================================================================
 function git_squash_commits() {
+  local __usage="
+NAME:
+  git_squash_commits - squash all commits on current branch into one commit
+
+SYNOPSIS
+  git_squash_commits [OPTIONS]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_squash_commits -h
+  git_squash_commits
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   git rebase -i HEAD~$(git_branch_commit_count)
 }
 

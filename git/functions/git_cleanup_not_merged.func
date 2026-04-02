@@ -2,8 +2,48 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# shows branches not merged that are over 2 years old
+#==============================================================================
+# Description: Delete remote branches NOT merged to master that are over 2
+#              years old (dry-run by default, use -f to execute)
+#
+# Usage: git_cleanup_not_merged [-f] [filter]
+#
+# Arguments:
+#   -f     - Force mode; actually delete branches (omit for dry-run)
+#   filter - Optional pattern to filter branch names
+#
+# Returns:
+#   0 - Success
+#
+# Example:
+#   git_cleanup_not_merged            # dry-run, shows what would be deleted
+#   git_cleanup_not_merged -f         # actually delete stale unmerged branches
+#   git_cleanup_not_merged -f feature # delete only unmerged branches matching "feature"
+#==============================================================================
 function git_cleanup_not_merged() {
+  local __usage="
+NAME:
+  git_cleanup_not_merged - delete remote branches NOT merged to master over 2 years old
+
+SYNOPSIS
+  git_cleanup_not_merged [OPTIONS] [filter]
+
+OPTIONS:
+  -h, --help       Prints this message
+  -f               Force mode; actually delete branches (omit for dry-run)
+
+EXAMPLES:
+  git_cleanup_not_merged -h
+  git_cleanup_not_merged            # dry-run, shows what would be deleted
+  git_cleanup_not_merged -f         # actually delete stale unmerged branches
+  git_cleanup_not_merged -f feature # delete only unmerged branches matching \"feature\"
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [[ -z $(sed --version 2>/dev/null) ]]; then
     local sed_flags='-E'
   else

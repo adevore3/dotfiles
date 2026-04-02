@@ -2,7 +2,41 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
+#==============================================================================
+# Description: Display git repo overview (remotes, status, recent log)
+#
+# Usage: git_info
+#
+# Arguments:
+#   None
+#
+# Returns:
+#   0 - Success (prints repo overview to stdout)
+#
+# Example:
+#   git_info
+#==============================================================================
 function git_info() {
+  local __usage="
+NAME:
+  git_info - display git repo overview (remotes, status, recent log)
+
+SYNOPSIS
+  git_info [OPTIONS]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_info -h
+  git_info
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]; then
     # print informations
     log_info "git repo overview"

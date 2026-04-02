@@ -1,7 +1,45 @@
 #!/bin/bash
 
-# Print out which branches are not merged
+#==============================================================================
+# Description: Show branches not merged to master, color-coded by commit types
+#
+# Usage: git_not_merged
+#
+# Arguments:
+#   None (uses $filter and $sed_flags from calling context)
+#
+# Returns:
+#   0 - Success
+#
+# Output:
+#   Green  - Branch has only merge commits
+#   Blue   - Branch has only merge and create-branch commits
+#   Red    - Branch has potential work on it
+#
+# Example:
+#   git_not_merged
+#==============================================================================
 function git_not_merged() {
+  local __usage="
+NAME:
+  git_not_merged - show branches not merged to master, color-coded by commit types
+
+SYNOPSIS
+  git_not_merged [OPTIONS]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_not_merged -h
+  git_not_merged
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
     for branch in $(git branch -r --no-merged origin/master | sed $sed_flags "s/^[[:space:]]*//" | grep "\<origin/$filter" | egrep -v '\<origin/master\>'); do
         printf "\n"
         if [[ -z $(git log --no-merges origin/master..$branch) ]]; then

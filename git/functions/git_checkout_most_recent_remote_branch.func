@@ -2,8 +2,44 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Git checkout most recent remote branch containing specified pattern
+#==============================================================================
+# Description: Checkout the most recently committed-to remote branch matching
+#              a pattern
+#
+# Usage: git_checkout_most_recent_remote_branch <pattern>
+#
+# Arguments:
+#   $1 - Pattern to match against remote branch names
+#
+# Returns:
+#   0 - Success
+#   1 - No pattern provided
+#   Exit code from git checkout on failure
+#
+# Example:
+#   git_checkout_most_recent_remote_branch feature
+#==============================================================================
 function git_checkout_most_recent_remote_branch() {
+  local __usage="
+NAME:
+  git_checkout_most_recent_remote_branch - checkout most recently committed-to remote branch matching a pattern
+
+SYNOPSIS
+  git_checkout_most_recent_remote_branch [OPTIONS] <pattern>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_checkout_most_recent_remote_branch -h
+  git_checkout_most_recent_remote_branch feature
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Must specify a pattern to match"
     return 1

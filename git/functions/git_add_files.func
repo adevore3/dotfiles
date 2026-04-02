@@ -2,8 +2,42 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Git add files that match a grep expression
+#==============================================================================
+# Description: Git add files that match a grep expression
+#
+# Usage: git_add_files <pattern>
+#
+# Arguments:
+#   $1 - Grep pattern to match against changed file names
+#
+# Returns:
+#   0 - Success
+#   1 - No pattern provided
+#
+# Example:
+#   git_add_files '\.java$'
+#==============================================================================
 function git_add_files() {
+  local __usage="
+NAME:
+  git_add_files - git add files that match a grep expression
+
+SYNOPSIS
+  git_add_files [OPTIONS] <pattern>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  git_add_files -h
+  git_add_files '\.java$'
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Must provide a pattern that grep will recognize"
     return 1
