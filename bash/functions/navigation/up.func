@@ -19,6 +19,27 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   up 3    # go up three directories
 #==============================================================================
 function up() {
+    local __usage="
+NAME:
+  up - Navigate up N directories in the file system
+
+SYNOPSIS
+  up [OPTIONS] [n]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  up -h
+  up        # go up one directory (same as cd ..)
+  up 3      # go up three directories
+"
+
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        echo "$__usage"
+        return 0
+    fi
+
     local cdir="$(pwd)"
     if [[ "${1}" == "" ]]; then
         cdir="$(dirname "${cdir}")"

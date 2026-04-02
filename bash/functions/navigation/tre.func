@@ -20,6 +20,31 @@ source "${DOTFILES}/bash/functions/text/join_by.func"
 #   tre -L 2      # show tree with max depth of 2
 #==============================================================================
 function tre() {
+  local __usage="
+NAME:
+  tre - Enhanced tree command with smart directory filtering
+
+SYNOPSIS
+  tre [OPTIONS] [tree_options]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+DESCRIPTION:
+  Runs tree ignoring .git, node_modules, bower_components, and
+  submodule directories, with color output piped to less.
+
+EXAMPLES:
+  tre -h
+  tre              # show tree of current directory
+  tre -L 2         # show tree with max depth of 2
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   mapfile -t ignored_dirs < <(cat .git/config | \
     grep -E '^\[submodule ".+"\]$' | \
     awk '{print $2}' | \

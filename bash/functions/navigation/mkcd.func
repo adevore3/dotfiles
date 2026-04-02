@@ -17,6 +17,27 @@
 #   mkcd /tmp/test/nested/dirs
 #==============================================================================
 function mkcd() {
+  local __usage="
+NAME:
+  mkcd - Create a directory and change into it
+
+SYNOPSIS
+  mkcd [OPTIONS] <directory_path>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  mkcd -h
+  mkcd ~/projects/new-project
+  mkcd /tmp/test/nested/dirs
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   mkdir -p "$*"
   cd "$*"
 }
