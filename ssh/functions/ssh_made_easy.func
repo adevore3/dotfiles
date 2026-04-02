@@ -4,6 +4,26 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 
 # Install ssh key on specified host
 function ssh_made_easy() {
+  local __usage="
+NAME:
+  ssh_made_easy - install ssh key and dotfiles on specified host
+
+SYNOPSIS
+  ssh_made_easy [OPTIONS] <host>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  ssh_made_easy -h
+  ssh_made_easy myserver.example.com
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "No host specified"
     return 1

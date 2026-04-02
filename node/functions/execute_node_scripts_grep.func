@@ -5,6 +5,27 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 # List node scripts matching grep and execute the selected script
 # todo: replace with select_from_options when ready to test
 function execute_node_scripts_grep() {
+  local __usage="
+NAME:
+  execute_node_scripts_grep - list and execute node scripts matching a pattern
+
+SYNOPSIS
+  execute_node_scripts_grep [OPTIONS] <pattern>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  execute_node_scripts_grep -h
+  execute_node_scripts_grep test
+  execute_node_scripts_grep build
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   if [ $# -ne 1 ]; then
     log_error "Must specify a pattern to match"
     return 1

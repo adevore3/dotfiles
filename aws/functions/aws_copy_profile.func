@@ -5,6 +5,27 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 # List a set of profiles to make your default
 # Will exit if no profiles exist
 function aws_copy_profile() {
+  local __usage="
+NAME:
+  aws_copy_profile - copy AWS credentials from one profile to another
+
+SYNOPSIS
+  aws_copy_profile [OPTIONS] [profile_name]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  aws_copy_profile -h
+  aws_copy_profile
+  aws_copy_profile default
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   local cred_file="$HOME/.aws/credentials"
 
   select_from_options "egrep '^\[.*\]$' $cred_file | sed 's/[][]//g' | sort"

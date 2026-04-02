@@ -1,7 +1,41 @@
 #!/bin/bash
 
-# Send a command to every session, every window and every pane
+#==============================================================================
+# Description: Send a command to every pane in every window of every tmux
+#              session
+#
+# Usage: tmux_send_command_every_session_window_pane <command>
+#
+# Arguments:
+#   $* - Command string to send to all panes
+#
+# Returns:
+#   0 - Success
+#
+# Example:
+#   tmux_send_command_every_session_window_pane "clear"
+#==============================================================================
 tmux_send_command_every_session_window_pane() {
+  local __usage="
+NAME:
+  tmux_send_command_every_session_window_pane - send a command to every pane in every window of every tmux session
+
+SYNOPSIS
+  tmux_send_command_every_session_window_pane [OPTIONS] <command>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  tmux_send_command_every_session_window_pane -h
+  tmux_send_command_every_session_window_pane \"clear\"
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   for session in `tmux list-sessions -F '#S'`; do
     for window in `tmux list-windows -t $session -F '#I' | sort`; do
       for pane in `tmux list-panes -t $session:$window -F '#P' | sort`; do

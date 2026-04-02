@@ -11,6 +11,26 @@ function find-up () {
 }
 
 function cdnvm() {
+  local __usage="
+NAME:
+  cdnvm - change directory and automatically run nvm use if .nvmrc is found
+
+SYNOPSIS
+  cdnvm [OPTIONS] [directory]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  cdnvm -h
+  cdnvm /path/to/project
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   cd "$@";
   nvm_path=$(find-up .nvmrc | tr -d '[:space:]')
 
