@@ -20,6 +20,27 @@
 #   join_by '|' foo bar baz  # outputs: "foo|bar|baz"
 #==============================================================================
 function join_by {
+  local __usage="
+NAME:
+  join_by - join a list of strings with a delimiter
+
+SYNOPSIS
+  join_by [OPTIONS] <delimiter> <string1> [string2 ...]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  join_by -h
+  join_by ', ' a b c        # outputs: a, b, c
+  join_by '|' foo bar baz   # outputs: foo|bar|baz
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}";
 }
 

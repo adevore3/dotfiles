@@ -18,6 +18,26 @@
 #   trim "  hello world  "  # outputs: "hello world"
 #==============================================================================
 function trim() {
+    local __usage="
+NAME:
+  trim - trim leading and trailing whitespace from a string
+
+SYNOPSIS
+  trim [OPTIONS] <string>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  trim -h
+  trim \"  hello world  \"   # outputs: hello world
+"
+
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        echo "$__usage"
+        return 0
+    fi
+
     local var="$*"
     # remove leading whitespace characters
     var="${var#"${var%%[![:space:]]*}"}"

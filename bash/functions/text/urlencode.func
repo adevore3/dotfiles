@@ -22,6 +22,27 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   urlencode "foo&bar=baz"  # outputs: foo%26bar%3Dbaz
 #==============================================================================
 function urlencode() {
+  local __usage="
+NAME:
+  urlencode - URL-encode a string (percent-encoding for URLs)
+
+SYNOPSIS
+  urlencode [OPTIONS] <string>
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  urlencode -h
+  urlencode \"hello world\"    # outputs: hello%20world
+  urlencode \"foo&bar=baz\"    # outputs: foo%26bar%3Dbaz
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   usage() {
      echo
      read -r -d '' VAR <<'EOF'

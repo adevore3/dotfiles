@@ -20,6 +20,27 @@
 #   ls -la | highlight "\.txt" "\.sh"
 #==============================================================================
 function highlight() {
+  local __usage="
+NAME:
+  highlight - highlight all patterns in input with color (case-insensitive)
+
+SYNOPSIS
+  <command> | highlight [OPTIONS] <pattern1> [pattern2 ...]
+
+OPTIONS:
+  -h, --help       Prints this message
+
+EXAMPLES:
+  highlight -h
+  cat file.txt | highlight error warning
+  ls -la | highlight \"\.txt\" \"\.sh\"
+"
+
+  if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    echo "$__usage"
+    return 0
+  fi
+
   egrep --color=auto -i "$(IFS=\| ; echo "$*")|\$"
 }
 
