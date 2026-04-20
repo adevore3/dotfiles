@@ -2,7 +2,6 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-# Using date, convert datetime to unixtime seconds
 function from_datetime() {
   local __usage="
 NAME:

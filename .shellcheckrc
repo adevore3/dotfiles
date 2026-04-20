@@ -1,0 +1,15 @@
+# ShellCheck configuration for dotfiles repository
+#
+# Disable specific warnings that are problematic for this codebase
+
+# SC1090: Can't follow non-constant source (we use ${DOTFILES} variable)
+disable=SC1090
+
+# SC1091: Not following source file (similar to SC1090)
+disable=SC1091
+
+# SC2148: Tips depend on target shell and yours is unknown (we specify #!/bin/bash)
+# This is already handled by shebangs, so we can disable this
+
+# External sources (files sourced with variables in path)
+external-sources=true

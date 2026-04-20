@@ -31,10 +31,27 @@ If submodules fail to initialize:
 git submodule update --init --force --remote
 ```
 
-## Testing
+## Development Commands
+
+This repository includes a Makefile for common operations. Run `make help` to see all available targets.
+
+**Common commands:**
+```bash
+make help               # Show all available commands
+make test               # Run all tests
+make lint               # Run shellcheck on all shell files
+make stats              # Show repository statistics
+make list-functions     # List all bash functions by category
+make install            # Install dotfiles (creates symlinks)
+make update-submodules  # Update git submodules
+```
+
+### Testing
 
 **Run all tests:**
 ```bash
+make test
+# or directly:
 ./run_all_tests.sh
 ```
 Discovers and executes all `*_test.sh` files in the repository. Test files use utilities from `bash/functions/test/test_utils.sh` (assert_equals, assert_contains).
@@ -43,6 +60,22 @@ Discovers and executes all `*_test.sh` files in the repository. Test files use u
 ```bash
 bash bash/functions/test/log_utils_test.sh
 ```
+
+### Linting
+
+The repository uses [shellcheck](https://www.shellcheck.net/) for shell script linting, configured via `.shellcheckrc`.
+
+**Lint all code:**
+```bash
+make lint               # Lint both functions and scripts
+make lint-functions     # Lint only bash functions
+make lint-scripts       # Lint only shell scripts
+make lint-verbose       # Verbose output with error codes
+```
+
+**Configuration:**
+- `.shellcheckrc` - Disables SC1090/SC1091 (can't follow non-constant source paths)
+- Excludes third-party code (autojump, dotbot, indeed submodules)
 
 ## Architecture
 
