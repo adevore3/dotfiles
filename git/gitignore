@@ -1,6 +1,7 @@
 *adevore*.properties
 ,*
 .gradle/
+.claude/
 /*.iml
 /.idea
 build/
