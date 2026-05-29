@@ -8,7 +8,7 @@ set -uo pipefail
 HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$HOOK_DIR/notify-lib.sh"
 
-read_hook_context   # sets DIR, LABEL, SID
+read_hook_context   # sets DIR, LABEL, SID, TRANSCRIPT
 
 MSG="Session started in ${DIR}"
 [ -n "$SID" ] && MSG="${MSG} · ${SID}"

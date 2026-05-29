@@ -26,8 +26,10 @@ a dotbot `shell:` step).
 ## Notifications
 
 - **Notification** event (Claude needs attention) -> Slack (`notify-slack.sh`), desktop fallback.
-- **Stop** event (Claude finished) -> Slack preferred; falls back to ntfy on any Slack failure,
-  noting when Slack was configured but failed (`notify-done.sh`). Exactly one notification.
+- **Stop** event (Claude finished) -> Slack preferred, ntfy fallback (`notify-done.sh`). The
+  message includes a snippet of Claude's last reply and flags **needs-input** (❓, ntfy
+  Priority high) vs **FYI** (✅, ntfy Priority low), classified by a heuristic + the
+  `<!-- needs-input -->` marker. Exactly one notification.
 - **SessionStart** event -> notifies BOTH channels and warns (in-session + via any working
   channel) if either is unconfigured or fails; never blocks (`notify-session-start.sh`, async).
 

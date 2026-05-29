@@ -20,3 +20,8 @@
 - Logging utilities available: `log_debug`, `log_info`, `log_warn`, `log_error` (from dotfiles)
 - Uses autojump for directory navigation
 - DOTFILES env var points to dotfiles repo root
+
+## Notifications
+- When your reply needs the user to make a decision or answer a question before you can
+  continue, end the message with `<!-- needs-input -->` (an HTML comment that stays hidden in
+  the terminal). A Stop hook reads it to flag the phone/Slack notification as needing input.
