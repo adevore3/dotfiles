@@ -1,65 +1,60 @@
 #!/bin/bash
-# Tests that the notify hooks read their secret from the environment, that the Stop hook
-# (notify-done) posts to both ntfy and Slack, and that each channel no-ops on its
-# placeholder. A stub `curl` on PATH captures requests instead of hitting the network.
-# HOME is pointed at a temp dir per run so a real ~/.claude/secrets.env cannot leak in.
+# Tests notify-slack (Notification) and notify-done (Stop: Slack-preferred, ntfy fallback).
+# Uses the stub curl from notify_test_helpers.sh and a temp HOME so a real ~/.claude/secrets.env
+# can't leak in.
 set -uo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="${DOTFILES:-$(cd "$DIR/../.." && pwd)}"
 source "$ROOT/bash/functions/test/test_utils.sh"
+source "$DIR/notify_test_helpers.sh"
 HOOKS="$DIR/../hooks"
+SLACK_OK="https://hooks.slack.com/services/T/B/zzz"
 
-setup_stub() {
-  STUB_DIR="$(mktemp -d)"
-  export CURL_LOG="$STUB_DIR/curl.log"
-  : > "$CURL_LOG"
-  cat > "$STUB_DIR/curl" <<'STUB'
-#!/bin/bash
-printf '%s\n' "$*" >> "$CURL_LOG"
-exit 0
-STUB
-  chmod +x "$STUB_DIR/curl"
-  export PATH="$STUB_DIR:$PATH"
-}
-teardown_stub() { export PATH="${PATH#"$STUB_DIR":}"; rm -rf "$STUB_DIR"; }
-wait_for_log() { for _ in $(seq 1 60); do [ -s "$CURL_LOG" ] && return 0; sleep 0.05; done; return 1; }
-
-# notify-slack: posts to the env webhook
+# --- notify-slack (Notification) ---
 setup_stub
 echo '{"message":"hi","cwd":"/tmp/proj"}' | \
-  HOME="$STUB_DIR" SLACK_WEBHOOK_URL="https://hooks.slack.com/services/T/B/zzz" bash "$HOOKS/notify-slack.sh"
-assert_contains "https://hooks.slack.com/services/T/B/zzz" "$(cat "$CURL_LOG")" "notify-slack posts to env webhook"
+  HOME="$STUB_DIR" SLACK_WEBHOOK_URL="$SLACK_OK" bash "$HOOKS/notify-slack.sh"
+assert_contains "$SLACK_OK" "$(cat "$CURL_LOG")" "notify-slack posts to env webhook"
 teardown_stub
 
-# notify-slack: no-op with placeholder
 setup_stub
 echo '{"message":"hi","cwd":"/tmp/proj"}' | \
   HOME="$STUB_DIR" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-slack.sh"
 assert_equals "" "$(cat "$CURL_LOG")" "notify-slack skips curl without a real webhook"
 teardown_stub
 
-# notify-done: posts to the env ntfy topic
+# --- notify-done (Stop): Slack preferred, ntfy fallback ---
+
+# Slack delivers -> ntfy NOT called
+setup_stub
+echo '{"cwd":"/tmp/proj","session_id":"abc123"}' | \
+  HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="$SLACK_OK" bash "$HOOKS/notify-done.sh"
+assert_contains "$SLACK_OK" "$(cat "$CURL_LOG")" "notify-done posts to Slack when configured"
+assert_equals "0" "$(grep -c 'ntfy.sh' "$CURL_LOG")" "notify-done does NOT call ntfy when Slack delivers"
+teardown_stub
+
+# Slack not configured -> ntfy plain (no failure note)
 setup_stub
 echo '{"cwd":"/tmp/proj","session_id":"abc123"}' | \
   HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
-wait_for_log
-assert_contains "ntfy.sh/claude-test-topic" "$(cat "$CURL_LOG")" "notify-done posts to env ntfy topic"
+assert_contains "ntfy.sh/claude-test-topic" "$(cat "$CURL_LOG")" "notify-done falls back to ntfy when Slack unconfigured"
+assert_equals "0" "$(grep -c 'Slack delivery failed' "$CURL_LOG")" "no failure note when Slack simply unconfigured"
 teardown_stub
 
-# notify-done: ALSO posts the done message to Slack when the webhook is set
+# Slack configured but FAILS -> ntfy fallback WITH failure note
 setup_stub
 echo '{"cwd":"/tmp/proj","session_id":"abc123"}' | \
-  HOME="$STUB_DIR" NTFY_TOPIC="claude-CHANGEME" SLACK_WEBHOOK_URL="https://hooks.slack.com/services/T/B/zzz" bash "$HOOKS/notify-done.sh"
-wait_for_log
-assert_contains "https://hooks.slack.com/services/T/B/zzz" "$(cat "$CURL_LOG")" "notify-done also posts done to Slack"
+  HOME="$STUB_DIR" FAIL_SLACK=1 NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="$SLACK_OK" bash "$HOOKS/notify-done.sh"
+assert_contains "ntfy.sh/claude-test-topic" "$(cat "$CURL_LOG")" "notify-done falls back to ntfy when Slack fails"
+assert_contains "Slack delivery failed" "$(cat "$CURL_LOG")" "ntfy message notes the Slack failure"
 teardown_stub
 
-# notify-done: skips both channels when neither secret is configured
+# Neither configured -> nothing
 setup_stub
 echo '{"cwd":"/tmp/proj"}' | \
   HOME="$STUB_DIR" NTFY_TOPIC="claude-CHANGEME" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
-assert_equals "" "$(cat "$CURL_LOG")" "notify-done skips both channels when unconfigured"
+assert_equals "" "$(cat "$CURL_LOG")" "notify-done does nothing when neither channel configured"
 teardown_stub
 
-echo "All notify secret tests passed."
+echo "All notify-done/slack tests passed."
