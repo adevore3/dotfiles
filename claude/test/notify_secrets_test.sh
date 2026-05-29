@@ -23,7 +23,7 @@ STUB
   export PATH="$STUB_DIR:$PATH"
 }
 teardown_stub() { export PATH="${PATH#"$STUB_DIR":}"; rm -rf "$STUB_DIR"; }
-wait_for_log() { local i; for i in $(seq 1 60); do [ -s "$CURL_LOG" ] && return 0; sleep 0.05; done; return 1; }
+wait_for_log() { for _ in $(seq 1 60); do [ -s "$CURL_LOG" ] && return 0; sleep 0.05; done; return 1; }
 
 # notify-slack: posts to the env webhook
 setup_stub

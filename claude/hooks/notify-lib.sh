@@ -10,7 +10,7 @@
 # Posts a Block Kit message to $SLACK_WEBHOOK_URL. Returns non-zero (no-op) if the webhook
 # is unset/placeholder. Never errors out the calling hook.
 slack_send() {
-  local text="$1" project="$2" url payload
+  local text="${1:-}" project="${2:-}" url payload
   url="${SLACK_WEBHOOK_URL:-YOUR_SLACK_WEBHOOK_URL}"
   [[ "$url" == https://hooks.slack.com/services/* ]] || return 1
   payload=$(jq -n --arg text "$text" --arg project "$project" '{

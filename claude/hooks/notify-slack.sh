@@ -8,7 +8,7 @@ set -uo pipefail
 HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$HOOK_DIR/notify-lib.sh"
 
-INPUT=$(cat /dev/stdin)
+INPUT=$(cat)
 MSG=$(echo "$INPUT" | jq -r '.message // "Claude Code needs your attention"')
 CWD=$(echo "$INPUT" | jq -r '.cwd // "unknown"')
 PROJECT=$(basename "$CWD")
@@ -16,7 +16,9 @@ PROJECT=$(basename "$CWD")
 # Best-effort local desktop popup; no-op (returns non-zero) on headless boxes.
 notify_desktop() {
   if command -v osascript >/dev/null 2>&1; then
-    osascript -e "display notification \"$MSG\" with title \"Claude Code\" subtitle \"$PROJECT\" sound name \"Glass\"" 2>/dev/null
+    osascript -e 'on run argv
+display notification (item 1 of argv) with title "Claude Code" subtitle (item 2 of argv) sound name "Glass"
+end run' "$MSG" "$PROJECT" 2>/dev/null
   elif command -v notify-send >/dev/null 2>&1 && [ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]; then
     notify-send "Claude Code — $PROJECT" "$MSG" 2>/dev/null
   else

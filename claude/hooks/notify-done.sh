@@ -1,6 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Stop hook: notifies that Claude finished — via ntfy.sh (NTFY_TOPIC) AND Slack
 # (SLACK_WEBHOOK_URL). Either channel is skipped if its secret is unset. See claude/README.md.
+
+set -uo pipefail
 
 HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$HOOK_DIR/notify-lib.sh"   # provides slack_send + secret sourcing
