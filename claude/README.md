@@ -15,6 +15,7 @@ submodule, not here.
 | `hooks/notify-lib.sh` | `~/.claude/hooks/notify-lib.sh` | Shared helper sourced by the two hooks |
 | `hooks/notify-slack.sh` | `~/.claude/hooks/notify-slack.sh` | Notification hook (attention) |
 | `hooks/notify-done.sh` | `~/.claude/hooks/notify-done.sh` | Stop hook (done) -> ntfy + Slack |
+| `hooks/notify-session-start.sh` | `~/.claude/hooks/notify-session-start.sh` | SessionStart hook (notify both + health-warn, async) |
 | `plugins/*.json` | `~/.claude/plugins/*.json` | Manifests only, not plugin code |
 | `memory/dotfiles/` | `~/.claude/projects/<slug>/memory/` | Directory symlink (see below) |
 
@@ -24,11 +25,14 @@ a dotbot `shell:` step).
 
 ## Notifications
 
-- **Notification** event (Claude needs attention) -> Slack (`notify-slack.sh`).
-- **Stop** event (Claude finished) -> ntfy + Slack (`notify-done.sh`).
+- **Notification** event (Claude needs attention) -> Slack (`notify-slack.sh`), desktop fallback.
+- **Stop** event (Claude finished) -> Slack preferred; falls back to ntfy on any Slack failure,
+  noting when Slack was configured but failed (`notify-done.sh`). Exactly one notification.
+- **SessionStart** event -> notifies BOTH channels and warns (in-session + via any working
+  channel) if either is unconfigured or fails; never blocks (`notify-session-start.sh`, async).
 
-Both share `notify-lib.sh` (`slack_send` + secret sourcing). Each channel is skipped
-gracefully when its secret is unset.
+All hooks share `notify-lib.sh` (`slack_send`, `ntfy_send`, `read_hook_context`). Each send
+helper returns 0=delivered / 1=not configured / 2=failed. Channels skip gracefully when unset.
 
 ## Memory
 
