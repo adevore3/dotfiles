@@ -17,9 +17,23 @@
     ~/.vim: vim/vim
     ~/.vimrc: vim/vimrc
 
+- link:
+    ~/.claude/CLAUDE.md: { path: claude/CLAUDE.md, force: true }
+    ~/.claude/settings.json: { path: claude/settings.json, force: true }
+    ~/.claude/statusline-command.sh: { path: claude/statusline-command.sh, force: true }
+    ~/.claude/hooks/notify-lib.sh: { path: claude/hooks/notify-lib.sh, create: true, force: true }
+    ~/.claude/hooks/notify-slack.sh: { path: claude/hooks/notify-slack.sh, force: true }
+    ~/.claude/hooks/notify-done.sh: { path: claude/hooks/notify-done.sh, force: true }
+    ~/.claude/plugins/installed_plugins.json: { path: claude/plugins/installed_plugins.json, create: true, force: true }
+    ~/.claude/plugins/known_marketplaces.json: { path: claude/plugins/known_marketplaces.json, force: true }
+
 - shell:
   - command: "sudo /home/$(whoami)/dotfiles/env-setup.sh"
     stdout: true
     stderr: true
     description: "Running env setup script."
+  - command: "claude/setup.sh"
+    stdout: true
+    stderr: true
+    description: "Linking Claude memory dir."
 
