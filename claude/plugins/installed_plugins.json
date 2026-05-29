@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "plugins": {
+    "context7@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/adevore/.claude/plugins/cache/claude-plugins-official/context7/unknown",
+        "version": "unknown",
+        "installedAt": "2026-04-01T19:43:03.596Z",
+        "lastUpdated": "2026-05-14T23:19:22.726Z"
+      }
+    ],
+    "superpowers@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/adevore/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0",
+        "version": "5.1.0",
+        "installedAt": "2026-05-27T21:57:44.564Z",
+        "lastUpdated": "2026-05-27T22:05:32.246Z"
+      }
+    ]
+  }
+}
