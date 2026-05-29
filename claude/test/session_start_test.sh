@@ -33,6 +33,17 @@ assert_contains "ntfy delivery failed" "$(cat "$err")" "warning printed to stder
 assert_equals "2" "$(grep -c 'hooks.slack.com' "$CURL_LOG")" "warning cross-reported via working Slack channel"
 teardown_stub
 
+# Slack configured but FAILS, ntfy ok -> exit 0, stderr warns, cross-report via ntfy
+setup_stub
+err="$STUB_DIR/err"
+echo '{"cwd":"/tmp/proj","session_id":"sess01"}' | \
+  HOME="$STUB_DIR" FAIL_SLACK=1 NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="$SLACK_OK" \
+  bash "$HOOKS/notify-session-start.sh" 2>"$err"; rc=$?
+assert_equals "0" "$rc" "session-start exits 0 even when Slack fails"
+assert_contains "Slack delivery failed" "$(cat "$err")" "warns Slack delivery failed"
+assert_equals "2" "$(grep -c 'ntfy.sh' "$CURL_LOG")" "warning cross-reported via working ntfy channel"
+teardown_stub
+
 # Both unconfigured -> exit 0, stderr warns about both, no curl calls
 setup_stub
 err="$STUB_DIR/err"

@@ -27,7 +27,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/notify-session-start.sh"
+            "command": "bash ~/.claude/hooks/notify-session-start.sh",
+            "async": true
           }
         ]
       }

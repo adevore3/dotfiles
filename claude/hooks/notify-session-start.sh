@@ -23,7 +23,7 @@ case $ntfy_rc  in 1) warnings+=("ntfy not configured");;  2) warnings+=("ntfy de
 if [ "${#warnings[@]}" -gt 0 ]; then
   joined=$(printf '%s; ' "${warnings[@]}"); joined="${joined%; }"
   warn_text="session-start check: ${joined}"
-  echo "⚠️  ${warn_text}" >&2                                       # (a) in-session (transcript)
+  echo "⚠️ ${warn_text}" >&2                                        # (a) in-session (transcript)
   [ "$slack_rc" -eq 0 ] && slack_send ":warning: ${warn_text}" "$DIR"   # (b) cross-report via Slack
   [ "$ntfy_rc"  -eq 0 ] && ntfy_send "$LABEL" "⚠️ ${warn_text}"        #     cross-report via ntfy
 fi
