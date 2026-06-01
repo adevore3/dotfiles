@@ -42,16 +42,6 @@
           }
         ]
       }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/notify-slack.sh"
-          }
-        ]
-      }
     ]
   },
   "statusLine": {
