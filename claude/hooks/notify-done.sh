@@ -14,24 +14,20 @@ text=$(last_assistant_text)
 urgency=$(classify_urgency "$text")
 snip=$(snippet "$text")
 
+# Session identity leads every message so you can tell which session pinged.
+ident="${DIR}"
+[ -n "$SID" ] && ident="${ident} · ${SID}"
+
 if [ "$urgency" = "input" ]; then
-  slack_text=":question: *Needs your input*"
-  [ -n "$snip" ] && slack_text="${slack_text} — ${snip}"
-  ntfy_title="❓ ${LABEL}"
-  ntfy_body="${snip:-Needs your input}"
-  prio="high"
-  tags="question"
+  emoji=":question:"; ntfy_title="❓ ${LABEL}"; prio="high"; tags="question"
 else
-  base="Done in ${DIR}"
-  [ -n "$SID" ] && base="${base} · ${SID}"
-  slack_text=":white_check_mark: *${base}*"
-  [ -n "$snip" ] && slack_text="${slack_text} — ${snip}"
-  ntfy_title="✅ ${LABEL}"
-  ntfy_body="$base"
-  [ -n "$snip" ] && ntfy_body="${ntfy_body} — ${snip}"
-  prio="low"
-  tags="white_check_mark,robot"
+  emoji=":white_check_mark:"; ntfy_title="✅ ${LABEL}"; prio="low"; tags="white_check_mark,robot"
 fi
+
+slack_text="${emoji} *${ident}*"
+[ -n "$snip" ] && slack_text="${slack_text} — ${snip}"
+ntfy_body="$ident"
+[ -n "$snip" ] && ntfy_body="${ntfy_body} — ${snip}"
 
 slack_send "$slack_text" "$DIR"
 case $? in

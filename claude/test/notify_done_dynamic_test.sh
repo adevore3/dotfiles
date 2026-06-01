@@ -27,22 +27,22 @@ assert_contains "Priority: high" "$log" "needs-input -> ntfy high priority"
 assert_contains "Which database should I use" "$log" "needs-input ntfy body carries the snippet text"
 teardown_stub
 
-# needs-input + Slack delivers -> Slack message says 'Needs your input'
+# needs-input + Slack delivers -> Slack message leads with session identity (no "Needs your input" prose)
 setup_stub
 tf=$(mk_transcript "Should I deploy now?")
 echo '{"cwd":"/tmp/proj","session_id":"abc123","transcript_path":"'"$tf"'"}' | \
   HOME="$STUB_DIR" SLACK_WEBHOOK_URL="$SLACK_OK" bash "$HOOKS/notify-done.sh"
-assert_contains "Needs your input" "$(cat "$CURL_LOG")" "needs-input -> Slack 'Needs your input'"
+assert_contains "proj · abc123" "$(cat "$CURL_LOG")" "needs-input -> Slack leads with session identity"
 teardown_stub
 
-# fyi -> ntfy low priority + 'Done in'
+# fyi -> ntfy low priority + session identity (no "Done in" prose)
 setup_stub
 tf=$(mk_transcript "Started the build; it is running now.")
 echo '{"cwd":"/tmp/proj","session_id":"abc123","transcript_path":"'"$tf"'"}' | \
   HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
 log=$(cat "$CURL_LOG")
 assert_contains "Priority: low" "$log" "fyi -> ntfy low priority"
-assert_contains "Done in proj" "$log" "fyi -> 'Done in' body"
+assert_contains "proj · abc123" "$log" "fyi -> body leads with session identity"
 teardown_stub
 
 # marker forces needs-input even without a question mark
@@ -61,7 +61,7 @@ echo '{"cwd":"/tmp/proj","session_id":"abc123","transcript_path":"/nonexistent/x
   HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"; rc=$?
 log=$(cat "$CURL_LOG")
 assert_equals "0" "$rc" "missing transcript -> exit 0"
-assert_contains "Done in proj" "$log" "missing transcript -> graceful 'Done in'"
+assert_contains "proj · abc123" "$log" "missing transcript -> graceful session identity"
 assert_contains "Priority: low" "$log" "missing transcript -> low priority (fyi)"
 teardown_stub
 
