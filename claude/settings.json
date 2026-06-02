@@ -6,7 +6,9 @@
       "Grep",
       "Bash",
       "Edit",
-      "Write"
+      "Write",
+      "Edit(/home/adevore/.claude/projects/**/memory/**)",
+      "Write(/home/adevore/.claude/projects/**/memory/**)"
     ],
     "defaultMode": "dontAsk"
   },
