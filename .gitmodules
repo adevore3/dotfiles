@@ -1,52 +1,67 @@
 [submodule "dotbot"]
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
+	ignore = dirty
 [submodule "vim/bundle/pathogen"]
 	path = vim/vim/bundle/pathogen
 	url = https://github.com/tpope/vim-pathogen.git
+	ignore = dirty
 [submodule "vim/bundle/fugitive"]
 	path = vim/vim/bundle/fugitive
 	url = http://github.com/tpope/vim-fugitive.git
+	ignore = dirty
 [submodule "vim/bundle/colors-solarized"]
 	path = vim/vim/bundle/colors-solarized
 	url = https://github.com/altercation/vim-colors-solarized.git
+	ignore = dirty
 [submodule "vim/bundle/scala"]
 	path = vim/vim/bundle/scala
 	url = https://github.com/derekwyatt/vim-scala.git
+	ignore = dirty
 [submodule "vim/bundle/tmux"]
 	path = vim/vim/bundle/tmux
 	url = https://github.com/tmux-plugins/vim-tmux.git
+	ignore = dirty
 [submodule "vim/bundle/gitgutter"]
 	path = vim/vim/bundle/gitgutter
 	url = https://github.com/airblade/vim-gitgutter.git
+	ignore = dirty
 [submodule "vim/bundle/sensible"]
 	path = vim/vim/bundle/sensible
 	url = https://github.com/tpope/vim-sensible.git
+	ignore = dirty
 [submodule "vim/bundle/tmux-navigator"]
 	path = vim/vim/bundle/tmux-navigator
 	url = https://github.com/christoomey/vim-tmux-navigator.git
+	ignore = dirty
 [submodule "vim/bundle/easy-align"]
 	path = vim/vim/bundle/easy-align
 	url = https://github.com/junegunn/vim-easy-align.git
+	ignore = dirty
 [submodule "vim/bundle/json"]
 	path = vim/vim/bundle/json
 	url = https://github.com/elzr/vim-json
+	ignore = dirty
 [submodule "autojump"]
 	path = autojump/autojump
 	url = https://github.com/wting/autojump.git
+	ignore = dirty
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+	ignore = dirty
 [submodule "vim/vim/bundle/multiple-cursors"]
 	path = vim/vim/bundle/multiple-cursors
 	url = https://github.com/terryma/vim-multiple-cursors
+	ignore = dirty
 [submodule "vim/vim/bundle/expand-region"]
 	path = vim/vim/bundle/expand-region
 	url = https://github.com/terryma/vim-expand-region
-  ignore = dirty
+	ignore = dirty
 [submodule "indeed"]
 	path = indeed
 	url = git@code.corp.indeed.com:adevore/indeed-dotfiles
 [submodule "cheat/cheatsheets/community"]
 	path = cheat/cheatsheets/community
 	url = https://github.com/cheat/cheatsheets
+	ignore = dirty
