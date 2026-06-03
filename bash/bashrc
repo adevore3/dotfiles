@@ -16,6 +16,17 @@ export DOTFILES="${HOME}/dotfiles"
 # private or per instance configuration
 if [ -a ~/.localrc ]; then source ~/.localrc; fi
 
+# Route SSH agent access through a stable symlink so tmux sessions survive reconnects. `ssh -A` forwards the
+# agent to a per-connection socket whose path changes every login; long-lived tmux shells read the symlink
+# instead, so repointing it here lets every existing pane pick up the fresh agent. This must run early, in the
+# login shell before any per-host config.bash auto-attaches tmux (cloudvm does), while SSH_AUTH_SOCK still
+# holds this connection's forwarded socket. Ungated: it has to run even where SSH_AGENT_DISABLE turns off the
+# local-agent fallback at the bottom of this file.
+SSH_AUTH_SOCK_LINK="${HOME}/.ssh/ssh_auth_sock"
+if [[ -S "${SSH_AUTH_SOCK:-}" && "${SSH_AUTH_SOCK}" != "${SSH_AUTH_SOCK_LINK}" ]]; then
+  ln -sf "${SSH_AUTH_SOCK}" "${SSH_AUTH_SOCK_LINK}"
+fi
+
 # source our functions (must go before configs because conditionally_prefix_path is required for some configs)
 for config_file in $(find ${DOTFILES} -type f -name "*.func"); do
   #echo $config_file
@@ -38,14 +49,14 @@ if [[ $PROMPT ]]; then
     export PS1=$PROMPT
 fi
 
-# Mostly works (sometimes expires, not sure why)
-# Also must remain in bashrc otherwise I'm prompted way too often
-if [[ -z "${SSH_AGENT_DISABLE}" ]]; then
-  if [ ! -S ~/.ssh/ssh_auth_sock ]; then
-    eval `ssh-agent`
-    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-  fi
-  export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
-  ssh-add -l > /dev/null || ssh-add
+# Local-agent fallback: when no forwarded agent backs the symlink, start a local one and add a key. Disabled
+# on hosts that set SSH_AGENT_DISABLE (e.g. cloudvm, which relies on the forwarded agent linked above).
+if [[ -z "${SSH_AGENT_DISABLE}" && ! -S "${SSH_AUTH_SOCK_LINK}" ]]; then
+  eval "$(ssh-agent)"
+  ln -sf "${SSH_AUTH_SOCK}" "${SSH_AUTH_SOCK_LINK}"
+  ssh-add
 fi
+# Always reach the agent through the symlink when something is backing it.
+[ -S "${SSH_AUTH_SOCK_LINK}" ] && export SSH_AUTH_SOCK="${SSH_AUTH_SOCK_LINK}"
+unset SSH_AUTH_SOCK_LINK
 
