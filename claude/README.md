@@ -35,8 +35,15 @@ a dotbot `shell:` step).
 - **SessionStart** event -> notifies BOTH channels and warns (in-session + via any working
   channel) if either is unconfigured or fails; never blocks (`notify-session-start.sh`, async).
 
-All hooks share `notify-lib.sh` (`slack_send`, `ntfy_send`, `read_hook_context`). Each send
-helper returns 0=delivered / 1=not configured / 2=failed. Channels skip gracefully when unset.
+All hooks share `notify-lib.sh` (`slack_send`, `ntfy_send`, `read_hook_context`, `md_to_mrkdwn`).
+Each send helper returns 0=delivered / 1=not configured / 2=failed. Channels skip gracefully when
+unset. `md_to_mrkdwn` converts Claude's GitHub-flavored markdown to Slack mrkdwn (stdlib Python,
+embedded in `notify-lib.sh`; no-ops to raw text if python3 is missing).
+
+To eyeball the Slack formatting after changing the converter, use `test/notify-preview.sh` with the
+saved samples in `test/fixtures/`: run it with no args for an offline converted preview (NBSP shown
+as `·`), or `--send` to fire the live Stop hook to Slack. It is not a `*_test.sh`, so `make test`
+skips it (it can touch the network).
 
 ## Memory
 

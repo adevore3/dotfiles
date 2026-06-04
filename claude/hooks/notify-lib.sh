@@ -6,6 +6,53 @@
 # Pull secrets from a non-login-shell-safe fallback file if present (env/~/.localrc wins).
 [ -f "$HOME/.claude/secrets.env" ] && source "$HOME/.claude/secrets.env"
 
+# Self-contained GitHub-Markdown -> Slack mrkdwn converter (stdlib Python, no deps). Embedded as a
+# heredoc so the single symlinked notify-lib.sh stays portable. Reads stdin, writes converted stdout.
+# Fenced/inline code passes through untouched; Slack supports ``` and `code`.
+read -r -d '' MD_TO_MRKDWN_PY <<'PYEOF' || true
+import re, sys
+
+BOLD = "\x00"  # sentinel so bold markers survive the *italic* pass, restored to * at the end
+
+def inline(seg):
+    seg = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", r"<\2|\1>", seg)   # ![alt](url) -> <url|alt>
+    seg = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r"<\2|\1>", seg)    # [text](url) -> <url|text>
+    seg = re.sub(r"\*\*(.+?)\*\*", BOLD + r"\1" + BOLD, seg)     # **bold**
+    seg = re.sub(r"__(.+?)__", BOLD + r"\1" + BOLD, seg)          # __bold__
+    seg = re.sub(r"(?<!\*)\*(?!\*)(.+?)\*", r"_\1_", seg)         # *italic* -> _italic_ (Slack)
+    seg = re.sub(r"~~(.+?)~~", r"~\1~", seg)                      # ~~strike~~ -> ~strike~
+    return seg.replace(BOLD, "*")
+
+def codeaware(text):  # convert only the non-`inline code` segments of a line
+    parts = re.split(r"(`[^`]+`)", text)
+    return "".join(p if i % 2 else inline(p) for i, p in enumerate(parts))
+
+def conv_line(line):
+    m = re.match(r"^#{1,6}\s+(.*)$", line)                       # heading -> bold line
+    if m:
+        return "*" + codeaware(m.group(1).rstrip()) + "*"
+    m = re.match(r"^([ \t]*)[-*+]\s+(.*)$", line)                # bullet -> • (◦ when nested)
+    if m:
+        indent = m.group(1).replace("\t", "  ")
+        pad = " " * len(indent)                             # NBSP: Slack keeps these, unlike plain spaces
+        return pad + ("◦ " if indent else "• ") + codeaware(m.group(2))
+    if re.match(r"^\s*([-*_])\1{2,}\s*$", line):                 # horizontal rule -> line of dashes
+        return "─" * 20
+    return codeaware(line)
+
+def convert(md):
+    out, fence = [], False
+    for line in md.split("\n"):
+        if line.lstrip().startswith("```"):                     # fence toggle; drop any info string
+            fence = not fence
+            out.append("```")
+            continue
+        out.append(line if fence else conv_line(line))
+    return "\n".join(out)
+
+sys.stdout.write(convert(sys.stdin.read()))
+PYEOF
+
 # read_hook_context: reads the hook's stdin JSON once and sets globals DIR, LABEL, SID, TRANSCRIPT.
 #   DIR        = basename of .cwd (or $PWD if absent)
 #   SID        = first 6 chars of .session_id (may be empty)
@@ -61,6 +108,14 @@ snippet() {
   s="${s# }"; s="${s% }"
   [ "${#s}" -gt 200 ] && s="${s:0:200}…"
   printf '%s' "$s"
+}
+
+# md_to_mrkdwn <github-markdown> -> Slack mrkdwn. Falls back to the input unchanged if python3 is
+# missing or the converter errors, so a notification is never dropped over formatting.
+md_to_mrkdwn() {
+  local text="${1:-}" out
+  command -v python3 >/dev/null 2>&1 || { printf '%s' "$text"; return; }
+  out=$(printf '%s' "$text" | python3 -c "$MD_TO_MRKDWN_PY" 2>/dev/null) && printf '%s' "$out" || printf '%s' "$text"
 }
 
 # chunk_text <text> [max] -> prints <text> split into <=max-char pieces, pieces separated by a US (\x1f)

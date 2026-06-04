@@ -14,8 +14,10 @@ read_hook_context   # sets DIR, LABEL, SID, TRANSCRIPT
 text=$(last_assistant_text)
 urgency=$(classify_urgency "$text")
 snip=$(snippet "$text")
-# Slack carries the full message (chunked by slack_send); strip only the input marker. ntfy keeps the snippet.
+# Slack carries the full message (chunked by slack_send): strip the input marker, then convert
+# Claude's GitHub-flavored markdown to Slack mrkdwn so it renders natively. ntfy keeps the snippet.
 body=$(printf '%s' "$text" | sed 's/<!-- needs-input -->//g')
+body=$(md_to_mrkdwn "$body")
 
 # Session identity leads every message so you can tell which session pinged.
 ident="${DIR}"
