@@ -1,5 +1,9 @@
 #!/bin/env bash
 
+# Resolve repo root from this script's own location: sudo strips DOTFILES from the environment,
+# so relying on the env var leaves the source path empty and log_* helpers undefined.
+DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
 function installing_template() {
@@ -68,8 +72,6 @@ apt_install_template "tmux"
 apt_install_template "tree"
 apt_install_template "vim"
 apt_install_template "wget"
-
-DOTFILES=${DOTFILES:-$HOME/dotfiles}
 
 installing_template "autojump" install_autojump
 installing_template "cheat" install_cheat
