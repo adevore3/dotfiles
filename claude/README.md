@@ -14,7 +14,7 @@ submodule, not here.
 | `statusline-command.sh` | `~/.claude/statusline-command.sh` | |
 | `hooks/notify-lib.sh` | `~/.claude/hooks/notify-lib.sh` | Shared helper sourced by the two hooks |
 | `hooks/notify-slack.sh` | `~/.claude/hooks/notify-slack.sh` | Notification hook (attention) |
-| `hooks/notify-done.sh` | `~/.claude/hooks/notify-done.sh` | Stop hook (done) -> ntfy + Slack |
+| `hooks/notify-done.sh` | `~/.claude/hooks/notify-done.sh` | Stop hook (done) -> Slack (ntfy opt-in) |
 | `hooks/notify-session-start.sh` | `~/.claude/hooks/notify-session-start.sh` | SessionStart hook (notify both + health-warn, async) |
 | `plugins/*.json` | `~/.claude/plugins/*.json` | Manifests only, not plugin code |
 | `memory/dotfiles/` | `~/.claude/projects/<slug>/memory/` | Directory symlink (see below) |
@@ -26,9 +26,11 @@ a dotbot `shell:` step).
 ## Notifications
 
 - **Notification** event (Claude needs attention) -> Slack (`notify-slack.sh`), desktop fallback.
-- **Stop** event (Claude finished) -> Slack preferred, ntfy fallback (`notify-done.sh`). The
-  message includes a snippet of Claude's last reply and flags **needs-input** (❓, ntfy
-  Priority high) vs **FYI** (✅, ntfy Priority low), classified by a heuristic + the
+- **Stop** event (Claude finished) -> Slack only by default (`notify-done.sh`); set
+  `NTFY_FALLBACK=1` to fall back to ntfy on any Slack failure. The Slack message carries
+  Claude's **full** last reply, chunked across multiple section blocks (Slack caps blocks at
+  3000 chars / 50 blocks); ntfy, when enabled, gets a 200-char snippet. Flags **needs-input**
+  (❓, ntfy Priority high) vs **FYI** (✅, ntfy Priority low), classified by a heuristic + the
   `<!-- needs-input -->` marker. Exactly one notification.
 - **SessionStart** event -> notifies BOTH channels and warns (in-session + via any working
   channel) if either is unconfigured or fails; never blocks (`notify-session-start.sh`, async).

@@ -20,7 +20,7 @@ mk_transcript() {  # $1 = assistant text -> echoes a transcript file path under 
 setup_stub
 tf=$(mk_transcript "Which database should I use?")
 echo '{"cwd":"/tmp/proj","session_id":"abc123","transcript_path":"'"$tf"'"}' | \
-  HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
+  HOME="$STUB_DIR" NTFY_FALLBACK=1 NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
 log=$(cat "$CURL_LOG")
 assert_contains "ntfy.sh/claude-test-topic" "$log" "needs-input posts to ntfy"
 assert_contains "Priority: high" "$log" "needs-input -> ntfy high priority"
@@ -39,7 +39,7 @@ teardown_stub
 setup_stub
 tf=$(mk_transcript "Started the build; it is running now.")
 echo '{"cwd":"/tmp/proj","session_id":"abc123","transcript_path":"'"$tf"'"}' | \
-  HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
+  HOME="$STUB_DIR" NTFY_FALLBACK=1 NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
 log=$(cat "$CURL_LOG")
 assert_contains "Priority: low" "$log" "fyi -> ntfy low priority"
 assert_contains "proj · abc123" "$log" "fyi -> body leads with session identity"
@@ -49,7 +49,7 @@ teardown_stub
 setup_stub
 tf=$(mk_transcript "I have two viable approaches. <!-- needs-input -->")
 echo '{"cwd":"/tmp/proj","session_id":"abc123","transcript_path":"'"$tf"'"}' | \
-  HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
+  HOME="$STUB_DIR" NTFY_FALLBACK=1 NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
 log=$(cat "$CURL_LOG")
 assert_contains "Priority: high" "$log" "marker -> needs-input high priority"
 assert_equals "0" "$(grep -c 'needs-input' "$CURL_LOG")" "marker is stripped from the snippet"
@@ -58,11 +58,21 @@ teardown_stub
 # missing transcript -> graceful FYI default, exit 0
 setup_stub
 echo '{"cwd":"/tmp/proj","session_id":"abc123","transcript_path":"/nonexistent/x.jsonl"}' | \
-  HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"; rc=$?
+  HOME="$STUB_DIR" NTFY_FALLBACK=1 NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"; rc=$?
 log=$(cat "$CURL_LOG")
 assert_equals "0" "$rc" "missing transcript -> exit 0"
 assert_contains "proj · abc123" "$log" "missing transcript -> graceful session identity"
 assert_contains "Priority: low" "$log" "missing transcript -> low priority (fyi)"
+teardown_stub
+
+# ntfy disabled by default: Slack unconfigured + no NTFY_FALLBACK -> no ntfy POST, still exit 0
+setup_stub
+tf=$(mk_transcript "Started the build; it is running now.")
+echo '{"cwd":"/tmp/proj","session_id":"abc123","transcript_path":"'"$tf"'"}' | \
+  HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"; rc=$?
+log=$(cat "$CURL_LOG")
+assert_equals "0" "$rc" "ntfy disabled -> still exit 0"
+assert_equals "0" "$(grep -c 'ntfy.sh' "$CURL_LOG")" "ntfy disabled -> no ntfy POST without NTFY_FALLBACK"
 teardown_stub
 
 echo "All notify-done dynamic tests passed."

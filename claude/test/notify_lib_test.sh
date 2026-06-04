@@ -26,6 +26,25 @@ out=$(snippet "$long")
 assert_equals "200" "$(printf '%s' "$out" | tr -cd 'a' | wc -c | tr -d ' ')" "snippet truncates body to 200 chars"
 assert_contains "…" "$out" "snippet appends ellipsis when truncated"
 
+# --- chunk_text ---
+# Short text -> single chunk, identical to input (no \x1f separators).
+out=$(chunk_text "$(printf 'line one\nline two')" 2900)
+assert_equals "$(printf 'line one\nline two')" "$out" "chunk_text keeps short text as one chunk"
+assert_equals "0" "$(printf '%s' "$out" | tr -cd '\037' | wc -c | tr -d ' ')" "short text has no chunk separators"
+
+# Long text -> multiple chunks, each <= max; chunks are separated by a single \x1f byte.
+long=$(printf 'p%s\n' $(seq 1 50) | awk '{for(i=0;i<60;i++)printf $0" "; print ""}')
+chunks=$(chunk_text "$long" 500)
+nsep=$(printf '%s' "$chunks" | tr -cd '\037' | wc -c | tr -d ' ')
+if [ "$nsep" -ge 1 ]; then echo "✓ long text splits into $((nsep + 1)) chunks"; else echo "✗ long text did not split"; exit 1; fi
+maxlen=$(printf '%s' "$chunks" | awk 'BEGIN{RS="\037"; m=0} {if(length>m)m=length} END{print m}')
+if [ "$maxlen" -le 500 ]; then echo "✓ every chunk <= max (longest $maxlen)"; else echo "✗ a chunk exceeded max ($maxlen)"; exit 1; fi
+
+# A single line longer than max is hard-split rather than dropped.
+oneline=$(printf 'x%.0s' $(seq 1 1200))
+maxlen=$(chunk_text "$oneline" 500 | awk 'BEGIN{RS="\037"; m=0} {if(length>m)m=length} END{print m}')
+if [ "$maxlen" -le 500 ]; then echo "✓ over-long single line hard-split (longest $maxlen)"; else echo "✗ long line not split ($maxlen)"; exit 1; fi
+
 # --- last_assistant_text ---
 tfile="$TMP/t.jsonl"
 printf '%s\n' \

@@ -63,18 +63,44 @@ snippet() {
   printf '%s' "$s"
 }
 
+# chunk_text <text> [max] -> prints <text> split into <=max-char pieces, pieces separated by a US (\x1f)
+# byte. Breaks on newline boundaries so markdown stays intact; hard-splits any single line longer than max.
+# Default max is 2900, just under Slack's 3000-char-per-mrkdwn-block limit.
+chunk_text() {
+  local text="${1:-}" max="${2:-2900}" line cur="" started=""
+  local US=$'\x1f'
+  while IFS= read -r line || [ -n "$line" ]; do
+    while [ "${#line}" -gt "$max" ]; do                 # a lone line longer than max -> hard-split it
+      [ -n "$cur" ] && { printf '%s%s' "$cur" "$US"; cur=""; }
+      printf '%s%s' "${line:0:max}" "$US"
+      line="${line:max}"
+    done
+    if [ -z "$started" ]; then
+      cur="$line"; started=1                            # first line seeds the buffer (even if empty)
+    elif [ $(( ${#cur} + 1 + ${#line} )) -le "$max" ]; then
+      cur="${cur}"$'\n'"${line}"                         # fits -> append, preserving the newline
+    else
+      printf '%s%s' "$cur" "$US"; cur="$line"            # would overflow -> flush and start a new chunk
+    fi
+  done <<< "$text"
+  printf '%s' "$cur"
+}
+
 # slack_send <markdown-text> <project-label>
 #   0 = delivered | 1 = not configured (placeholder) | 2 = configured but POST failed
+# Long text is chunked into one section block per <=2900-char piece (Slack caps mrkdwn blocks at 3000
+# chars and messages at 50 blocks); we keep <=49 section blocks and flag truncation past that.
 slack_send() {
   local text="${1:-}" project="${2:-}" url payload
   url="${SLACK_WEBHOOK_URL:-YOUR_SLACK_WEBHOOK_URL}"
   [[ "$url" == https://hooks.slack.com/services/* ]] || return 1
-  payload=$(jq -n --arg text "$text" --arg project "$project" '{
-    blocks: [
-      { type: "section", text: { type: "mrkdwn", text: $text } },
-      { type: "context", elements: [ { type: "mrkdwn", text: ("*Project:* " + $project) } ] }
-    ]
-  }')
+  payload=$(chunk_text "$text" | jq -Rs --arg project "$project" '
+    (split("\u001f") | map(select(length > 0) | { type: "section", text: { type: "mrkdwn", text: . } })) as $secs
+    | { blocks: (
+        $secs[0:49]
+        + (if ($secs | length) > 49 then [ { type: "context", elements: [ { type: "mrkdwn", text: "… (truncated)" } ] } ] else [] end)
+        + [ { type: "context", elements: [ { type: "mrkdwn", text: ("*Project:* " + $project) } ] } ]
+      ) }')
   curl -fsS --max-time 5 -X POST -H 'Content-type: application/json' --data "$payload" "$url" >/dev/null 2>&1 && return 0 || return 2
 }
 
