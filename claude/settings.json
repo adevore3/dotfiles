@@ -54,5 +54,8 @@
     "context7@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true
   },
-  "theme": "dark-ansi"
+  "theme": "dark-daltonized",
+  "editorMode": "vim",
+  "verbose": true,
+  "autoCompactEnabled": false
 }
