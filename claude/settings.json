@@ -52,10 +52,19 @@
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
   },
   "theme": "dark-daltonized",
   "editorMode": "vim",
   "verbose": true,
-  "autoCompactEnabled": false
+  "autoCompactEnabled": false,
+  "extraKnownMarketplaces": {
+    "indeed-ai-marketplace": {
+      "source": {
+        "source": "git",
+        "url": "git@code.corp.indeed.com:ai4dp/indeed-ai-marketplace.git"
+      }
+    }
+  }
 }
