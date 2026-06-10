@@ -30,7 +30,9 @@ session_name() {
   name="$(basename "$(dirname "$start_cwd")")/$(basename "$start_cwd")"   # last two path components
 
   if [ -n "${start_ts:-}" ]; then
-    when=$(date -d "$start_ts" +"%Y-%m-%d_%H:%M" 2>/dev/null)             # ISO (UTC) -> local time
+    # ISO (UTC) -> Pacific. Forced to a fixed zone (not the machine's, which is UTC on cloud VMs); America/Los_Angeles
+    # tracks PST/PDT across DST. Override with CLAUDE_SESSION_TZ if you want a different zone.
+    when=$(TZ="${CLAUDE_SESSION_TZ:-America/Los_Angeles}" date -d "$start_ts" +"%Y-%m-%d_%H:%M_%Z" 2>/dev/null)
     [ -n "$when" ] && name="${name} @ ${when}"
   fi
 
