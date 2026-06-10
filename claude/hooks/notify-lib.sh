@@ -6,6 +6,9 @@
 # Pull secrets from a non-login-shell-safe fallback file if present (env/~/.localrc wins).
 [ -f "$HOME/.claude/secrets.env" ] && source "$HOME/.claude/secrets.env"
 
+# Per-session naming (path it started in + start time), shared with the statusline.
+source "$(dirname "${BASH_SOURCE[0]}")/session-name.sh"
+
 # Self-contained GitHub-Markdown -> Slack mrkdwn converter (stdlib Python, no deps). Embedded as a
 # heredoc so the single symlinked notify-lib.sh stays portable. Reads stdin, writes converted stdout.
 # Fenced/inline code passes through untouched; Slack supports ``` and `code`.
@@ -59,23 +62,21 @@ PYEOF
 #   TRANSCRIPT = .transcript_path (path to the session JSONL; may be empty)
 #   LABEL      = $CLAUDE_LABEL > meaningful tmux window name > DIR, sanitized for HTTP headers
 read_hook_context() {
-  local input cwd win
+  local input cwd full_sid
   input="$(cat)"
   cwd="$(printf '%s' "$input" | jq -r '.cwd // empty' 2>/dev/null)"
+  full_sid="$(printf '%s' "$input" | jq -r '.session_id // empty' 2>/dev/null)"
   # shellcheck disable=SC2034  # SID is a global consumed by the sourcing script
-  SID="$(printf '%s' "$input" | jq -r '.session_id // empty' 2>/dev/null | cut -c1-6)"
+  SID="$(printf '%s' "$full_sid" | cut -c1-6)"
   # shellcheck disable=SC2034  # TRANSCRIPT is a global consumed by the sourcing script
   TRANSCRIPT="$(printf '%s' "$input" | jq -r '.transcript_path // empty' 2>/dev/null)"
   DIR="$(basename "${cwd:-$PWD}")"
-  LABEL=""
+  # Per-session name shared with the statusline. Replaces the old tmux window-name label, which was shared across panes
+  # and collided when several Claude sessions ran in one window. CLAUDE_LABEL still overrides.
   if [ -n "${CLAUDE_LABEL:-}" ]; then
     LABEL="$CLAUDE_LABEL"
-  elif [ -n "${TMUX_PANE:-}" ]; then
-    win=$(tmux display-message -p -t "$TMUX_PANE" '#W' 2>/dev/null)
-    case "$win" in
-      ''|bash|zsh|sh|fish|tmux) ;;
-      *[!0-9]*) LABEL="$win" ;;   # has at least one non-digit -> a real name
-    esac
+  else
+    LABEL="$(session_name "$TRANSCRIPT" "$full_sid" "$cwd")"
   fi
   [ -z "$LABEL" ] && LABEL="$DIR"
   LABEL=$(printf '%s' "$LABEL" | tr -d '\r\n' | cut -c1-60)

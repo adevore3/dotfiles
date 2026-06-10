@@ -10,7 +10,7 @@ source "$HOOK_DIR/notify-lib.sh"
 
 read_hook_context   # sets DIR, LABEL, SID, TRANSCRIPT
 
-MSG="Session started in ${DIR}"
+MSG="Session started · ${LABEL}"
 [ -n "$SID" ] && MSG="${MSG} · ${SID}"
 
 slack_send ":large_green_circle: ${MSG}" "$DIR"; slack_rc=$?

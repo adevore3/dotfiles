@@ -22,6 +22,7 @@
     ~/.claude/settings.json: { path: claude/settings.json, force: true }
     ~/.claude/statusline-command.sh: { path: claude/statusline-command.sh, force: true }
     ~/.claude/hooks/notify-lib.sh: { path: claude/hooks/notify-lib.sh, create: true, force: true }
+    ~/.claude/hooks/session-name.sh: { path: claude/hooks/session-name.sh, force: true }
     ~/.claude/hooks/notify-slack.sh: { path: claude/hooks/notify-slack.sh, force: true }
     ~/.claude/hooks/notify-done.sh: { path: claude/hooks/notify-done.sh, force: true }
     ~/.claude/hooks/notify-session-start.sh: { path: claude/hooks/notify-session-start.sh, force: true }

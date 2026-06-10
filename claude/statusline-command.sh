@@ -2,6 +2,13 @@
 
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.cwd')
+sid=$(echo "$input" | jq -r '.session_id // empty')
+transcript=$(echo "$input" | jq -r '.transcript_path // empty')
+
+# Per-session name: "<parent>/<leaf> @ <start-time>" from the transcript (path it started in + start time). Shared with
+# the Slack notification hooks via session-name.sh.
+source ~/.claude/hooks/session-name.sh
+sname=$(session_name "$transcript" "$sid" "$cwd")
 
 # Hostname (short)
 host=$(hostname -s)
@@ -26,7 +33,8 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     git_info=" ${sha} ${branch}${state}"
 fi
 
-printf "%s λ %s(%s%s)" \
+printf "[%s] %s λ %s(%s%s)" \
+    "$sname" \
     "$host" \
     "$node_info" \
     "$cwd" \

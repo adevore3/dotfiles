@@ -19,8 +19,9 @@ snip=$(snippet "$text")
 body=$(printf '%s' "$text" | sed 's/<!-- needs-input -->//g')
 body=$(md_to_mrkdwn "$body")
 
-# Session identity leads every message so you can tell which session pinged.
-ident="${DIR}"
+# Session identity leads every message so you can tell which session pinged. LABEL is the per-session name (path it
+# started in + start time); SID guarantees uniqueness when two sessions share a name.
+ident="${LABEL}"
 [ -n "$SID" ] && ident="${ident} · ${SID}"
 
 if [ "$urgency" = "input" ]; then
