@@ -12,7 +12,7 @@
 - When asking clarifying questions, keep them short and specific.
 
 ## Code Style
-- **Comments wrap at 120 characters, not 80.** Applies to every source language (Bash, Gradle/Groovy, Java/Scala, Python, YAML, HCL, Makefiles, Dockerfile, etc.). Keep the prose itself terse — width is for fewer wrap points, not longer sentences. Markdown doc files keep one paragraph per line and don't need column wrapping.
+- **Comments and prose wrap at 120 characters, not 80.** Applies to every source language (Bash, Gradle/Groovy, Java/Scala, Python, YAML, HCL, Makefiles, Dockerfile, etc.) AND to markdown doc files (READMEs) — column-wrap markdown prose at 120 too; do not leave one-paragraph-per-line. Keep the prose itself terse — width is for fewer wrap points, not longer sentences. Leave unwrappable constructs alone: markdown table rows, long URLs, and single long tokens (e.g. fully-qualified config keys).
 
 ## User Environment
 - Shell: bash with vi mode
