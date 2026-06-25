@@ -29,3 +29,5 @@ link_memory() {
 
 # Non-Indeed repos whose memory we track: <memory-dir-name> <checkout-path>
 link_memory dotfiles "$DOTFILES"
+# Global/default project (Claude runs with cwd=$HOME): personal, non-repo memory.
+link_memory home "$HOME"

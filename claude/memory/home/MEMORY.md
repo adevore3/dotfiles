@@ -1,0 +1,1 @@
+- [ntfy phone notifications](ntfy-notifications.md) — outbound-only via Stop hook; user rejected inbound bridge for threat-model reasons
