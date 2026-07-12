@@ -74,3 +74,10 @@ question, then the pointed observation.
 
 Correction: a PR reply doesn't have to resolve with reasoning or next-steps. Acknowledge-and-defer is a
 valid, common mode. "Hmm," is a genuine reflective opener he uses.
+
+**PR response opener — draft led with "First thing worth stating up front is ...":**
+> First thing is ...   (or "First thing is that ...")
+
+Correction: "worth stating up front" is stiff filler he wouldn't use. When he leads with "first" it's the
+plain "first thing is" / "first thing is that". And enumeration is consistent: if he opens a point with
+"first", he continues "second", "third" — not "first ..." then unlabeled follow-ons.
