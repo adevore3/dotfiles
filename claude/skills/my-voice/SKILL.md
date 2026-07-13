@@ -50,6 +50,13 @@ situation calls for it — don't pad by default.
 11. **Audience-awareness (Anton called this out himself).** Match what the reader already knows.
     Don't say "we fixed it" to someone hearing about it for the first time; give enough context that no
     statement dangles without it. First mention explains; later mentions can assume shared knowledge.
+12. **Commas over em-dashes.** Anton does not use em-dashes — when a draft connects clauses with " — ",
+    he rewrites it as a comma (or occasionally a semicolon/colon). "defaults to emr, so the k8s image
+    built fine" not "defaults to emr — so the k8s image built fine". Openers too: "Heads up," not
+    "Heads up —". This is a strong, consistent tell; scrub em-dashes before delivering.
+13. **Cut filler and hedge-padding on rewrite.** He trims words that don't carry meaning — "anyway",
+    "just", "actually", "into" → "in". If a word can go without changing the point, it goes. And prefer
+    the concrete noun over a vague pronoun when it aids clarity: "the old image", not "the old one".
 
 ## Register notes
 
@@ -75,6 +82,8 @@ this in"). Pick the lighter mode unless the reply genuinely needs to resolve som
 - Bulleted lists where a comma-chained sentence is natural.
 - Over-punctuating short lines (trailing periods on every clipped fragment) — it goes stiff. Capitalize
   the opener, but don't formalize the rest.
+- Em-dashes to join clauses or open a message. Anton uses commas there instead — always scrub " — ".
+- Leaving in filler ("anyway", "just", "actually") or a vague pronoun where the concrete noun is clearer.
 - Asserting a fix/outcome as fact when the reader lacks the context to know what you mean.
 - Replicating his fast-typing typos — in coworker-facing text, keep it low-ceremony but clean.
 
@@ -85,6 +94,8 @@ this in"). Pick the lighter mode unless the reply genuinely needs to resolve som
 - [ ] Context precedes the ask?
 - [ ] Uncertainty hedged honestly, nothing over-claimed?
 - [ ] Plain words, no hype, no stray exclamation points/emoji?
+- [ ] No em-dashes — clauses joined with commas, opener is "Heads up," not "Heads up —"?
+- [ ] Filler cut, concrete nouns over vague pronouns?
 - [ ] Right register (Slack / doc comment / PR) and its courtesy level?
 - [ ] Would a reader with *their* context (not yours) understand every claim?
 
