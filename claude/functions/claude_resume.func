@@ -73,15 +73,20 @@ filt   = os.environ["FILTER"]
 projects = os.environ["PROJECTS"]
 HOME   = os.path.expanduser("~")
 
-# There is no status flag in a transcript, so infer one from your last prompt (a short message):
+# There is no status flag in a transcript, so infer one from your last prompt:
 #   "done" - reads as approval/thanks/sign-off, the work wrapped up
 #   "tbc"  - reads as "to be continued" / paused mid-flight
-#   "???"  - anything else (a task, a question, or too long to be a sign-off)
-# Heuristics and easy to tune — widen a pattern or the length cap to taste. 'tbc' is checked first
-# since its phrasing is the more specific signal.
+#   "???"  - anything else (a task, a question, or too ambiguous to call)
+# Heuristics and easy to tune. STRONG_DONE_RE holds unambiguous closers that mean "done" at any
+# length; DONE_RE holds weaker approval words that only count in a short message, since they often
+# appear mid-task ("nice, now do X"). 'tbc' sits between the two.
+STRONG_DONE_RE = re.compile(
+    r"\b(close (this|it)|resolved|lgtm|ship it|all set|that'?s all|we'?re done|done here|nailed it)\b",
+    re.I,
+)
 DONE_RE = re.compile(
-    r"\b(thanks|thank you|thx|ty|perfect|great|awesome|nice|lgtm|looks (good|great)|"
-    r"that works|works( now| great)?|ship it|done|all set|nailed it|excellent|beautiful|amazing)\b",
+    r"\b(thanks|thank you|thx|ty|perfect|great|awesome|nice|looks (good|great)|"
+    r"that works|works( now| great)?|done|excellent|beautiful|amazing)\b",
     re.I,
 )
 TBC_RE = re.compile(
@@ -95,7 +100,11 @@ TBC_RE = re.compile(
 
 def status_of(last_prompt):
     lp = (last_prompt or "").strip()
-    if not lp or len(lp) >= 80:
+    if not lp:
+        return "???"
+    if STRONG_DONE_RE.search(lp):    # unambiguous closer: done regardless of length
+        return "done"
+    if len(lp) >= 80:                # otherwise a long prompt is treated as an ongoing task
         return "???"
     if TBC_RE.search(lp):
         return "tbc"
