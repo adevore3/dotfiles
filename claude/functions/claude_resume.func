@@ -3,10 +3,11 @@
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
 #==============================================================================
-# Description: List recent Claude Code sessions (newest last), let you pick one,
-#              then cd into that session's original working directory and resume
-#              it. Works from anywhere — the session's cwd is read from the
+# Description: List recent Claude Code sessions (newest first) as a table, let you
+#              pick one, then cd into that session's original working directory and
+#              resume it. Works from anywhere — the session's cwd is read from the
 #              transcript itself, not inferred from the (lossy) project dir name.
+#              The table adapts its wide columns (title/dir/branch) to the terminal width.
 #
 # Usage: claude_resume [OPTIONS] [filter]
 #
@@ -14,7 +15,7 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   filter - Optional substring; only sessions whose cwd contains it are shown
 #
 # Options:
-#   -n <count>   How many recent sessions to list (default 20)
+#   -n <count>   How many recent sessions to list (default 25)
 #   -h, --help   Print this message
 #
 # Returns:
@@ -22,7 +23,7 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   1 - Bad usage / no claude binary / no sessions
 #
 # Examples:
-#   claude_resume            # pick from the 20 most recent sessions
+#   claude_resume            # pick from the 25 most recent sessions
 #   claude_resume spark      # only sessions whose cwd contains "spark"
 #   claude_resume -n 40      # widen the list to 40
 #==============================================================================
@@ -35,7 +36,7 @@ SYNOPSIS
   claude_resume [OPTIONS] [filter]
 
 OPTIONS:
-  -n <count>    Number of recent sessions to list (default 20)
+  -n <count>    Number of recent sessions to list (default 25)
   -h, --help    Prints this message
 
 EXAMPLES:
@@ -44,7 +45,7 @@ EXAMPLES:
   claude_resume -n 40
 "
 
-  local count=20
+  local count=25
   while [[ "${1:-}" =~ ^-{1,2}.* ]]; do
     case "$1" in
       -h|--help) echo "$__usage"; return 0;;
@@ -59,15 +60,31 @@ EXAMPLES:
   local projects="${HOME}/.claude/projects"
   [[ -d "$projects" ]] || { log_error "No Claude projects dir at $projects"; return 1; }
 
-  # Emit one TSV row per session: session_id \t cwd \t "YYYY-MM-DD HH:MM" \t msgs \t title
-  # cwd/title come from the transcript contents; recency is the file mtime.
+  # Emit one TSV row per session, columns:
+  #   session_id \t full_cwd \t "YYYY-MM-DD HH:MM" \t status \t title \t display_cwd \t branch \t msgs \t tokens \t tlevel
+  # Everything but full_cwd/tlevel is displayed; full_cwd drives the cd, tlevel ("", warn, crit)
+  # drives the token-cell color. Recency is the file mtime; the rest comes from transcript contents.
   local rows
   rows=$(COUNT="$count" FILTER="$filter" PROJECTS="$projects" python3 - <<'PY'
-import json, glob, os, datetime, sys
+import json, glob, os, datetime, re
 
 count  = int(os.environ["COUNT"])
 filt   = os.environ["FILTER"]
 projects = os.environ["PROJECTS"]
+HOME   = os.path.expanduser("~")
+
+# There is no "done" flag in a transcript, so infer it from your last prompt: a short message that
+# reads as approval/thanks/sign-off means the work wrapped up; anything else is unknown ("???").
+# Heuristic and easy to tune — widen the pattern or the length cap to taste.
+DONE_RE = re.compile(
+    r"\b(thanks|thank you|thx|ty|perfect|great|awesome|nice|lgtm|looks (good|great)|"
+    r"that works|works( now| great)?|ship it|done|all set|nailed it|excellent|beautiful|amazing)\b",
+    re.I,
+)
+
+def is_done(last_prompt):
+    lp = (last_prompt or "").strip()
+    return bool(lp) and len(lp) < 80 and bool(DONE_RE.search(lp))
 
 def first_user_text(path):
     for line in open(path, errors="ignore"):
@@ -84,30 +101,55 @@ def first_user_text(path):
                     return b["text"]
     return ""
 
+def short_path(cwd):
+    s = cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
+    parts = [p for p in s.split("/") if p != ""] if s != "~" else ["~"]
+    # Show at most the last two path components so long trees don't crowd the title column. The
+    # final width-trimming happens in bash, where the column width adapts to the terminal.
+    if len(parts) > 2:
+        s = ".../" + "/".join(parts[-2:])
+    return s
+
 rows = []
 for f in glob.glob(os.path.join(projects, "**", "*.jsonl"), recursive=True):
     if "/subagents/" in f:
         continue
-    cwd = None; n = 0
+    cwd = None; n = 0; ai_title = ""; out_tok = 0; branch = ""; last_prompt = ""
     for line in open(f, errors="ignore"):
         try: d = json.loads(line)
         except: continue
-        if d.get("cwd"): cwd = d["cwd"]
+        # Use the FIRST cwd (session launch dir): that's what determines the project
+        # dir where the transcript is stored, and where `claude --resume` looks for it.
+        # A mid-session `cd` changes later cwd values but not the storage location.
+        if d.get("cwd") and cwd is None: cwd = d["cwd"]
         if d.get("type") in ("user", "assistant"): n += 1
+        # Claude writes the auto-generated session name as repeated 'ai-title' entries; keep the latest.
+        if d.get("type") == "ai-title" and d.get("aiTitle"): ai_title = d["aiTitle"]
+        # Sum output tokens (what Claude generated) as a rough measure of session size.
+        if d.get("type") == "assistant":
+            out_tok += (d.get("message", {}).get("usage", {}) or {}).get("output_tokens", 0)
+        # Keep the latest git branch seen (where the session left off).
+        if d.get("gitBranch"): branch = d["gitBranch"]
+        # Keep the latest recorded user prompt (used to guess whether the session is "done").
+        if d.get("type") == "last-prompt" and d.get("lastPrompt"): last_prompt = d["lastPrompt"]
     if not cwd:
         continue
     if filt and filt not in cwd:
         continue
-    mtime = datetime.datetime.fromtimestamp(os.path.getmtime(f))
-    sid   = os.path.basename(f)[:-6]  # strip .jsonl
-    title = " ".join(first_user_text(f).split())[:60]
-    rows.append((mtime, sid, cwd, n, title))
+    mtime  = datetime.datetime.fromtimestamp(os.path.getmtime(f))
+    sid    = os.path.basename(f)[:-6]  # strip .jsonl
+    full   = cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
+    tok    = f"{out_tok/1000:.0f}k" if out_tok >= 1000 else str(out_tok)
+    tlevel = "crit" if out_tok > 200_000 else "warn" if out_tok > 100_000 else ""
+    status = "done" if is_done(last_prompt) else "???"
+    # Generous safety caps only; bash trims title/branch/dir to the width-adaptive columns.
+    branch = branch[:120]
+    title  = " ".join((ai_title or first_user_text(f)).split())[:120]
+    rows.append((mtime, sid, full, status, title, short_path(cwd), branch, n, tok, tlevel))
 
-rows.sort(key=lambda r: r[0])          # oldest first -> newest at the bottom, nearest the prompt
-for mtime, sid, cwd, n, title in rows[-count:]:
-    home = os.path.expanduser("~")
-    short = cwd.replace(home, "~", 1) if cwd.startswith(home) else cwd
-    print(f"{sid}\t{short}\t{mtime:%Y-%m-%d %H:%M}\t{n}\t{title}")
+rows.sort(key=lambda r: r[0], reverse=True)   # newest first (top of the list)
+for mtime, sid, full, status, title, disp, branch, n, tok, tlevel in rows[:count]:
+    print(f"{sid}\t{full}\t{mtime:%Y-%m-%d %H:%M}\t{status}\t{title}\t{disp}\t{branch}\t{n}\t{tok}\t{tlevel}")
 PY
 )
 
@@ -116,20 +158,101 @@ PY
     return 1
   fi
 
-  # Load rows into parallel arrays.
-  local -a sids cwds metas
-  while IFS=$'\t' read -r sid short when msgs title; do
+  # Styling — only when writing to a terminal, so piped/redirected output stays clean.
+  local zebra="" reset="" bold="" cols=120
+  if [[ -t 1 ]]; then
+    zebra=$'\033[48;5;236m'   # subtle background for alternating rows
+    reset=$'\033[0m'
+    bold=$'\033[1m'
+  fi
+  # Terminal width drives the flexible columns. Prefer $COLUMNS (kept current by bash), fall back to
+  # `tput cols`, then a sane default; clamp so a tiny window still yields a usable layout.
+  cols=${COLUMNS:-$(tput cols 2>/dev/null || echo 120)}
+  [[ "$cols" =~ ^[0-9]+$ ]] || cols=120
+  (( cols < 90 )) && cols=90
+
+  # Fixed columns are #:3 when:16 status:6 msgs:5 tokens:6; with the eight ' │ '/' ' separators that
+  # leaves this much overhead. The rest is shared by the three flexible columns (title/dir/branch).
+  local overhead=58
+  local flex=$(( cols - overhead ))
+  local tw=$(( flex * 45 / 100 ))   # title
+  local dw=$(( flex * 27 / 100 ))   # directory
+  local bw=$(( flex - tw - dw ))    # branch
+  (( tw < 24 )) && tw=24; (( tw > 80 )) && tw=80
+  (( dw < 16 )) && dw=16; (( dw > 60 )) && dw=60
+  (( bw < 14 )) && bw=14; (( bw > 60 )) && bw=60
+
+  # Load rows into parallel arrays. metas holds every cell EXCEPT the leading number and the trailing
+  # tokens cell (both handled in the print loop). exts holds the per-row count of zero-width bytes
+  # baked into metas (green 'done' escape + multi-byte '…' from truncation) so the zebra pad can
+  # account for them. toks/tlevels feed the token coloring.
+  local -a sids cwds metas toks tlevels exts
+  local sid full when status title disp branch msgs tok tlevel scell ext
+  while IFS=$'\t' read -r sid full when status title disp branch msgs tok tlevel; do
     sids+=("$sid")
-    cwds+=("$short")
-    metas+=("$(printf '%-16s %4s msg  %-42s %s' "$when" "$msgs" "$short" "$title")")
+    cwds+=("$full")
+    toks+=("$tok")
+    tlevels+=("$tlevel")
+    ext=0
+    # Width-trim the flexible columns: title/branch keep the head, directory keeps the tail (leaf).
+    (( ${#title}  > tw )) && { title="${title:0:tw-1}…";                 ext=$(( ext + 2 )); }
+    (( ${#branch} > bw )) && { branch="${branch:0:bw-1}…";               ext=$(( ext + 2 )); }
+    (( ${#disp}   > dw )) && { disp="…${disp:${#disp}-dw+1}";            ext=$(( ext + 2 )); }
+    # Status cell, green when done (fg 39 restores default without clearing the zebra bg).
+    if [[ "$status" == "done" && -n "$reset" ]]; then
+      printf -v scell '\033[38;5;40m%-6s\033[39m' "$status"
+      ext=$(( ext + 15 ))   # '\033[38;5;40m' (10) + '\033[39m' (5)
+    else
+      printf -v scell '%-6s' "$status"
+    fi
+    metas+=("$(printf '%-16s │ %s │ %-*s │ %-*s │ %-*s │ %5s' \
+      "$when" "$scell" "$tw" "$title" "$dw" "$disp" "$bw" "$branch" "$msgs")")
+    exts+=("$ext")
   done <<< "$rows"
 
   local size=${#sids[@]}
-  log_info "Found $size session(s) (most recent last):"
+  log_info "Found $size session(s) (most recent first, ${cols}-col terminal):"
   echo
-  local i
+
+  # Build a horizontal rule matching the column widths: a run of '─' per cell, joined with '┼'.
+  local dashes='' k
+  for ((k = 0; k < 90; k++)); do dashes+='─'; done
+  local rule
+  rule="${dashes:0:5}┼${dashes:0:18}┼${dashes:0:8}┼${dashes:0:tw+2}┼${dashes:0:dw+2}┼${dashes:0:bw+2}┼${dashes:0:7}┼${dashes:0:7}"
+
+  # Header + top rule.
+  # shellcheck disable=SC2059
+  printf "${bold} %3s │ %-16s │ %-6s │ %-*s │ %-*s │ %-*s │ %5s │ %6s${reset}\n" \
+    "#" "When" "Status" "$tw" "Title" "$dw" "Directory" "$bw" "Branch" "Msgs" "Tokens"
+  printf '%s\n' "$rule"
+
+  # Data rows, zebra-striped, with the tokens cell colored orange (>100k) / red (>200k). Each row
+  # carries seven multi-byte '│' dividers (3 bytes, 1 column each) plus any zero-width escapes baked
+  # into metas (exts) and the token color. Pad the striped rows to cols + those extra bytes so the
+  # background reaches the true terminal width. '\033[39m' restores the default fg without clearing
+  # the zebra bg.
+  local i line num tcolor tokcell extra
   for i in "${!sids[@]}"; do
-    printf "\t%2d)  %s\n" "$((i + 1))" "${metas[$i]}"
+    num=$(( i + 1 ))
+    tcolor=""; extra=$(( 14 + ${exts[$i]} ))
+    if [[ -n "$reset" ]]; then
+      case "${tlevels[$i]}" in
+        crit) tcolor=$'\033[38;5;196m';;
+        warn) tcolor=$'\033[38;5;208m';;
+      esac
+    fi
+    if [[ -n "$tcolor" ]]; then
+      printf -v tokcell '%s%6s\033[39m' "$tcolor" "${toks[$i]}"
+      extra=$(( extra + ${#tcolor} + 5 ))
+    else
+      printf -v tokcell '%6s' "${toks[$i]}"
+    fi
+    line=$(printf ' %3s │ %s │ %s' "$num" "${metas[$i]}" "$tokcell")
+    if [[ -n "$zebra" && $(( i % 2 )) -eq 1 ]]; then
+      printf '%s%-*s%s\n' "$zebra" "$(( cols + extra ))" "$line" "$reset"
+    else
+      printf '%s%s\n' "$line" "$reset"
+    fi
   done
   echo
 
