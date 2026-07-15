@@ -1,0 +1,158 @@
+#!/bin/bash
+
+source "${DOTFILES}/bash/functions/log_utils.sh"
+
+#==============================================================================
+# Description: List recent Claude Code sessions (newest last), let you pick one,
+#              then cd into that session's original working directory and resume
+#              it. Works from anywhere — the session's cwd is read from the
+#              transcript itself, not inferred from the (lossy) project dir name.
+#
+# Usage: claude_resume [OPTIONS] [filter]
+#
+# Arguments:
+#   filter - Optional substring; only sessions whose cwd contains it are shown
+#
+# Options:
+#   -n <count>   How many recent sessions to list (default 20)
+#   -h, --help   Print this message
+#
+# Returns:
+#   0 - Resumed (or nothing to do)
+#   1 - Bad usage / no claude binary / no sessions
+#
+# Examples:
+#   claude_resume            # pick from the 20 most recent sessions
+#   claude_resume spark      # only sessions whose cwd contains "spark"
+#   claude_resume -n 40      # widen the list to 40
+#==============================================================================
+function claude_resume() {
+  local __usage="
+NAME:
+  claude_resume - pick a recent Claude Code session, cd to its directory, and resume it
+
+SYNOPSIS
+  claude_resume [OPTIONS] [filter]
+
+OPTIONS:
+  -n <count>    Number of recent sessions to list (default 20)
+  -h, --help    Prints this message
+
+EXAMPLES:
+  claude_resume
+  claude_resume spark
+  claude_resume -n 40
+"
+
+  local count=20
+  while [[ "${1:-}" =~ ^-{1,2}.* ]]; do
+    case "$1" in
+      -h|--help) echo "$__usage"; return 0;;
+      -n) count="$2"; shift 2;;
+      *) log_error "Invalid option: \"$1\""; echo "$__usage"; return 1;;
+    esac
+  done
+  local filter="${1:-}"
+
+  command -v claude >/dev/null || { log_error "'claude' not found on PATH"; return 1; }
+
+  local projects="${HOME}/.claude/projects"
+  [[ -d "$projects" ]] || { log_error "No Claude projects dir at $projects"; return 1; }
+
+  # Emit one TSV row per session: session_id \t cwd \t "YYYY-MM-DD HH:MM" \t msgs \t title
+  # cwd/title come from the transcript contents; recency is the file mtime.
+  local rows
+  rows=$(COUNT="$count" FILTER="$filter" PROJECTS="$projects" python3 - <<'PY'
+import json, glob, os, datetime, sys
+
+count  = int(os.environ["COUNT"])
+filt   = os.environ["FILTER"]
+projects = os.environ["PROJECTS"]
+
+def first_user_text(path):
+    for line in open(path, errors="ignore"):
+        try: d = json.loads(line)
+        except: continue
+        if d.get("type") != "user": continue
+        msg = d.get("message", {})
+        c = msg.get("content")
+        if isinstance(c, str) and c.strip():
+            return c
+        if isinstance(c, list):
+            for b in c:
+                if isinstance(b, dict) and b.get("type") == "text" and b.get("text", "").strip():
+                    return b["text"]
+    return ""
+
+rows = []
+for f in glob.glob(os.path.join(projects, "**", "*.jsonl"), recursive=True):
+    if "/subagents/" in f:
+        continue
+    cwd = None; n = 0
+    for line in open(f, errors="ignore"):
+        try: d = json.loads(line)
+        except: continue
+        if d.get("cwd"): cwd = d["cwd"]
+        if d.get("type") in ("user", "assistant"): n += 1
+    if not cwd:
+        continue
+    if filt and filt not in cwd:
+        continue
+    mtime = datetime.datetime.fromtimestamp(os.path.getmtime(f))
+    sid   = os.path.basename(f)[:-6]  # strip .jsonl
+    title = " ".join(first_user_text(f).split())[:60]
+    rows.append((mtime, sid, cwd, n, title))
+
+rows.sort(key=lambda r: r[0])          # oldest first -> newest at the bottom, nearest the prompt
+for mtime, sid, cwd, n, title in rows[-count:]:
+    home = os.path.expanduser("~")
+    short = cwd.replace(home, "~", 1) if cwd.startswith(home) else cwd
+    print(f"{sid}\t{short}\t{mtime:%Y-%m-%d %H:%M}\t{n}\t{title}")
+PY
+)
+
+  if [[ -z "$rows" ]]; then
+    log_error "No matching sessions found${filter:+ for filter \"$filter\"}"
+    return 1
+  fi
+
+  # Load rows into parallel arrays.
+  local -a sids cwds metas
+  while IFS=$'\t' read -r sid short when msgs title; do
+    sids+=("$sid")
+    cwds+=("$short")
+    metas+=("$(printf '%-16s %4s msg  %-42s %s' "$when" "$msgs" "$short" "$title")")
+  done <<< "$rows"
+
+  local size=${#sids[@]}
+  log_info "Found $size session(s) (most recent last):"
+  echo
+  local i
+  for i in "${!sids[@]}"; do
+    printf "\t%2d)  %s\n" "$((i + 1))" "${metas[$i]}"
+  done
+  echo
+
+  local number
+  while :; do
+    read -r -p "Session to resume (1-$size, q to quit): " number
+    [[ "$number" == "q" ]] && return 0
+    [[ "$number" =~ ^[0-9]+$ ]] && (( number >= 1 && number <= size )) && break
+    log_error "Enter a number between 1 and $size (or q)"
+  done
+
+  local idx=$(( number - 1 ))
+  local sid="${sids[$idx]}"
+  local target="${cwds[$idx]/#\~/$HOME}"   # re-expand leading ~
+
+  if [[ ! -d "$target" ]]; then
+    log_warn "Directory '$target' no longer exists; resuming from \$PWD ($PWD)"
+  else
+    cd "$target" || { log_error "Could not cd to $target"; return 1; }
+  fi
+
+  log_info "Resuming $sid in $(pwd)"
+  claude --resume "$sid"
+}
+
+export -f claude_resume

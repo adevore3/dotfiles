@@ -1,1 +1,3 @@
 - [ntfy phone notifications](ntfy-notifications.md) — outbound-only via Stop hook; user rejected inbound bridge for threat-model reasons
+- [VM scheduled auto-stop](vm-scheduled-autostop.md) — "unexpected shutdowns" are a ~10h AWS EC2 auto-stop, not crashes
+- [claude_resume command](claude-resume-command.md) — dotfiles function to pick/cd/resume a recent Claude session
