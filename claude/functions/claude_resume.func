@@ -73,18 +73,35 @@ filt   = os.environ["FILTER"]
 projects = os.environ["PROJECTS"]
 HOME   = os.path.expanduser("~")
 
-# There is no "done" flag in a transcript, so infer it from your last prompt: a short message that
-# reads as approval/thanks/sign-off means the work wrapped up; anything else is unknown ("???").
-# Heuristic and easy to tune — widen the pattern or the length cap to taste.
+# There is no status flag in a transcript, so infer one from your last prompt (a short message):
+#   "done" - reads as approval/thanks/sign-off, the work wrapped up
+#   "tbc"  - reads as "to be continued" / paused mid-flight
+#   "???"  - anything else (a task, a question, or too long to be a sign-off)
+# Heuristics and easy to tune — widen a pattern or the length cap to taste. 'tbc' is checked first
+# since its phrasing is the more specific signal.
 DONE_RE = re.compile(
     r"\b(thanks|thank you|thx|ty|perfect|great|awesome|nice|lgtm|looks (good|great)|"
     r"that works|works( now| great)?|ship it|done|all set|nailed it|excellent|beautiful|amazing)\b",
     re.I,
 )
+TBC_RE = re.compile(
+    r"\b(to be continued|tbc|wip|continue (this |it )?(later|tomorrow|next time)|"
+    r"pick (this|it) (back )?up (later|tomorrow|next time)|come back to (this|it)|"
+    r"pause here|let'?s pause|stop(ping)? here|finish (this |it )?(later|tomorrow)|"
+    r"resume (this |it )?(later|tomorrow)|more (on this )?later|pick up where we left off|"
+    r"for now|next session)\b",
+    re.I,
+)
 
-def is_done(last_prompt):
+def status_of(last_prompt):
     lp = (last_prompt or "").strip()
-    return bool(lp) and len(lp) < 80 and bool(DONE_RE.search(lp))
+    if not lp or len(lp) >= 80:
+        return "???"
+    if TBC_RE.search(lp):
+        return "tbc"
+    if DONE_RE.search(lp):
+        return "done"
+    return "???"
 
 def first_user_text(path):
     for line in open(path, errors="ignore"):
@@ -141,7 +158,7 @@ for f in glob.glob(os.path.join(projects, "**", "*.jsonl"), recursive=True):
     full   = cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
     tok    = f"{out_tok/1000:.0f}k" if out_tok >= 1000 else str(out_tok)
     tlevel = "crit" if out_tok > 200_000 else "warn" if out_tok > 100_000 else ""
-    status = "done" if is_done(last_prompt) else "???"
+    status = status_of(last_prompt)
     # Generous safety caps only; bash trims title/branch/dir to the width-adaptive columns.
     branch = branch[:120]
     title  = " ".join((ai_title or first_user_text(f)).split())[:120]
@@ -198,10 +215,17 @@ PY
     (( ${#title}  > tw )) && { title="${title:0:tw-1}…";                 ext=$(( ext + 2 )); }
     (( ${#branch} > bw )) && { branch="${branch:0:bw-1}…";               ext=$(( ext + 2 )); }
     (( ${#disp}   > dw )) && { disp="…${disp:${#disp}-dw+1}";            ext=$(( ext + 2 )); }
-    # Status cell, green when done (fg 39 restores default without clearing the zebra bg).
-    if [[ "$status" == "done" && -n "$reset" ]]; then
-      printf -v scell '\033[38;5;40m%-6s\033[39m' "$status"
-      ext=$(( ext + 15 ))   # '\033[38;5;40m' (10) + '\033[39m' (5)
+    # Status cell: green "done", yellow "tbc" (fg 39 restores default without clearing the zebra bg).
+    local scolor=""
+    if [[ -n "$reset" ]]; then
+      case "$status" in
+        done) scolor=$'\033[38;5;40m';;    # green
+        tbc)  scolor=$'\033[38;5;226m';;   # yellow
+      esac
+    fi
+    if [[ -n "$scolor" ]]; then
+      printf -v scell '%s%-6s\033[39m' "$scolor" "$status"
+      ext=$(( ext + ${#scolor} + 5 ))     # color escape + '\033[39m' (5), both zero-width
     else
       printf -v scell '%-6s' "$status"
     fi
