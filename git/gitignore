@@ -6,3 +6,6 @@
 /.idea
 build/
 node_modules/
+.emr-netrc
+.netrc
+*.netrc
