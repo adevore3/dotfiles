@@ -8,6 +8,8 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #              resume it. Works from anywhere — the session's cwd is read from the
 #              transcript itself, not inferred from the (lossy) project dir name.
 #              The table adapts its wide columns (title/dir/branch) to the terminal width.
+#              Sessions open right now in a running `claude` process are flagged "live" (cyan) in
+#              the Status column (Linux only — detection reads /proc).
 #
 # Usage: claude_resume [OPTIONS] [filter]
 #
@@ -60,20 +62,44 @@ EXAMPLES:
   local projects="${HOME}/.claude/projects"
   [[ -d "$projects" ]] || { log_error "No Claude projects dir at $projects"; return 1; }
 
+  # Detect sessions currently open in a running `claude` process (Linux /proc; degrades to "no live
+  # sessions" elsewhere). Two cases: `claude --resume <sid>` hands us the session id directly; a bare
+  # `claude` hides it, so we pass that process's cwd through and let the Python claim the newest
+  # transcript(s) launched there. (Claude appends-and-closes transcripts, so lsof/open-fd is no help.)
+  local -a live_sids=() live_cwds=()
+  local ps_pid ps_args ps_rest ps_cwd
+  while read -r ps_pid ps_args; do
+    case "$ps_args" in
+      "claude --resume "*) ps_rest="${ps_args#claude --resume }"; live_sids+=("${ps_rest%% *}");;
+      "claude"|"claude "*)
+        ps_cwd=$(readlink "/proc/$ps_pid/cwd" 2>/dev/null) && [[ -n "$ps_cwd" ]] && live_cwds+=("$ps_cwd");;
+    esac
+  done < <(ps -eo pid=,args= 2>/dev/null)
+  local live_cwds_str=""
+  (( ${#live_cwds[@]} )) && live_cwds_str=$(printf '%s\n' "${live_cwds[@]}")
+
   # Emit one TSV row per session, columns:
   #   session_id \t full_cwd \t "YYYY-MM-DD HH:MM" \t status \t title \t display_cwd \t branch \t msgs \t tokens \t tlevel
   # Everything but full_cwd/tlevel is displayed; full_cwd drives the cd, tlevel ("", warn, crit)
   # drives the token-cell color. Recency is the file mtime; the rest comes from transcript contents.
   local rows
-  rows=$(COUNT="$count" FILTER="$filter" PROJECTS="$projects" python3 - <<'PY'
+  rows=$(COUNT="$count" FILTER="$filter" PROJECTS="$projects" \
+         LIVE_SIDS="${live_sids[*]:-}" LIVE_CWDS="$live_cwds_str" python3 - <<'PY'
 import json, glob, os, datetime, re
+from collections import Counter
 
 count  = int(os.environ["COUNT"])
 filt   = os.environ["FILTER"]
 projects = os.environ["PROJECTS"]
 HOME   = os.path.expanduser("~")
 
+# Sessions the caller found open in a running `claude` process (see the bash side): an exact set of
+# session ids from `--resume`, plus a count of bare `claude` launches per cwd to resolve below.
+live_sids     = {s for s in os.environ.get("LIVE_SIDS", "").split() if s}
+live_cwd_cnts = Counter(l for l in os.environ.get("LIVE_CWDS", "").splitlines() if l)
+
 # There is no status flag in a transcript, so infer one from your last prompt:
+#   "live" - the session is open in a running `claude` process (set below from process info, not guessed)
 #   "done" - reads as approval/thanks/sign-off, the work wrapped up
 #   "tbc"  - reads as "to be continued" / paused mid-flight
 #   "???"  - anything else (a task, a question, or too ambiguous to call)
@@ -171,10 +197,25 @@ for f in glob.glob(os.path.join(projects, "**", "*.jsonl"), recursive=True):
     # Generous safety caps only; bash trims title/branch/dir to the width-adaptive columns.
     branch = branch[:120]
     title  = " ".join((ai_title or first_user_text(f)).split())[:120]
-    rows.append((mtime, sid, full, status, title, short_path(cwd), branch, n, tok, tlevel))
+    rows.append((mtime, sid, cwd, full, status, title, short_path(cwd), branch, n, tok, tlevel))
 
 rows.sort(key=lambda r: r[0], reverse=True)   # newest first (top of the list)
-for mtime, sid, full, status, title, disp, branch, n, tok, tlevel in rows[:count]:
+
+# Resolve which sessions are live. `--resume` ids match exactly; for each bare-launch cwd, claim the
+# N newest transcripts launched there (N = bare `claude` processes sharing that cwd), skipping any
+# already matched exactly. rows are newest-first, so the first matches per cwd are the freshest.
+live = set(live_sids)
+for cwd_target, cnt in live_cwd_cnts.items():
+    claimed = 0
+    for r in rows:
+        if claimed >= cnt:
+            break
+        if r[2] == cwd_target and r[1] not in live:
+            live.add(r[1]); claimed += 1
+
+for mtime, sid, rawcwd, full, status, title, disp, branch, n, tok, tlevel in rows[:count]:
+    if sid in live:
+        status = "live"
     print(f"{sid}\t{full}\t{mtime:%Y-%m-%d %H:%M}\t{status}\t{title}\t{disp}\t{branch}\t{n}\t{tok}\t{tlevel}")
 PY
 )
@@ -224,10 +265,11 @@ PY
     (( ${#title}  > tw )) && { title="${title:0:tw-1}…";                 ext=$(( ext + 2 )); }
     (( ${#branch} > bw )) && { branch="${branch:0:bw-1}…";               ext=$(( ext + 2 )); }
     (( ${#disp}   > dw )) && { disp="…${disp:${#disp}-dw+1}";            ext=$(( ext + 2 )); }
-    # Status cell: green "done", yellow "tbc" (fg 39 restores default without clearing the zebra bg).
+    # Status cell: cyan "live", green "done", yellow "tbc" (fg 39 restores default without clearing zebra bg).
     local scolor=""
     if [[ -n "$reset" ]]; then
       case "$status" in
+        live) scolor=$'\033[38;5;51m';;    # cyan
         done) scolor=$'\033[38;5;40m';;    # green
         tbc)  scolor=$'\033[38;5;226m';;   # yellow
       esac
