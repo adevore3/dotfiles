@@ -5,6 +5,22 @@
 - **Under `~/`, write freely.** File edits, code changes, running builds/tests — do these without asking.
 - **Always ask before destructive commands** (force push, reset --hard, rm -rf, branch deletion) regardless of context.
 
+## Git Workflow — MUST FOLLOW
+- **Always pull/fetch the default branch (main/master) before starting branch work, and branch from an up-to-date
+  tip.** Before pushing, rebasing, or opening an MR, re-sync with the latest default branch too. This avoids landing
+  changes that conflict with work already merged — especially an overlapping fix touching the same file/ticket.
+
+## Secrets & Credentials — MUST FOLLOW
+- **A secret's literal text must NEVER appear in a command you emit.** Tool calls are recorded in the
+  transcript. This includes passwords, API tokens, and Basic-auth blobs (base64 is reversible, so an
+  encoded credential is still the secret).
+- **Reference credentials indirectly.** Keep them in a mode-600 file the user authored (e.g. a netrc
+  file) or an env var; pass them by path/name only. Never `cat`/`echo`/`grep`/print a credential file.
+- **For `curl` with auth:** prefer `--netrc-file <path>` (keeps the secret out of `argv` entirely).
+  Never use `-v`/`--trace`/`--trace-ascii` (they dump the `Authorization` header); use `-sS`.
+- The user creates/edits the credential file in their OWN terminal — not via you, and not via the `!`
+  session prefix (both would record the secret).
+
 ## Communication Style
 - Be concise. Don't summarize what you just did — I can read the diff.
 - Don't narrate your thought process or explain obvious steps.
