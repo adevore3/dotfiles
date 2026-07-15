@@ -7,8 +7,7 @@
       "Bash",
       "Edit",
       "Write",
-      "Edit(/home/adevore/.claude/projects/**/memory/**)",
-      "Write(/home/adevore/.claude/projects/**/memory/**)"
+      "Edit(/home/adevore/.claude/projects/**/memory/**)"
     ],
     "defaultMode": "dontAsk"
   },
