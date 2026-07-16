@@ -214,7 +214,9 @@ for cwd_target, cnt in live_cwd_cnts.items():
             live.add(r[1]); claimed += 1
 
 for mtime, sid, rawcwd, full, status, title, disp, branch, n, tok, tlevel in rows[:count]:
-    if sid in live:
+    # A sign-off wins over "live": if your last prompt reads as done, show "done" even when the
+    # process is still open (you finished but left the tab up). Otherwise a running process is "live".
+    if sid in live and status != "done":
         status = "live"
     print(f"{sid}\t{full}\t{mtime:%Y-%m-%d %H:%M}\t{status}\t{title}\t{disp}\t{branch}\t{n}\t{tok}\t{tlevel}")
 PY
