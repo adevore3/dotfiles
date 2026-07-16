@@ -29,6 +29,7 @@
     ~/.claude/plugins/installed_plugins.json: { path: claude/plugins/installed_plugins.json, create: true, force: true }
     ~/.claude/plugins/known_marketplaces.json: { path: claude/plugins/known_marketplaces.json, force: true }
     ~/.claude/skills/my-voice: { path: claude/skills/my-voice, create: true, force: true }
+    ~/.claude/skills/my-mrs: { path: claude/skills/my-mrs, create: true, force: true }
 
 - shell:
   - command: "sudo /home/$(whoami)/dotfiles/env-setup.sh"
