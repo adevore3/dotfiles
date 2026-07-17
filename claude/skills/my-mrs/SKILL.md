@@ -24,6 +24,30 @@ general MR comment. General comments are for MR-wide points.
 
 **Why:** an inline comment shows exactly which line it refers to, so the author doesn't have to guess.
 
+## Always reply in the thread, not top-level
+
+When responding to someone's comment (a reviewer's question, a CodeRabbit finding, a reply in an existing thread),
+**always post into that comment's discussion thread**, not as a new top-level MR note. Only start a new top-level note
+for a genuinely MR-wide point that isn't answering anyone.
+
+**Why:** a top-level note is orphaned from the question it answers, the reader can't tell what it responds to, and it
+breaks the back-and-forth. Reply in-thread whenever the target is a specific comment or discussion.
+
+Reply to an existing discussion by POSTing to its `notes` sub-resource (get the `<discussion_id>` by fetching
+`.../discussions`):
+
+```bash
+glab api --method POST "projects/<id>/merge_requests/<iid>/discussions/<discussion_id>/notes" \
+  --header "Content-Type: application/json" --input /tmp/reply.json   # {"body": "..."}
+```
+
+- A general MR comment posted with `.../merge_requests/<iid>/notes` starts its OWN discussion; if you meant it as a
+  reply, it lands orphaned. Use the `discussions/<discussion_id>/notes` form instead.
+- Note the target thread may be a reviewer's *reply* to an earlier note (GitLab nests it under the discussion the
+  original comment created, not under a new one), so resolve the `discussion_id` from the current `.../discussions`
+  listing rather than assuming.
+- Verify after posting: re-fetch the discussion and confirm your note is the last entry in that thread.
+
 ## Posting an inline comment via glab
 
 `glab api --field body=...` does NOT attach a `position` object, the bracketed `position[...]` form fields get
