@@ -26,6 +26,7 @@
     ~/.claude/hooks/notify-slack.sh: { path: claude/hooks/notify-slack.sh, force: true }
     ~/.claude/hooks/notify-done.sh: { path: claude/hooks/notify-done.sh, force: true }
     ~/.claude/hooks/notify-session-start.sh: { path: claude/hooks/notify-session-start.sh, force: true }
+    ~/.claude/hooks/session_coord.sh: { path: claude/hooks/session_coord.sh, force: true }
     ~/.claude/plugins/installed_plugins.json: { path: claude/plugins/installed_plugins.json, create: true, force: true }
     ~/.claude/plugins/known_marketplaces.json: { path: claude/plugins/known_marketplaces.json, force: true }
     ~/.claude/skills/my-voice: { path: claude/skills/my-voice, create: true, force: true }

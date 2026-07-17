@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# session_note: set/show/clear this worktree's one-line "what I'm working on" note. The session_coord collision-
+# awareness hook (claude/hooks/session_coord.sh) picks it up as the session's description in cross-session warnings,
+# so a colliding session sees a human summary instead of just a branch name.
+#
+# Keyed by git-worktree-toplevel (falling back to the cwd) -- the SAME key the hook derives -- so the note correlates
+# to the right session without needing a session-id env var. The sanitize step below MUST match the hook's sanitize().
+#
+#   session_note "<text>"    set the note (trimmed to one line, 80 chars)
+#   session_note             print the current note (if any)
+#   session_note --clear     remove the note
+session_note() {
+  local registry root wtkey note
+  registry="${CLAUDE_SESSION_COORD_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/claude-session-coord}"
+  root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+  wtkey="$(printf '%s' "$root" | tr '/ ' '__' | tr -cd '[:alnum:]._-')"
+  note="$registry/note.$wtkey"
+  case "${1:-}" in
+    "")       [ -f "$note" ] && cat "$note" ;;
+    --clear)  rm -f "$note"; echo "session note cleared" ;;
+    *)        mkdir -p "$registry"; printf '%s' "$*" | tr -d '\r\n' | cut -c1-80 >"$note"; echo "session note set: $(cat "$note")" ;;
+  esac
+}
+export -f session_note
