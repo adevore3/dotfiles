@@ -9,6 +9,11 @@
 - **Always pull/fetch the default branch (main/master) before starting branch work, and branch from an up-to-date
   tip.** Before pushing, rebasing, or opening an MR, re-sync with the latest default branch too. This avoids landing
   changes that conflict with work already merged — especially an overlapping fix touching the same file/ticket.
+- **Branch names:** `adevore/<ticket>/<short-description>`, e.g. `adevore/DIRP-XXXX/adding-feature`. Lowercase,
+  hyphen-separated description; keep it short.
+- **First commit message:** lead with the ticket, e.g. `DIRP-XXXX added feature`, optionally a short body explaining
+  the change — keep it terse. GitLab uses the first commit's message as the default squash message on merge, so make it
+  the good one. Later commits on the branch can be simpler/one-liners.
 
 ## Secrets & Credentials — MUST FOLLOW
 - **A secret's literal text must NEVER appear in a command you emit.** Tool calls are recorded in the
