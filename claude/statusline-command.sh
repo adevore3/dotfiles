@@ -31,7 +31,12 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     else
         state=""
     fi
-    git_info=" ${sha} ${branch}${state}"
+    # Worktree label: the worktree root's basename (stable across `cd` into subdirs, unique per worktree). Lets you
+    # tell parallel sessions apart at a glance when several run in different worktrees of one repo.
+    wt=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null)
+    wt_info=""
+    [[ -n "$wt" ]] && wt_info=" ⑃ $(basename "$wt")"
+    git_info=" ${sha} ${branch}${state}${wt_info}"
 fi
 
 # Context window usage: computed from the transcript's last assistant `usage` (ground truth, version-independent). The
