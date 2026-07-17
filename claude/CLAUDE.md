@@ -11,6 +11,11 @@
   changes that conflict with work already merged — especially an overlapping fix touching the same file/ticket.
 - **Branch names:** `adevore/<ticket>/<short-description>`, e.g. `adevore/DIRP-XXXX/adding-feature`. Lowercase,
   hyphen-separated description; keep it short.
+- **Work in a dedicated worktree — except this repo.** For any repo *other than* the dotfiles repo (`~/dotfiles`) and
+  its `indeed/` submodule (`~/dotfiles/indeed`), do the work in a git worktree named to match the branch/ticket rather
+  than in the main checkout, e.g. `git worktree add ../<repo>-DIRP-XXXX -b adevore/DIRP-XXXX/<desc>`. This keeps
+  parallel sessions isolated (the worktree-awareness hook warns when two sessions would collide on shared local state)
+  and the main checkout clean. The dotfiles repo and its `indeed/` submodule are edited in place, not in a worktree.
 - **First commit message:** lead with the ticket, e.g. `DIRP-XXXX added feature`, optionally a short body explaining
   the change — keep it terse. GitLab uses the first commit's message as the default squash message on merge, so make it
   the good one. Later commits on the branch can be simpler/one-liners.

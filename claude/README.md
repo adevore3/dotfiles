@@ -16,6 +16,7 @@ submodule, not here.
 | `hooks/notify-slack.sh` | `~/.claude/hooks/notify-slack.sh` | Notification hook (attention) |
 | `hooks/notify-done.sh` | `~/.claude/hooks/notify-done.sh` | Stop hook (done) -> Slack (ntfy opt-in) |
 | `hooks/notify-session-start.sh` | `~/.claude/hooks/notify-session-start.sh` | SessionStart hook (notify both + health-warn, async) |
+| `hooks/session_coord.sh` | `~/.claude/hooks/session_coord.sh` | Worktree-awareness hook (PreToolUse/PostToolUse) |
 | `plugins/*.json` | `~/.claude/plugins/*.json` | Manifests only, not plugin code |
 | `memory/dotfiles/` | `~/.claude/projects/<slug>/memory/` | Directory symlink (see below) |
 
@@ -44,6 +45,26 @@ To eyeball the Slack formatting after changing the converter, use `test/notify-p
 saved samples in `test/fixtures/`: run it with no args for an offline converted preview (NBSP shown
 as `·`), or `--send` to fire the live Stop hook to Slack. It is not a `*_test.sh`, so `make test`
 skips it (it can touch the network).
+
+## Worktree awareness
+
+`hooks/session_coord.sh` (a `PreToolUse`/`PostToolUse` hook) keeps two Claude sessions running in **parallel git
+worktrees of one repo** from silently colliding on shared, machine-global state (a local artifact repo, ports, image
+tags). When a session starts a watched command, the hook records a claim (one file per worktree+resource under
+`${XDG_STATE_HOME:-~/.local/state}/claude-session-coord/`); a second session starting the same class of command gets a
+non-blocking warning injected into its context, naming the other worktree, branch, description, and how long it's been
+running. Warn-only — nothing is ever blocked. Claims clear on `PostToolUse` and self-heal after a TTL
+(`CLAUDE_SESSION_COORD_TTL`, default 3600s).
+
+The engine is generic and carries no project-specific strings: watched commands come from config files dropped into
+`~/.claude/session-coord.d/*.conf` (TAB-separated `<resource>\t<extended-regex>\t<hint>`). With no config it's a silent
+no-op, so it's safe on any machine. The private `indeed/` submodule supplies the `publocal` and `spark-run` patterns via
+its own `setup.sh`.
+
+`session_note "<text>"` (a shell function in `functions/session_note.func`, auto-sourced by bashrc) sets this
+worktree's one-line description shown in those warnings; with no note it falls back to the session's transcript summary,
+then the branch name. This pairs with the "work in a dedicated worktree" rule in `CLAUDE.md`: give each repo's work its
+own worktree and the two sessions stay isolated and mutually aware.
 
 ## Memory
 
