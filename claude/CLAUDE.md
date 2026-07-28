@@ -16,6 +16,10 @@
   than in the main checkout, e.g. `git worktree add ../<repo>-DIRP-XXXX -b adevore/DIRP-XXXX/<desc>`. This keeps
   parallel sessions isolated (the worktree-awareness hook warns when two sessions would collide on shared local state)
   and the main checkout clean. The dotfiles repo and its `indeed/` submodule are edited in place, not in a worktree.
+- **Before cleaning up a worktree, account for its untracked files.** `git worktree remove` deletes the directory, so
+  anything untracked or gitignored goes with it and there's no way back. Run `git status --short --ignored` and look at
+  what's there, especially `out/` (run logs, captured metadata, test evidence) — that content exists nowhere else. Copy
+  anything worth keeping into the main checkout's `out/<ticket>/` first, then confirm before removing the worktree.
 - **First commit message:** lead with the ticket, e.g. `DIRP-XXXX added feature`, optionally a short body explaining
   the change — keep it terse. GitLab uses the first commit's message as the default squash message on merge, so make it
   the good one. Later commits on the branch can be simpler/one-liners.
