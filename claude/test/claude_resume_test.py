@@ -461,6 +461,13 @@ class ParseArgsTest(unittest.TestCase):
     def test_result_file_is_accepted(self):
         self.assertEqual(cr.parse_args(["--result-file", "/tmp/x"]).result_file, "/tmp/x")
 
+    def test_list_only_defaults_off_and_takes_no_value(self):
+        self.assertFalse(cr.parse_args([]).list_only)
+        for flag in ("-l", "--list"):
+            options = cr.parse_args([flag, "spark"])
+            self.assertTrue(options.list_only, flag)
+            self.assertEqual(options.filters.anywhere, "spark", "-l must not swallow the filter")
+
 
 class PromptTest(unittest.TestCase):
     def choose(self, typed, size=3):

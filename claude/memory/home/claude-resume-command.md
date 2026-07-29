@@ -24,6 +24,8 @@ in that directory when the session exits. Run it from anywhere. Two pieces:
 - `claude_resume -fd|--find-dir <substr>` — match the directory only (`~/dotfiles` and `/home/…/dotfiles` both work)
 - `claude_resume -hl|--highlight <substr>` — mark matches in the title/directory cells (bold magenta) without
   filtering; pairs well with a big `-n` when you want context around the hits
+- `claude_resume -l|--list` — print the table and stop: no prompt, nothing resumed, so it is safe to pipe
+  (`cr -l -n 50 | grep spark`)
 
 Searches are case-insensitive substrings and combine with AND; `-n` caps what survives filtering. Options may come
 before or after the positional filter. Color (highlight, zebra stripes, status/token colors) is suppressed when stdout

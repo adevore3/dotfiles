@@ -119,7 +119,23 @@ assert_contains "[ERROR] Enter a number between 1 and 2 (or q)" "$out" "out-of-r
 assert_contains "rc=0" "$out" "quitting after a bad pick exits 0"
 assert_equals "" "$(cat "$TMP/claude.log")" "a rejected pick never launches claude"
 
-# 8. Stdin at EOF quits instead of looping forever (the shell implementation used to spin here).
+# 8. -l lists and stops: no prompt, nothing resumed, and a pick waiting on stdin is left untouched.
+: > "$TMP/claude.log"
+out="$(run_wrapper 1 -l)"
+assert_contains "Found 2 session(s)" "$out" "-l still lists sessions"
+assert_contains "rc=0" "$out" "-l exits 0"
+assert_equals "" "$(cat "$TMP/claude.log")" "-l never launches claude"
+assert_contains "final_pwd=$PWD" "$out" "-l leaves the shell where it was"
+out="$(run_wrapper 1 --list -fs deleted)"
+assert_contains "Found 1 session(s) matching title ~ \"deleted\"" "$out" "--list composes with filters"
+
+# 9. Piped output stays clean: no escapes, and the table is on stdout where grep can reach it.
+piped="$(HOME="$FAKE_HOME" PATH="$TMP/bin:$PATH" COLUMNS=140 DOTFILES="$ROOT" \
+  bash -c 'source "$DOTFILES/claude/functions/claude_resume.func"; claude_resume -l' 2>/dev/null | grep "live directory")"
+assert_contains "session in a live directory" "$piped" "-l output survives a pipe to grep"
+assert_equals "0" "$(printf '%s' "$piped" | grep -c $'\033')" "piped output carries no color escapes"
+
+# 10. Stdin at EOF quits instead of looping forever (the shell implementation used to spin here).
 # shellcheck disable=SC2016  # $DOTFILES is expanded by the inner shell, which gets it from the env above
 out="$(FAKE_CLAUDE_LOG="$TMP/claude.log" HOME="$FAKE_HOME" PATH="$TMP/bin:$PATH" COLUMNS=140 DOTFILES="$ROOT" \
   timeout 20 bash -c 'source "$DOTFILES/claude/functions/claude_resume.func"; claude_resume < /dev/null; echo "rc=$?"' 2>&1)"

@@ -21,12 +21,13 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   -fs, --find-session <str>  Keep sessions whose title contains <str>
 #   -fd, --find-dir <str>      Keep sessions whose directory contains <str>
 #   -hl, --highlight <str>     Highlight <str> in the title/directory cells without filtering anything
+#   -l, --list                 Print the table and stop — no prompt, nothing resumed
 #   -h, --help                 Print this message
 #
 # See claude_resume.py for the full flag semantics (case-insensitive substrings, AND-combined).
 #
 # Returns:
-#   0 - Resumed, or quit at the prompt
+#   0 - Resumed, listed with -l, or quit at the prompt
 #   1 - Bad usage / no python3 / no claude binary / no sessions
 #
 # Examples:
@@ -35,6 +36,7 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   claude_resume -n 40                  # widen the list to 40
 #   claude_resume -fd dotfiles           # only sessions under a dotfiles directory
 #   claude_resume -n 60 -hl iceberg      # list 60 sessions, flag the ones mentioning iceberg
+#   claude_resume -l -n 50 | grep spark  # just show the table; nothing is resumed
 #==============================================================================
 function claude_resume() {
   local script="${DOTFILES}/claude/functions/claude_resume.py"

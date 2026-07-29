@@ -544,6 +544,7 @@ OPTIONS:
   -fs, --find-session <str>   Match <str> against the session title only
   -fd, --find-dir <str>       Match <str> against the session directory only
   -hl, --highlight <str>      Mark <str> in the title/directory cells; filters nothing
+  -l, --list                  Print the table and stop — no prompt, nothing resumed
   -h, --help                  Prints this message
 
   Searches are case-insensitive substrings; multiple filter flags must all match.
@@ -555,6 +556,7 @@ EXAMPLES:
   claude_resume -fd dotfiles
   claude_resume -fs statusline -fd dotfiles
   claude_resume -n 60 -hl iceberg
+  claude_resume -l -n 50 | grep spark
 """
 
 DEFAULT_COUNT = 25
@@ -577,6 +579,7 @@ class Options:
     count: int = DEFAULT_COUNT
     filters: Filters = field(default_factory=Filters)
     highlight: str = ""
+    list_only: bool = False  # -l: render and stop, so the table can be read or piped
     result_file: str = ""
 
 
@@ -613,6 +616,8 @@ def parse_args(argv: list[str]) -> Options:
             filters.directory = value_for(arg)
         elif arg in ("-hl", "--highlight"):
             options.highlight = value_for(arg)
+        elif arg in ("-l", "--list"):
+            options.list_only = True
         elif arg == "--result-file":  # internal: where to report the pick back to the shell wrapper
             options.result_file = value_for(arg)
         elif arg.startswith("-"):
@@ -689,6 +694,9 @@ def main(argv: list[str] | None = None) -> int:
     for line in render_table(sessions, layout, options.highlight, color=sys.stdout.isatty()):
         print(line)
     print()
+
+    if options.list_only:
+        return 0
 
     choice = prompt_choice(len(sessions))
     if choice is None:
