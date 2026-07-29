@@ -34,10 +34,12 @@ assert_contains "$SLACK_OK" "$(cat "$CURL_LOG")" "notify-done posts to Slack whe
 assert_equals "0" "$(grep -c 'ntfy.sh' "$CURL_LOG")" "notify-done does NOT call ntfy when Slack delivers"
 teardown_stub
 
-# Slack not configured -> ntfy plain (no failure note)
+# Slack not configured -> ntfy plain (no failure note). NTFY_FALLBACK=1 because ntfy is opt-in;
+# notify_done_dynamic_test.sh covers the default, where an undelivered Slack notifies nothing.
 setup_stub
 echo '{"cwd":"/tmp/proj","session_id":"abc123"}' | \
-  HOME="$STUB_DIR" NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
+  HOME="$STUB_DIR" NTFY_FALLBACK=1 NTFY_TOPIC="claude-test-topic" \
+  SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL" bash "$HOOKS/notify-done.sh"
 assert_contains "ntfy.sh/claude-test-topic" "$(cat "$CURL_LOG")" "notify-done falls back to ntfy when Slack unconfigured"
 assert_equals "0" "$(grep -c 'Slack delivery failed' "$CURL_LOG")" "no failure note when Slack simply unconfigured"
 teardown_stub
@@ -45,7 +47,8 @@ teardown_stub
 # Slack configured but FAILS -> ntfy fallback WITH failure note
 setup_stub
 echo '{"cwd":"/tmp/proj","session_id":"abc123"}' | \
-  HOME="$STUB_DIR" FAIL_SLACK=1 NTFY_TOPIC="claude-test-topic" SLACK_WEBHOOK_URL="$SLACK_OK" bash "$HOOKS/notify-done.sh"
+  HOME="$STUB_DIR" FAIL_SLACK=1 NTFY_FALLBACK=1 NTFY_TOPIC="claude-test-topic" \
+  SLACK_WEBHOOK_URL="$SLACK_OK" bash "$HOOKS/notify-done.sh"
 assert_contains "ntfy.sh/claude-test-topic" "$(cat "$CURL_LOG")" "notify-done falls back to ntfy when Slack fails"
 assert_contains "Slack delivery failed" "$(cat "$CURL_LOG")" "ntfy message notes the Slack failure"
 teardown_stub
