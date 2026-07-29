@@ -3,13 +3,12 @@
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
 #==============================================================================
-# Description: List recent Claude Code sessions (newest first) as a table, let you
-#              pick one, then cd into that session's original working directory and
-#              resume it. Works from anywhere — the session's cwd is read from the
-#              transcript itself, not inferred from the (lossy) project dir name.
-#              The table adapts its wide columns (title/dir/branch) to the terminal width.
-#              Sessions open right now in a running `claude` process are flagged "live" (cyan) in
-#              the Status column (Linux only — detection reads /proc).
+# Description: Pick a recent Claude Code session, cd into the directory it was launched from, and
+#              resume it. The listing, filtering and table live in claude_resume.py; this wrapper
+#              exists because only a shell function can move your shell — a child process cannot cd
+#              its parent — so the script reports the pick back through a temp file and this function
+#              does the cd and the `claude --resume`. When the session exits you are left in that
+#              directory.
 #
 # Usage: claude_resume [OPTIONS] [filter]
 #
@@ -24,429 +23,42 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #   -hl, --highlight <str>     Highlight <str> in the title/directory cells without filtering anything
 #   -h, --help                 Print this message
 #
-# All searches are case-insensitive substrings; combining filter flags narrows (AND). -n counts what is
-# left after filtering, so it always caps the rows you actually see. --highlight never filters — it only
-# marks matches, so use it to spot sessions in a wide list.
+# See claude_resume.py for the full flag semantics (case-insensitive substrings, AND-combined).
 #
 # Returns:
-#   0 - Resumed (or nothing to do)
-#   1 - Bad usage / no claude binary / no sessions
+#   0 - Resumed, or quit at the prompt
+#   1 - Bad usage / no python3 / no claude binary / no sessions
 #
 # Examples:
 #   claude_resume                        # pick from the 25 most recent sessions
 #   claude_resume spark                  # title or directory contains "spark"
 #   claude_resume -n 40                  # widen the list to 40
 #   claude_resume -fd dotfiles           # only sessions under a dotfiles directory
-#   claude_resume -fs statusline -fd dotfiles   # both must match
 #   claude_resume -n 60 -hl iceberg      # list 60 sessions, flag the ones mentioning iceberg
 #==============================================================================
-# Wrap every case-insensitive occurrence of $2 in $1 with the escapes $3/$4. Results come back in
-# __hl_out (the marked-up text) and __hl_ext (bytes of zero-width escape added, so the caller can keep
-# its column padding honest). Splitting this out keeps the print loop readable.
-function _claude_resume_highlight() {
-  local text="$1" needle="$2" on="$3" off="$4"
-  __hl_out="$text"; __hl_ext=0
-  [[ -n "$needle" ]] || return 0
-  local rest="$text" lrest="${text,,}" lneedle="${needle,,}" len=${#needle} out="" prefix i
-  while [[ "$lrest" == *"$lneedle"* ]]; do
-    prefix="${lrest%%"$lneedle"*}"
-    i=${#prefix}
-    out+="${rest:0:i}${on}${rest:i:len}${off}"
-    rest="${rest:i+len}"
-    lrest="${lrest:i+len}"
-    __hl_ext=$(( __hl_ext + ${#on} + ${#off} ))
-  done
-  __hl_out="${out}${rest}"
-}
-
 function claude_resume() {
-  local __usage="
-NAME:
-  claude_resume - pick a recent Claude Code session, cd to its directory, and resume it
+  local script="${DOTFILES}/claude/functions/claude_resume.py"
+  [[ -f "$script" ]] || { log_error "Session picker not found at $script"; return 1; }
+  command -v python3 >/dev/null || { log_error "'python3' not found on PATH"; return 1; }
 
-SYNOPSIS
-  claude_resume [OPTIONS] [filter]
+  # The pick comes back through a file so the script keeps the real terminal on stdout: colors,
+  # the table and the prompt all behave as if it were running directly.
+  local result
+  result=$(mktemp "${TMPDIR:-/tmp}/claude_resume.XXXXXX") || { log_error "Could not create temp file"; return 1; }
 
-OPTIONS:
-  -n <count>                  Number of recent sessions to list (default 25)
-  -f <str>                    Match <str> against the session title OR its directory
-  -fs, --find-session <str>   Match <str> against the session title only
-  -fd, --find-dir <str>       Match <str> against the session directory only
-  -hl, --highlight <str>      Mark <str> in the title/directory cells; filters nothing
-  -h, --help                  Prints this message
+  # Export the shell's current COLUMNS (bash keeps it accurate but does not export it) so the table
+  # adapts to this window; the script falls back to an ioctl and then 120.
+  local rc=0
+  COLUMNS="${COLUMNS:-$(tput cols 2>/dev/null || echo 120)}" \
+    python3 "$script" --result-file "$result" "$@" || rc=$?
 
-  Searches are case-insensitive substrings; multiple filter flags must all match.
-
-EXAMPLES:
-  claude_resume
-  claude_resume spark
-  claude_resume -n 40
-  claude_resume -fd dotfiles
-  claude_resume -fs statusline -fd dotfiles
-  claude_resume -n 60 -hl iceberg
-"
-
-  # Options may appear before or after the positional filter, so keep scanning the whole argv instead of
-  # stopping at the first non-flag (`claude_resume spark -n 40` has to honor the -n).
-  local count=25 find_any="" find_session="" find_dir="" highlight=""
-  local -a positional=()
-  while (( $# )); do
-    case "$1" in
-      -h|--help) echo "$__usage"; return 0;;
-      -n)
-        if [[ ! "${2:-}" =~ ^[1-9][0-9]*$ ]]; then
-          log_error "-n needs a positive integer, got \"${2:-}\""
-          return 1
-        fi
-        count="$2"; shift 2;;
-      -f)
-        [[ $# -ge 2 ]] || { log_error "-f needs a search string"; return 1; }
-        find_any="$2"; shift 2;;
-      -fs|--find-session)
-        [[ $# -ge 2 ]] || { log_error "$1 needs a search string"; return 1; }
-        find_session="$2"; shift 2;;
-      -fd|--find-dir)
-        [[ $# -ge 2 ]] || { log_error "$1 needs a search string"; return 1; }
-        find_dir="$2"; shift 2;;
-      -hl|--highlight)
-        [[ $# -ge 2 ]] || { log_error "$1 needs a search string"; return 1; }
-        highlight="$2"; shift 2;;
-      -*) log_error "Invalid option: \"$1\""; echo "$__usage"; return 1;;
-      *) positional+=("$1"); shift;;
-    esac
-  done
-  # A bare positional argument is shorthand for -f; more than one, or one alongside -f, is ambiguous —
-  # say so rather than silently dropping any of them.
-  if (( ${#positional[@]} )); then
-    if (( ${#positional[@]} > 1 )) || [[ -n "$find_any" ]]; then
-      log_error "Pass at most one search string, either positionally or with -f"
-      return 1
-    fi
-    find_any="${positional[0]}"
+  local sid="" target=""
+  if (( rc == 0 )); then
+    { read -r sid; read -r target; } < "$result"
   fi
-  # Human-readable summary of the active filters, reused in the header and the not-found message.
-  local desc=""
-  [[ -n "$find_any" ]]     && desc+="${desc:+, }title/dir ~ \"$find_any\""
-  [[ -n "$find_session" ]] && desc+="${desc:+, }title ~ \"$find_session\""
-  [[ -n "$find_dir" ]]     && desc+="${desc:+, }dir ~ \"$find_dir\""
-
-  command -v claude >/dev/null || { log_error "'claude' not found on PATH"; return 1; }
-
-  local projects="${HOME}/.claude/projects"
-  [[ -d "$projects" ]] || { log_error "No Claude projects dir at $projects"; return 1; }
-
-  # Detect sessions currently open in a running `claude` process (Linux /proc; degrades to "no live
-  # sessions" elsewhere). Two cases: `claude --resume <sid>` hands us the session id directly; a bare
-  # `claude` hides it, so we pass that process's cwd through and let the Python claim the newest
-  # transcript(s) launched there. (Claude appends-and-closes transcripts, so lsof/open-fd is no help.)
-  local -a live_sids=() live_cwds=()
-  local ps_pid ps_args ps_rest ps_cwd
-  while read -r ps_pid ps_args; do
-    case "$ps_args" in
-      "claude --resume "*) ps_rest="${ps_args#claude --resume }"; live_sids+=("${ps_rest%% *}");;
-      "claude"|"claude "*)
-        ps_cwd=$(readlink "/proc/$ps_pid/cwd" 2>/dev/null) && [[ -n "$ps_cwd" ]] && live_cwds+=("$ps_cwd");;
-    esac
-  done < <(ps -eo pid=,args= 2>/dev/null)
-  local live_cwds_str=""
-  (( ${#live_cwds[@]} )) && live_cwds_str=$(printf '%s\n' "${live_cwds[@]}")
-
-  # Emit one TSV row per session, columns:
-  #   session_id \t full_cwd \t "YYYY-MM-DD HH:MM" \t status \t title \t display_cwd \t branch \t msgs \t tokens \t tlevel
-  # Everything but full_cwd/tlevel is displayed; full_cwd drives the cd, tlevel ("", warn, crit)
-  # drives the token-cell color. Recency is the file mtime; the rest comes from transcript contents.
-  local rows
-  rows=$(COUNT="$count" FIND_ANY="$find_any" FIND_SESSION="$find_session" FIND_DIR="$find_dir" \
-         PROJECTS="$projects" \
-         LIVE_SIDS="${live_sids[*]:-}" LIVE_CWDS="$live_cwds_str" python3 - <<'PY'
-import json, glob, os, datetime, re
-from collections import Counter
-
-count  = int(os.environ["COUNT"])
-projects = os.environ["PROJECTS"]
-HOME   = os.path.expanduser("~")
-
-# Filters, lowercased for case-insensitive substring matching. find_any matches either field; the two
-# targeted ones match a single field. Whatever is set must match (AND).
-find_any     = os.environ.get("FIND_ANY", "").lower()
-find_session = os.environ.get("FIND_SESSION", "").lower()
-find_dir     = os.environ.get("FIND_DIR", "").lower()
-
-# Sessions the caller found open in a running `claude` process (see the bash side): an exact set of
-# session ids from `--resume`, plus a count of bare `claude` launches per cwd to resolve below.
-live_sids     = {s for s in os.environ.get("LIVE_SIDS", "").split() if s}
-live_cwd_cnts = Counter(l for l in os.environ.get("LIVE_CWDS", "").splitlines() if l)
-
-# There is no status flag in a transcript, so infer one from your last prompt:
-#   "live" - the session is open in a running `claude` process (set below from process info, not guessed)
-#   "done" - reads as approval/thanks/sign-off, the work wrapped up
-#   "tbc"  - reads as "to be continued" / paused mid-flight
-#   "???"  - anything else (a task, a question, or too ambiguous to call)
-# Heuristics and easy to tune. STRONG_DONE_RE holds unambiguous closers that mean "done" at any
-# length; DONE_RE holds weaker approval words that only count in a short message, since they often
-# appear mid-task ("nice, now do X"). 'tbc' sits between the two.
-STRONG_DONE_RE = re.compile(
-    r"\b(close (this|it)|resolved|lgtm|ship it|all set|that'?s all|we'?re done|done here|nailed it)\b",
-    re.I,
-)
-DONE_RE = re.compile(
-    r"\b(thanks|thank you|thx|ty|perfect|great|awesome|nice|looks (good|great)|"
-    r"that works|works( now| great)?|done|excellent|beautiful|amazing)\b",
-    re.I,
-)
-TBC_RE = re.compile(
-    r"\b(to be continued|tbc|wip|continue (this |it )?(later|tomorrow|next time)|"
-    r"pick (this|it) (back )?up (later|tomorrow|next time)|come back to (this|it)|"
-    r"pause here|let'?s pause|stop(ping)? here|finish (this |it )?(later|tomorrow)|"
-    r"resume (this |it )?(later|tomorrow)|more (on this )?later|pick up where we left off|"
-    r"for now|next session)\b",
-    re.I,
-)
-
-def status_of(last_prompt):
-    lp = (last_prompt or "").strip()
-    if not lp:
-        return "???"
-    if STRONG_DONE_RE.search(lp):    # unambiguous closer: done regardless of length
-        return "done"
-    if len(lp) >= 80:                # otherwise a long prompt is treated as an ongoing task
-        return "???"
-    if TBC_RE.search(lp):
-        return "tbc"
-    if DONE_RE.search(lp):
-        return "done"
-    return "???"
-
-def first_user_text(path):
-    for line in open(path, errors="ignore"):
-        try: d = json.loads(line)
-        except: continue
-        if d.get("type") != "user": continue
-        msg = d.get("message", {})
-        c = msg.get("content")
-        if isinstance(c, str) and c.strip():
-            return c
-        if isinstance(c, list):
-            for b in c:
-                if isinstance(b, dict) and b.get("type") == "text" and b.get("text", "").strip():
-                    return b["text"]
-    return ""
-
-def short_path(cwd):
-    s = cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
-    parts = [p for p in s.split("/") if p != ""] if s != "~" else ["~"]
-    # Show at most the last two path components so long trees don't crowd the title column. The
-    # final width-trimming happens in bash, where the column width adapts to the terminal.
-    if len(parts) > 2:
-        s = ".../" + "/".join(parts[-2:])
-    return s
-
-rows = []
-for f in glob.glob(os.path.join(projects, "**", "*.jsonl"), recursive=True):
-    if "/subagents/" in f:
-        continue
-    cwd = None; n = 0; ai_title = ""; out_tok = 0; branch = ""; last_prompt = ""
-    for line in open(f, errors="ignore"):
-        try: d = json.loads(line)
-        except: continue
-        # Use the FIRST cwd (session launch dir): that's what determines the project
-        # dir where the transcript is stored, and where `claude --resume` looks for it.
-        # A mid-session `cd` changes later cwd values but not the storage location.
-        if d.get("cwd") and cwd is None: cwd = d["cwd"]
-        if d.get("type") in ("user", "assistant"): n += 1
-        # Claude writes the auto-generated session name as repeated 'ai-title' entries; keep the latest.
-        if d.get("type") == "ai-title" and d.get("aiTitle"): ai_title = d["aiTitle"]
-        # Sum output tokens (what Claude generated) as a rough measure of session size.
-        if d.get("type") == "assistant":
-            out_tok += (d.get("message", {}).get("usage", {}) or {}).get("output_tokens", 0)
-        # Keep the latest git branch seen (where the session left off).
-        if d.get("gitBranch"): branch = d["gitBranch"]
-        # Keep the latest recorded user prompt (used to guess whether the session is "done").
-        if d.get("type") == "last-prompt" and d.get("lastPrompt"): last_prompt = d["lastPrompt"]
-    if not cwd:
-        continue
-    full   = cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
-    # Directory haystack holds both the absolute and the ~-abbreviated form, so "--find-dir ~/dotfiles"
-    # and "--find-dir /home/me/dotfiles" both hit.
-    hay_dir = (cwd + "\n" + full).lower()
-    if find_dir and find_dir not in hay_dir:
-        continue
-    mtime  = datetime.datetime.fromtimestamp(os.path.getmtime(f))
-    sid    = os.path.basename(f)[:-6]  # strip .jsonl
-    tok    = f"{out_tok/1000:.0f}k" if out_tok >= 1000 else str(out_tok)
-    tlevel = "crit" if out_tok > 200_000 else "warn" if out_tok > 100_000 else ""
-    status = status_of(last_prompt)
-    # Generous safety caps only; bash trims title/branch/dir to the width-adaptive columns.
-    branch = branch[:120]
-    title  = " ".join((ai_title or first_user_text(f)).split())[:120]
-    # Title filters run here, after the title is known (the repo filter already ran, above).
-    hay_title = title.lower()
-    if find_session and find_session not in hay_title:
-        continue
-    if find_any and find_any not in hay_title and find_any not in hay_dir:
-        continue
-    rows.append((mtime, sid, cwd, full, status, title, short_path(cwd), branch, n, tok, tlevel))
-
-rows.sort(key=lambda r: r[0], reverse=True)   # newest first (top of the list)
-
-# Resolve which sessions are live. `--resume` ids match exactly; for each bare-launch cwd, claim the
-# N newest transcripts launched there (N = bare `claude` processes sharing that cwd), skipping any
-# already matched exactly. rows are newest-first, so the first matches per cwd are the freshest.
-live = set(live_sids)
-for cwd_target, cnt in live_cwd_cnts.items():
-    claimed = 0
-    for r in rows:
-        if claimed >= cnt:
-            break
-        if r[2] == cwd_target and r[1] not in live:
-            live.add(r[1]); claimed += 1
-
-for mtime, sid, rawcwd, full, status, title, disp, branch, n, tok, tlevel in rows[:count]:
-    # A sign-off wins over "live": if your last prompt reads as done, show "done" even when the
-    # process is still open (you finished but left the tab up). Otherwise a running process is "live".
-    if sid in live and status != "done":
-        status = "live"
-    print(f"{sid}\t{full}\t{mtime:%Y-%m-%d %H:%M}\t{status}\t{title}\t{disp}\t{branch}\t{n}\t{tok}\t{tlevel}")
-PY
-)
-
-  if [[ -z "$rows" ]]; then
-    log_error "No matching sessions found${desc:+ for $desc}"
-    return 1
-  fi
-
-  # Styling — only when writing to a terminal, so piped/redirected output stays clean.
-  local zebra="" reset="" bold="" cols=120
-  local hl_on="" hl_off=""
-  if [[ -t 1 ]]; then
-    zebra=$'\033[48;5;236m'   # subtle background for alternating rows
-    reset=$'\033[0m'
-    bold=$'\033[1m'
-    # --highlight marks: bold magenta, undone with '22;39' (bold off + default fg) so the zebra bg survives.
-    hl_on=$'\033[1;38;5;207m'
-    hl_off=$'\033[22;39m'
-  fi
-  # Terminal width drives the flexible columns. Prefer $COLUMNS (kept current by bash), fall back to
-  # `tput cols`, then a sane default; clamp so a tiny window still yields a usable layout.
-  cols=${COLUMNS:-$(tput cols 2>/dev/null || echo 120)}
-  [[ "$cols" =~ ^[0-9]+$ ]] || cols=120
-  (( cols < 90 )) && cols=90
-
-  # Fixed columns are #:3 when:16 status:6 msgs:5 tokens:6; with the eight ' │ '/' ' separators that
-  # leaves this much overhead. The rest is shared by the three flexible columns (title/dir/branch).
-  local overhead=58
-  local flex=$(( cols - overhead ))
-  local tw=$(( flex * 45 / 100 ))   # title
-  local dw=$(( flex * 27 / 100 ))   # directory
-  local bw=$(( flex - tw - dw ))    # branch
-  (( tw < 24 )) && tw=24; (( tw > 80 )) && tw=80
-  (( dw < 16 )) && dw=16; (( dw > 60 )) && dw=60
-  (( bw < 14 )) && bw=14; (( bw > 60 )) && bw=60
-
-  # Load rows into parallel arrays. metas holds every cell EXCEPT the leading number and the trailing
-  # tokens cell (both handled in the print loop). exts holds the per-row count of zero-width bytes
-  # baked into metas (green 'done' escape + multi-byte '…' from truncation) so the zebra pad can
-  # account for them. toks/tlevels feed the token coloring.
-  local -a sids cwds metas toks tlevels exts
-  local sid full when status title disp branch msgs tok tlevel scell tcell dcell ext
-  local __hl_out="" __hl_ext=0
-  while IFS=$'\t' read -r sid full when status title disp branch msgs tok tlevel; do
-    sids+=("$sid")
-    cwds+=("$full")
-    toks+=("$tok")
-    tlevels+=("$tlevel")
-    ext=0
-    # Width-trim the flexible columns: title/branch keep the head, directory keeps the tail (leaf).
-    (( ${#title}  > tw )) && { title="${title:0:tw-1}…";                 ext=$(( ext + 2 )); }
-    (( ${#branch} > bw )) && { branch="${branch:0:bw-1}…";               ext=$(( ext + 2 )); }
-    (( ${#disp}   > dw )) && { disp="…${disp:${#disp}-dw+1}";            ext=$(( ext + 2 )); }
-    # Status cell: cyan "live", green "done", yellow "tbc" (fg 39 restores default without clearing zebra bg).
-    local scolor=""
-    if [[ -n "$reset" ]]; then
-      case "$status" in
-        live) scolor=$'\033[38;5;51m';;    # cyan
-        done) scolor=$'\033[38;5;40m';;    # green
-        tbc)  scolor=$'\033[38;5;226m';;   # yellow
-      esac
-    fi
-    if [[ -n "$scolor" ]]; then
-      printf -v scell '%s%-6s\033[39m' "$scolor" "$status"
-      ext=$(( ext + ${#scolor} + 5 ))     # color escape + '\033[39m' (5), both zero-width
-    else
-      printf -v scell '%-6s' "$status"
-    fi
-    # Title and directory are padded to width FIRST, then marked up: inserting escapes before padding
-    # would make printf count them toward the field width and skew every column to the right.
-    printf -v tcell '%-*s' "$tw" "$title"
-    printf -v dcell '%-*s' "$dw" "$disp"
-    if [[ -n "$highlight" && -n "$reset" ]]; then
-      _claude_resume_highlight "$tcell" "$highlight" "$hl_on" "$hl_off"
-      tcell="$__hl_out"; ext=$(( ext + __hl_ext ))
-      _claude_resume_highlight "$dcell" "$highlight" "$hl_on" "$hl_off"
-      dcell="$__hl_out"; ext=$(( ext + __hl_ext ))
-    fi
-    metas+=("$(printf '%-16s │ %s │ %s │ %s │ %-*s │ %5s' \
-      "$when" "$scell" "$tcell" "$dcell" "$bw" "$branch" "$msgs")")
-    exts+=("$ext")
-  done <<< "$rows"
-
-  local size=${#sids[@]}
-  log_info "Found $size session(s)${desc:+ matching $desc}${highlight:+, highlighting \"$highlight\"} (most recent first, ${cols}-col terminal):"
-  echo
-
-  # Build a horizontal rule matching the column widths: a run of '─' per cell, joined with '┼'.
-  local dashes='' k
-  for ((k = 0; k < 90; k++)); do dashes+='─'; done
-  local rule
-  rule="${dashes:0:5}┼${dashes:0:18}┼${dashes:0:8}┼${dashes:0:tw+2}┼${dashes:0:dw+2}┼${dashes:0:bw+2}┼${dashes:0:7}┼${dashes:0:7}"
-
-  # Header + top rule.
-  # shellcheck disable=SC2059
-  printf "${bold} %3s │ %-16s │ %-6s │ %-*s │ %-*s │ %-*s │ %5s │ %6s${reset}\n" \
-    "#" "When" "Status" "$tw" "Title" "$dw" "Directory" "$bw" "Branch" "Msgs" "Tokens"
-  printf '%s\n' "$rule"
-
-  # Data rows, zebra-striped, with the tokens cell colored orange (>100k) / red (>200k). Each row
-  # carries seven multi-byte '│' dividers (3 bytes, 1 column each) plus any zero-width escapes baked
-  # into metas (exts) and the token color. Pad the striped rows to cols + those extra bytes so the
-  # background reaches the true terminal width. '\033[39m' restores the default fg without clearing
-  # the zebra bg.
-  local i line num tcolor tokcell extra
-  for i in "${!sids[@]}"; do
-    num=$(( i + 1 ))
-    tcolor=""; extra=$(( 14 + ${exts[$i]} ))
-    if [[ -n "$reset" ]]; then
-      case "${tlevels[$i]}" in
-        crit) tcolor=$'\033[38;5;196m';;
-        warn) tcolor=$'\033[38;5;208m';;
-      esac
-    fi
-    if [[ -n "$tcolor" ]]; then
-      printf -v tokcell '%s%6s\033[39m' "$tcolor" "${toks[$i]}"
-      extra=$(( extra + ${#tcolor} + 5 ))
-    else
-      printf -v tokcell '%6s' "${toks[$i]}"
-    fi
-    line=$(printf ' %3s │ %s │ %s' "$num" "${metas[$i]}" "$tokcell")
-    if [[ -n "$zebra" && $(( i % 2 )) -eq 1 ]]; then
-      printf '%s%-*s%s\n' "$zebra" "$(( cols + extra ))" "$line" "$reset"
-    else
-      printf '%s%s\n' "$line" "$reset"
-    fi
-  done
-  echo
-
-  local number
-  while :; do
-    read -r -p "Session to resume (1-$size, q to quit): " number
-    [[ "$number" == "q" ]] && return 0
-    [[ "$number" =~ ^[0-9]+$ ]] && (( number >= 1 && number <= size )) && break
-    log_error "Enter a number between 1 and $size (or q)"
-  done
-
-  local idx=$(( number - 1 ))
-  local sid="${sids[$idx]}"
-  local target="${cwds[$idx]/#\~/$HOME}"   # re-expand leading ~
+  rm -f "$result"
+  (( rc == 0 )) || return "$rc"
+  [[ -n "$sid" ]] || return 0   # quit at the prompt
 
   if [[ ! -d "$target" ]]; then
     log_warn "Directory '$target' no longer exists; resuming from \$PWD ($PWD)"
@@ -459,4 +71,3 @@ PY
 }
 
 export -f claude_resume
-export -f _claude_resume_highlight

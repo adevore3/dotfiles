@@ -7,10 +7,15 @@ metadata:
   originSessionId: 68fc3c1f-34d3-4da7-ba74-9dfc84e0efc7
 ---
 
-`claude_resume` is a bash function at `~/dotfiles/claude/functions/claude_resume.func` (auto-sourced by the
-bashrc `*.func` loop). Run from anywhere: it lists recent Claude Code sessions (newest last, by the prompt),
-each with its real cwd + first-prompt title read from the transcript, then `cd`s into the chosen session's
-directory and runs `claude --resume <id>`.
+`claude_resume` (alias `cr`) lists recent Claude Code sessions (newest first), each with its real cwd and title read
+from the transcript, then `cd`s into the chosen session's directory and runs `claude --resume <id>` — so you are left
+in that directory when the session exits. Run it from anywhere. Two pieces:
+
+- `claude/functions/claude_resume.func` — thin shell wrapper, auto-sourced by the bashrc `*.func` loop. Exists only
+  because a child process cannot cd its parent: it runs the picker, reads the pick back from a temp file, cds, resumes.
+- `claude/functions/claude_resume.py` — the picker: scanning, filtering, live detection, table rendering, the prompt.
+  Reports the pick via `--result-file` (session id on line 1, absolute directory on line 2). Tests in
+  `claude/test/claude_resume_test.py`, driven by `claude_resume_test.sh` so `make test` picks them up.
 
 - `claude_resume` — pick from the 25 most recent sessions
 - `claude_resume -n 40` — widen the list
