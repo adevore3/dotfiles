@@ -169,6 +169,42 @@ check_command_exists git "Please install git"
 **Error Handling**:
 Scripts use `set -uo pipefail` for strict error handling.
 
+### Choosing bash, Python, or both for a new function
+
+Decide this before writing the function, not after it grows. Getting it wrong is what produces long
+`*.func` files with a Python heredoc bolted into the middle.
+
+**Bash** — the default for glue: a handful of commands, env/PATH/alias work, wrapping a CLI, and anything that must
+change the calling shell (`cd`, `export`, defining functions). Only a shell function can move your shell; a child
+process cannot.
+
+**Python** — reach for it as soon as real data handling appears: JSON or other structured input, sorting and
+aggregating records, column layout, string-width math, or a pile of regexes. Signals you are past bash: a heredoc'd
+`python3 - <<'PY'`, `read`/`awk`/`sed` parsing a structured format, or arithmetic to keep output aligned.
+
+**Hybrid** — a thin `*.func` wrapper over a `*.py` module, when the work needs both real data handling *and* shell
+side effects. `claude_resume.func` + `claude_resume.py` is the reference: the wrapper stays ~70 lines (mostly its
+usage block) and does nothing but run the script, read the result, `cd`, and exec. Conventions that make it work:
+
+- Hand results back through a temp file (`--result-file`), not stdout, so the script keeps the real terminal — colors,
+  tables and prompts then behave exactly as if it ran directly.
+- Pass `COLUMNS` explicitly. Bash keeps it current but does not export it, so a child sees nothing.
+- Mirror `log_utils.sh` output in the Python (`[INFO]` to stdout, `[ERROR]` to stderr, honoring `LOG_LEVEL`) so
+  messages from both halves are indistinguishable.
+
+**Two bash traps worth knowing** (both hit `claude_resume` before it was ported):
+
+- `IFS=$'\t' read` collapses empty fields, because tab is IFS *whitespace*. Never move tabular data across a
+  language boundary as TSV — one empty cell silently shifts every later column.
+- `printf '%-*s'` pads by *bytes* while `${#var}` counts *characters*. Any output mixing ANSI escapes or non-ASCII
+  with column alignment needs hand-tracked byte accounting in bash, and none at all in Python.
+
+**Testing follows the language.** `make lint` (shellcheck) covers `*.func`/`*.sh` but cannot see inside a quoted
+heredoc, so heredoc'd Python is unlinted and effectively untestable. A real `.py` gets `unittest` coverage; give it a
+thin `*_test.sh` entry point, since `run_all_tests.sh` only discovers `*_test.sh`. See
+`claude/test/claude_resume_test.sh`, which delegates to `claude_resume_test.py` and then drives the wrapper
+end-to-end against a throwaway `HOME` with a fake binary on `PATH`.
+
 ## Notes
 
 - The `~/.localrc` file contains per-host configurations (sourced from bashrc)
