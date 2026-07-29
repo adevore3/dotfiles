@@ -13,6 +13,9 @@ the script directly; the wrapper always passes one).
 
 Everything a session displays is read out of its transcript rather than inferred from the project dir
 name under ~/.claude/projects, whose `/`->`-` munging is lossy and cannot be reversed.
+
+--clean is the one mode that writes to that tree: it deletes the sessions whose launch directory has
+since been removed. It never reports a pick, so the wrapper just exits.
 """
 
 from __future__ import annotations
@@ -56,10 +59,12 @@ def log_error(message: str) -> None:
 # ---------------------------------------------------------------------------------------------------
 
 # A transcript carries no status flag, so infer one from the last prompt you typed:
+#   "gone" - the launch directory no longer exists (a fact, not a guess); resume cannot cd there
 #   "live" - open in a running `claude` process (from process info, not guessed — see discover_live)
 #   "done" - reads as approval/thanks/sign-off, the work wrapped up
 #   "tbc"  - reads as "to be continued" / paused mid-flight
 #   "???"  - anything else (a task, a question, or too ambiguous to call)
+# "gone" outranks the rest: whatever the prompt said, a missing directory is the thing worth seeing.
 # STRONG_DONE_RE holds unambiguous closers that mean "done" at any length; DONE_RE holds weaker approval
 # words that only count in a short message, since they often appear mid-task ("nice, now do X").
 STRONG_DONE_RE = re.compile(
@@ -113,15 +118,6 @@ def abbreviate(path: str, home: str) -> str:
     return path.replace(home, "~", 1) if home and path.startswith(home) else path
 
 
-def short_path(path: str, home: str) -> str:
-    """Last two components of a path, so long trees don't crowd the title column."""
-    text = abbreviate(path, home)
-    parts = ["~"] if text == "~" else [p for p in text.split("/") if p]
-    if len(parts) > 2:
-        return ".../" + "/".join(parts[-2:])
-    return text
-
-
 @dataclass
 class Session:
     """One resumable session, as displayed in the table."""
@@ -135,14 +131,16 @@ class Session:
     out_tokens: int = 0
     status: str = "???"
     home: str = ""
+    path: str = ""  # the transcript this was read from — what --clean deletes
+    exists: bool = True  # is cwd still a directory? a stale session cannot be resumed in place
+    live: bool = False  # open in a running process (see assign_live); never deleted by --clean
 
     @property
     def home_cwd(self) -> str:
         return abbreviate(self.cwd, self.home)
 
-    @property
-    def display_dir(self) -> str:
-        return short_path(self.cwd, self.home)
+    def display_dir(self, width: int) -> str:
+        return elide_path(self.cwd, self.home, width)
 
     @property
     def when(self) -> str:
@@ -214,6 +212,7 @@ def read_transcript(path: Path, home: str) -> Session | None:
 
     if not cwd:
         return None
+    exists = os.path.isdir(cwd)
     return Session(
         sid=path.name[: -len(".jsonl")],
         cwd=cwd,
@@ -222,8 +221,10 @@ def read_transcript(path: Path, home: str) -> Session | None:
         branch=branch[:FIELD_CAP],
         messages=messages,
         out_tokens=out_tokens,
-        status=classify_status(last_prompt),
+        status=classify_status(last_prompt) if exists else "gone",
         home=home,
+        path=str(path),
+        exists=exists,
     )
 
 
@@ -289,8 +290,9 @@ def discover_live(proc_root: str = "/proc") -> LiveProcesses:
 def assign_live(sessions: list[Session], live: LiveProcesses) -> None:
     """Mark sessions open in a running process as "live", in place.
 
-    A sign-off wins: if the last prompt reads as done, keep "done" even though the process is still
-    around (you finished but left the tab up).
+    Two statuses outrank it in the display: a sign-off, since you may have finished but left the tab up,
+    and "gone", since a missing directory is what you need to see. The `live` flag is still set either
+    way — it is what keeps --clean from deleting a transcript out from under a running process.
     """
     live_sids = set(live.sids)
     # For each bare-launch cwd, claim the N newest transcripts launched there (N = processes sharing
@@ -304,8 +306,10 @@ def assign_live(sessions: list[Session], live: LiveProcesses) -> None:
                 live_sids.add(session.sid)
                 claimed += 1
     for session in sessions:
-        if session.sid in live_sids and session.status != "done":
-            session.status = "live"
+        if session.sid in live_sids:
+            session.live = True
+            if session.status not in ("done", "gone"):
+                session.status = "live"
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -355,7 +359,12 @@ RESET = "\033[0m"
 BOLD = "\033[1m"
 ZEBRA = "\033[48;5;236m"  # subtle background for alternating rows
 FG_DEFAULT = "\033[39m"  # restores the default foreground without clearing the zebra background
-STATUS_COLORS = {"live": "\033[38;5;51m", "done": "\033[38;5;40m", "tbc": "\033[38;5;226m"}
+STATUS_COLORS = {
+    "live": "\033[38;5;51m",
+    "done": "\033[38;5;40m",
+    "tbc": "\033[38;5;226m",
+    "gone": "\033[38;5;244m",  # grey: still selectable, just not resumable in place
+}
 TOKEN_COLORS = {"crit": "\033[38;5;196m", "warn": "\033[38;5;208m"}
 HIGHLIGHT_ON = "\033[1;38;5;207m"  # bold magenta
 HIGHLIGHT_OFF = "\033[22;39m"  # bold off + default fg, so the zebra background survives
@@ -387,6 +396,23 @@ def trim_head(text: str, width: int) -> str:
 def trim_tail(text: str, width: int) -> str:
     """Keep the end of a value (for paths, where the leaf matters most)."""
     return text if len(text) <= width else ELLIPSIS + text[len(text) - width + 1 :]
+
+
+def elide_path(path: str, home: str, width: int) -> str:
+    """Fit a path into width, dropping whole leading components before ever cutting mid-name.
+
+    A path that fits is shown whole, leading '~' included — the '…/' prefix appears only when something
+    really was dropped. Falls back to a character cut when even the last component is too wide.
+    """
+    text = abbreviate(path, home)
+    if len(text) <= width:
+        return text
+    parts = [p for p in text.split("/") if p]
+    for start in range(1, len(parts)):
+        candidate = ELLIPSIS + "/" + "/".join(parts[start:])
+        if len(candidate) <= width:
+            return candidate
+    return trim_tail(text, width)
 
 
 def mark(text: str, needle: str) -> Cell:
@@ -488,7 +514,7 @@ def render_table(sessions: list[Session], layout: Layout, highlight: str = "", c
             pad([Span(session.when)], 16),
             [Span(session.status.ljust(6), status_color, FG_DEFAULT if status_color else "")],
             pad(mark(trim_head(session.title, layout.title), highlight), layout.title),
-            pad(mark(trim_tail(session.display_dir, layout.directory), highlight), layout.directory),
+            pad(mark(session.display_dir(layout.directory), highlight), layout.directory),
             pad([Span(trim_head(session.branch, layout.branch))], layout.branch),
             pad([Span(str(session.messages))], 5, right_align=True),
             [Span(session.token_cell.rjust(6), token_color, FG_DEFAULT if token_color else "")],
@@ -527,6 +553,120 @@ def prompt_choice(size: int, stdin=None, stderr=None) -> int | None:
         log_error(f"Enter a number between 1 and {size} (or q)")
 
 
+def prompt_confirm(question: str, stdin=None, stderr=None) -> bool:
+    """Ask once before deleting. Only "y"/"yes" proceeds; anything else, including EOF, aborts."""
+    stdin = stdin or sys.stdin
+    stderr = stderr or sys.stderr
+    if stdin.isatty():
+        stderr.write(f"{question} (y/N): ")
+        stderr.flush()
+    answer = stdin.readline()
+    if not answer:
+        if stdin.isatty():
+            stderr.write("\n")
+        return False
+    return answer.strip().lower() in ("y", "yes")
+
+
+# ---------------------------------------------------------------------------------------------------
+# Cleanup
+# ---------------------------------------------------------------------------------------------------
+
+
+def remove_session_files(session: Session) -> tuple[list[str], list[str]]:
+    """Delete one session's transcript and its '<sid>/' sidecar dir (tool-results, subagents).
+
+    Returns (removed paths, error messages) rather than raising: one unreadable session should not
+    abandon the rest of the sweep.
+    """
+    transcript = Path(session.path)
+    removed: list[str] = []
+    errors: list[str] = []
+    for target in (transcript, transcript.parent / session.sid):
+        try:
+            if target.is_symlink() or target.is_file():
+                target.unlink()
+            elif target.is_dir():
+                shutil.rmtree(target)
+            else:
+                continue
+            removed.append(str(target))
+        except OSError as error:
+            errors.append(f"{target}: {error}")
+    return removed, errors
+
+
+def has_transcript(directory: Path) -> bool:
+    """Is any transcript left under a project dir? os.walk does not follow symlinks, so a 'memory'
+    symlink pointing into the dotfiles repo is never descended into."""
+    for _, _, files in os.walk(directory):
+        if any(name.endswith(".jsonl") for name in files):
+            return True
+    return False
+
+
+def prune_project_dir(directory: Path) -> bool:
+    """Remove a project dir once no transcripts remain under it. False if any are left.
+
+    rmtree unlinks the 'memory' symlink some project dirs carry instead of following it, so the linked-to
+    memory files in the dotfiles repo survive.
+    """
+    if has_transcript(directory):
+        return False
+    shutil.rmtree(directory)
+    return True
+
+
+def delete_sessions(stale: list[Session], projects: Path) -> int:
+    """Delete every stale session, then prune the project dirs left without a transcript. 1 on error."""
+    errors: list[str] = []
+    deleted = 0
+    for session in stale:
+        removed, failed = remove_session_files(session)
+        errors.extend(failed)
+        if removed:
+            deleted += 1
+    for directory in sorted({Path(s.path).parent for s in stale}):
+        if directory == projects:  # a transcript sitting in the root is not a project dir to prune
+            continue
+        try:
+            if prune_project_dir(directory):
+                log_info(f"Removed emptied project dir {directory}")
+        except OSError as error:
+            errors.append(f"{directory}: {error}")
+    log_info(f"Deleted {deleted} session(s)")
+    for message in errors:
+        log_error(f"Could not remove {message}")
+    return 1 if errors else 0
+
+
+def run_clean(sessions: list[Session], layout: Layout, options: Options, projects: Path) -> int:
+    """--clean: list the sessions whose launch directory is gone, then delete them on confirmation.
+
+    Filters still apply, so a sweep can be narrowed with -fd. -n does not: capping a cleanup would
+    silently leave stale sessions behind.
+    """
+    described = options.filters.describe()
+    suffix = f" matching {described}" if described else ""
+    stale = [s for s in sessions if not s.exists and not s.live]
+    if not stale:
+        log_info(f"No stale sessions{suffix} — nothing to clean")
+        return 0
+
+    log_info(f"{len(stale)} session(s){suffix} whose launch directory no longer exists:")
+    print()
+    for line in render_table(stale, layout, options.highlight, color=sys.stdout.isatty()):
+        print(line)
+    print()
+
+    if options.list_only:
+        return 0
+    if not prompt_confirm(f"Delete these {len(stale)} session(s) and their transcripts?"):
+        log_info("Nothing deleted")
+        return 0
+    return delete_sessions(stale, projects)
+
+
 # ---------------------------------------------------------------------------------------------------
 # Command line
 # ---------------------------------------------------------------------------------------------------
@@ -545,6 +685,10 @@ OPTIONS:
   -fd, --find-dir <str>       Match <str> against the session directory only
   -hl, --highlight <str>      Mark <str> in the title/directory cells; filters nothing
   -l, --list                  Print the table and stop — no prompt, nothing resumed
+  -c, --clean                 List the sessions whose launch directory is gone ("gone" in the table),
+                              then delete them after a y/N confirmation. Deletes each transcript and
+                              its '<session-id>/' sidecar dir, plus any project dir left without a
+                              transcript. Filters apply; -n does not. Add -l for a dry run.
   -h, --help                  Prints this message
 
   Searches are case-insensitive substrings; multiple filter flags must all match.
@@ -557,6 +701,8 @@ EXAMPLES:
   claude_resume -fs statusline -fd dotfiles
   claude_resume -n 60 -hl iceberg
   claude_resume -l -n 50 | grep spark
+  claude_resume --clean --list          # show what --clean would delete, delete nothing
+  claude_resume --clean -fd /tmp        # sweep only stale sessions launched under /tmp
 """
 
 DEFAULT_COUNT = 25
@@ -580,6 +726,7 @@ class Options:
     filters: Filters = field(default_factory=Filters)
     highlight: str = ""
     list_only: bool = False  # -l: render and stop, so the table can be read or piped
+    clean: bool = False  # -c: delete the sessions whose launch dir is gone, instead of resuming one
     result_file: str = ""
 
 
@@ -618,6 +765,8 @@ def parse_args(argv: list[str]) -> Options:
             options.highlight = value_for(arg)
         elif arg in ("-l", "--list"):
             options.list_only = True
+        elif arg in ("-c", "--clean"):
+            options.clean = True
         elif arg == "--result-file":  # internal: where to report the pick back to the shell wrapper
             options.result_file = value_for(arg)
         elif arg.startswith("-"):
@@ -672,17 +821,20 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     sessions = [s for s in scan_sessions(projects, home) if options.filters.matches(s)]
+    # Live detection runs across every match, then the list is capped: a bare `claude` claims the
+    # newest transcript from its directory whether or not that row made the cut.
+    assign_live(sessions, discover_live())
+    layout = Layout.for_width(terminal_width())
+
+    if options.clean:
+        return run_clean(sessions, layout, options, projects)
+
     if not sessions:
         described = options.filters.describe()
         log_error("No matching sessions found" + (f" for {described}" if described else ""))
         return 1
 
-    # Live detection runs across every match, then the list is capped: a bare `claude` claims the
-    # newest transcript from its directory whether or not that row made the cut.
-    assign_live(sessions, discover_live())
     sessions = sessions[: options.count]
-
-    layout = Layout.for_width(terminal_width())
     described = options.filters.describe()
     log_info(
         f"Found {len(sessions)} session(s)"

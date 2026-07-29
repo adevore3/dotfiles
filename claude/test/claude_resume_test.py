@@ -15,6 +15,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 # The picker lives beside the shell function rather than on the import path, so load it by file.
 # Registering it in sys.modules first is required: @dataclass resolves annotations through there.
@@ -66,11 +67,28 @@ class PathTest(unittest.TestCase):
         self.assertEqual(cr.abbreviate("/home/u/proj", self.HOME), "~/proj")
         self.assertEqual(cr.abbreviate("/srv/home/u", self.HOME), "/srv/home/u")
 
-    def test_short_path_keeps_last_two_components(self):
-        self.assertEqual(cr.short_path("/home/u/a/b/c/leaf", self.HOME), ".../c/leaf")
-        self.assertEqual(cr.short_path("/home/u/proj", self.HOME), "~/proj")
-        self.assertEqual(cr.short_path("/home/u", self.HOME), "~")
-        self.assertEqual(cr.short_path("/srv/worker/deploy", self.HOME), ".../worker/deploy")
+    def test_a_path_that_fits_is_shown_whole(self):
+        # The old fixed "last two components" rule rendered these as ".../tmp/slacktest" and
+        # ".../worker/deploy" even with room to spare, dropping the ~ and implying a longer path.
+        self.assertEqual(cr.elide_path("/home/u/tmp/slacktest", self.HOME, 30), "~/tmp/slacktest")
+        self.assertEqual(cr.elide_path("/srv/worker/deploy", self.HOME, 30), "/srv/worker/deploy")
+        self.assertEqual(cr.elide_path("/home/u", self.HOME, 30), "~")
+
+    def test_leading_components_go_one_at_a_time(self):
+        path = "/home/u/dotfiles/indeed/workspace/spark/migration"
+        self.assertEqual(cr.elide_path(path, self.HOME, 45), "~/dotfiles/indeed/workspace/spark/migration")
+        self.assertEqual(cr.elide_path(path, self.HOME, 40), "…/indeed/workspace/spark/migration")
+        self.assertEqual(cr.elide_path(path, self.HOME, 30), "…/workspace/spark/migration")
+        self.assertEqual(cr.elide_path(path, self.HOME, 20), "…/spark/migration")
+        self.assertEqual(cr.elide_path(path, self.HOME, 12), "…/migration")
+
+    def test_an_oversized_leaf_falls_back_to_a_character_cut(self):
+        self.assertEqual(cr.elide_path("/home/u/a-very-long-directory-name", self.HOME, 10), "…tory-name")
+
+    def test_elision_never_exceeds_the_width(self):
+        path = "/home/u/dotfiles/indeed/workspace/spark/spark-4.1-migration"
+        for width in range(4, 60):
+            self.assertLessEqual(len(cr.elide_path(path, self.HOME, width)), width, width)
 
 
 class SessionCellTest(unittest.TestCase):
@@ -98,6 +116,7 @@ class TranscriptFixture(unittest.TestCase):
         self.home = self.tmp.name
         self.projects = Path(self.home) / ".claude" / "projects"
         self.projects.mkdir(parents=True)
+        (Path(self.home) / "work").mkdir()  # a launch dir that still exists, so status stays a guess
         self.addCleanup(self.tmp.cleanup)
 
     def write(self, sid, entries, subdir="proj", mtime=1_000_000):
@@ -174,6 +193,35 @@ class ReadTranscriptTest(TranscriptFixture):
 
     def test_empty_transcript_is_unresumable(self):
         self.assertIsNone(cr.read_transcript(self.write("sid-7", []), self.home))
+
+
+class StaleSessionTest(TranscriptFixture):
+    def session(self, cwd, last_prompt="thanks"):
+        path = self.write("sid", [
+            {"type": "user", "cwd": cwd, "message": {"role": "user", "content": "a title"}},
+            {"type": "last-prompt", "lastPrompt": last_prompt},
+        ])
+        return cr.read_transcript(path, self.home)
+
+    def test_a_missing_launch_dir_outranks_the_prompt_heuristic(self):
+        session = self.session(f"{self.home}/deleted")
+        self.assertFalse(session.exists)
+        self.assertEqual(session.status, "gone", "a sign-off must not hide that the directory is gone")
+
+    def test_an_existing_launch_dir_keeps_the_heuristic(self):
+        session = self.session(f"{self.home}/work")
+        self.assertTrue(session.exists)
+        self.assertEqual(session.status, "done")
+
+    def test_transcript_path_is_recorded_for_cleanup(self):
+        session = self.session(f"{self.home}/work")
+        self.assertEqual(Path(session.path), self.projects / "proj" / "sid.jsonl")
+
+    def test_gone_survives_live_detection_but_the_flag_is_still_set(self):
+        session = self.session(f"{self.home}/deleted")
+        cr.assign_live([session], cr.LiveProcesses(sids={"sid"}))
+        self.assertEqual(session.status, "gone", "the missing directory is the more useful fact")
+        self.assertTrue(session.live, "but --clean still has to know a process holds it")
 
 
 class ScanSessionsTest(TranscriptFixture):
@@ -494,6 +542,119 @@ class PromptTest(unittest.TestCase):
         written = io.StringIO()
         cr.prompt_choice(3, stdin=io.StringIO("1\n"), stderr=written)
         self.assertEqual(written.getvalue(), "", "bash's read -p only prompts a terminal; match that")
+
+
+class ConfirmTest(unittest.TestCase):
+    def confirm(self, typed):
+        return cr.prompt_confirm("Delete?", stdin=io.StringIO(typed), stderr=io.StringIO())
+
+    def test_only_yes_proceeds(self):
+        for typed in ("y\n", "Y\n", "yes\n", " yes \n"):
+            self.assertTrue(self.confirm(typed), typed)
+
+    def test_everything_else_aborts(self):
+        for typed in ("n\n", "N\n", "\n", "", "yeah\n", "q\n", "1\n"):
+            self.assertFalse(self.confirm(typed), repr(typed))
+
+
+class CleanTest(TranscriptFixture):
+    """--clean deletes on disk, so these run against a throwaway ~/.claude/projects tree."""
+
+    def setUp(self):
+        super().setUp()
+        self.entries = [{"type": "user", "cwd": f"{self.home}/deleted",
+                         "message": {"role": "user", "content": "stale session"}}]
+        self.stale = self.write("stale-1", self.entries, subdir="gone-proj", mtime=2000)
+        self.stale_other = self.write("stale-2", self.entries, subdir="gone-proj", mtime=1000)
+        self.kept = self.write("kept-1", [{"type": "user", "cwd": f"{self.home}/work",
+                                           "message": {"role": "user", "content": "live session"}}],
+                               subdir="work-proj", mtime=3000)
+
+        # The '<sid>/' sidecar Claude writes beside a transcript.
+        self.sidecar = self.projects / "gone-proj" / "stale-1"
+        (self.sidecar / "subagents").mkdir(parents=True)
+        (self.sidecar / "subagents" / "agent-1.jsonl").write_text("{}\n")
+
+        # Some project dirs carry a 'memory' symlink into the dotfiles repo. Deleting the dir must
+        # unlink it, never follow it.
+        self.memory_source = Path(self.home) / "repo-memory"
+        self.memory_source.mkdir()
+        (self.memory_source / "MEMORY.md").write_text("keep me\n")
+        (self.projects / "gone-proj" / "memory").symlink_to(self.memory_source)
+
+    def clean(self, typed, argv=()):
+        """Run --clean end-to-end with `typed` answering the confirmation. Returns (exit code, stdout)."""
+        options = cr.parse_args(["--clean", *argv])
+        sessions = cr.scan_sessions(self.projects, self.home)
+        cr.assign_live(sessions, cr.LiveProcesses())
+        sessions = [s for s in sessions if options.filters.matches(s)]
+        out = io.StringIO()
+        with mock.patch.object(sys, "stdin", io.StringIO(typed)), contextlib.redirect_stdout(out):
+            code = cr.run_clean(sessions, cr.Layout.for_width(140), options, self.projects)
+        return code, strip(out.getvalue())
+
+    def test_confirming_deletes_the_stale_sessions_and_their_sidecar(self):
+        code, out = self.clean("y\n")
+        self.assertEqual(code, 0)
+        self.assertIn("2 session(s) whose launch directory no longer exists", out)
+        self.assertIn("Deleted 2 session(s)", out)
+        self.assertFalse(self.stale.exists())
+        self.assertFalse(self.stale_other.exists())
+        self.assertFalse(self.sidecar.exists(), "the '<sid>/' sidecar dir goes with the transcript")
+
+    def test_the_emptied_project_dir_is_pruned_but_the_memory_target_survives(self):
+        _, out = self.clean("y\n")
+        self.assertIn("Removed emptied project dir", out)
+        self.assertFalse((self.projects / "gone-proj").exists())
+        self.assertTrue((self.memory_source / "MEMORY.md").exists(), "rmtree unlinks the symlink, not its target")
+
+    def test_sessions_whose_directory_still_exists_are_untouched(self):
+        self.clean("y\n")
+        self.assertTrue(self.kept.exists())
+        self.assertTrue((self.projects / "work-proj").is_dir())
+
+    def test_declining_deletes_nothing(self):
+        for typed in ("n\n", "", "q\n"):
+            with self.subTest(typed=typed):
+                code, out = self.clean(typed)
+                self.assertEqual(code, 0)
+                self.assertIn("Nothing deleted", out)
+                self.assertTrue(self.stale.exists())
+
+    def test_list_only_is_a_dry_run_that_never_prompts(self):
+        code, out = self.clean("y\n", ["--list"])
+        self.assertEqual(code, 0)
+        self.assertIn("stale session", out, "the table is still printed")
+        self.assertNotIn("Deleted", out)
+        self.assertTrue(self.stale.exists())
+
+    def test_filters_narrow_the_sweep(self):
+        code, out = self.clean("y\n", ["-fd", "nowhere-near-this"])
+        self.assertEqual(code, 0)
+        self.assertIn("nothing to clean", out)
+        self.assertTrue(self.stale.exists())
+
+    def test_nothing_stale_is_not_an_error(self):
+        for path in (self.stale, self.stale_other):
+            path.unlink()
+        code, out = self.clean("y\n")
+        self.assertEqual(code, 0)
+        self.assertIn("No stale sessions", out)
+
+    def test_a_session_held_by_a_running_process_is_never_deleted(self):
+        options = cr.parse_args(["--clean"])
+        sessions = cr.scan_sessions(self.projects, self.home)
+        cr.assign_live(sessions, cr.LiveProcesses(sids={"stale-1"}))
+        out = io.StringIO()
+        with mock.patch.object(sys, "stdin", io.StringIO("y\n")), contextlib.redirect_stdout(out):
+            cr.run_clean(sessions, cr.Layout.for_width(140), options, self.projects)
+        self.assertTrue(self.stale.exists(), "a live process would keep writing to it")
+        self.assertFalse(self.stale_other.exists())
+        self.assertTrue((self.projects / "gone-proj").is_dir(), "a dir with a transcript left is not pruned")
+
+    def test_a_project_dir_keeping_a_transcript_is_not_pruned(self):
+        self.assertFalse(cr.prune_project_dir(self.projects / "work-proj"))
+        self.assertTrue(self.kept.exists())
 
 
 if __name__ == "__main__":

@@ -77,6 +77,7 @@ assert_contains "rc=0" "$out" "-h exits 0"
 out="$(run_wrapper q)"
 assert_contains "Found 2 session(s)" "$out" "lists every session in the fake HOME"
 assert_contains "session in a live directory" "$out" "shows the newest session's title"
+assert_contains "gone" "$out" "a session whose launch directory is missing is flagged in the table"
 assert_contains "rc=0" "$out" "quitting at the prompt exits 0"
 assert_equals "" "$(cat "$TMP/claude.log" 2>/dev/null)" "quitting never launches claude"
 
@@ -140,5 +141,32 @@ assert_equals "0" "$(printf '%s' "$piped" | grep -c $'\033')" "piped output carr
 out="$(FAKE_CLAUDE_LOG="$TMP/claude.log" HOME="$FAKE_HOME" PATH="$TMP/bin:$PATH" COLUMNS=140 DOTFILES="$ROOT" \
   timeout 20 bash -c 'source "$DOTFILES/claude/functions/claude_resume.func"; claude_resume < /dev/null; echo "rc=$?"' 2>&1)"
 assert_contains "rc=0" "$out" "end of input quits cleanly"
+
+# 11. --clean sweeps the session whose directory is gone. Last, since it deletes from the fake HOME.
+STALE="$FAKE_HOME/.claude/projects/proj/22222222-0000-4000-8000-000000000002.jsonl"
+exists() { [[ -e "$1" ]] && echo yes || echo no; }
+
+: > "$TMP/claude.log"
+out="$(run_wrapper y --clean --list)"
+assert_contains "1 session(s) whose launch directory no longer exists" "$out" "--clean finds the stale session"
+assert_contains "session in a deleted directory" "$out" "--clean shows what it would delete"
+assert_contains "rc=0" "$out" "--clean --list exits 0"
+assert_equals "yes" "$(exists "$STALE")" "--clean --list is a dry run"
+
+out="$(run_wrapper n --clean)"
+assert_contains "[INFO] Nothing deleted" "$out" "answering n aborts"
+assert_equals "yes" "$(exists "$STALE")" "a declined sweep deletes nothing"
+
+out="$(run_wrapper y --clean)"
+assert_contains "[INFO] Deleted 1 session(s)" "$out" "answering y deletes the stale session"
+assert_contains "rc=0" "$out" "--clean exits 0"
+assert_equals "no" "$(exists "$STALE")" "the stale transcript is gone"
+assert_equals "yes" "$(exists "$FAKE_HOME/.claude/projects/proj")" "a project dir still holding a transcript is kept"
+assert_contains "final_pwd=$PWD" "$out" "--clean leaves the shell where it was"
+assert_equals "" "$(cat "$TMP/claude.log")" "--clean never launches claude"
+
+out="$(run_wrapper y --clean)"
+assert_contains "[INFO] No stale sessions" "$out" "a second sweep finds nothing"
+assert_contains "rc=0" "$out" "nothing to clean is not an error"
 
 echo "All claude_resume tests passed"

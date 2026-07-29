@@ -26,10 +26,15 @@ in that directory when the session exits. Run it from anywhere. Two pieces:
   filtering; pairs well with a big `-n` when you want context around the hits
 - `claude_resume -l|--list` — print the table and stop: no prompt, nothing resumed, so it is safe to pipe
   (`cr -l -n 50 | grep spark`)
+- `claude_resume -c|--clean` — delete the sessions whose launch directory no longer exists (status `gone` in the
+  table), after a y/N confirmation. Removes each transcript plus its `<session-id>/` sidecar dir, then any project dir
+  left without a transcript. Filters apply, `-n` does not; add `-l` for a dry run. A session held open by a running
+  `claude` is never deleted.
 
 Searches are case-insensitive substrings and combine with AND; `-n` caps what survives filtering. Options may come
 before or after the positional filter. Color (highlight, zebra stripes, status/token colors) is suppressed when stdout
-is not a terminal.
+is not a terminal. The Directory column shows the whole `~`-abbreviated path when it fits and drops leading
+components with a `…/` prefix only when it does not.
 
 Sessions live as `~/.claude/projects/<munged-cwd>/<session-id>.jsonl`; the dir name is a lossy `/`→`-` of the
 cwd, so the authoritative cwd is the `cwd` field inside the transcript. Useful after a stop — see
