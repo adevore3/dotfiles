@@ -81,3 +81,64 @@ valid, common mode. "Hmm," is a genuine reflective opener he uses.
 Correction: "worth stating up front" is stiff filler he wouldn't use. When he leads with "first" it's the
 plain "first thing is" / "first thing is that". And enumeration is consistent: if he opens a point with
 "first", he continues "second", "third" — not "first ..." then unlabeled follow-ons.
+
+### From a Slack draft about a Spark 3.5.3 / Iceberg repro (five corrections in one pass)
+
+**Meta-label on a quote — draft introduced a code block with "verbatim":**
+> Before: The 3.5.3 failure, verbatim: <code block>
+> After:  The 3.5.3 failure: <code block>
+
+Demonstrates: don't announce that a quote is exact. The code block already conveys it, so the label is dead
+words. Applies to "quoting exactly", "copied below", "here's the raw output" too.
+
+**Slack formatting — draft used markdown conventions:**
+> Code blocks are three backticks, inline code is single backticks (`AccessDenied`), bold is `*bold*`.
+> A comparison matrix goes inside a code block as aligned columns, since Slack won't render a pipe-table.
+
+Demonstrates: the Slack register's formatting rules, called out by Anton directly ("for slack is 3
+backticks").
+
+**Tacked-on summarizing fragment:**
+> Before: ...no Spark frames in the trace. That's the silent drop, same as prod.
+> After:  ...no Spark frames in the trace which silently fails.
+
+Demonstrates: fold the conclusion into the preceding clause with a relative clause or comma. The standalone
+"That's the X." sentence restates what was just said and reads as not-Anton.
+
+**Staccato negative triple:**
+> Before: no AWS, no Glue, no network
+> After:  not affected by AWS, Glue or network issues
+
+Demonstrates: the rhetorical repeated-negation list is a tic he doesn't use. Collapse it into an ordinary
+phrase with a normal "or" list.
+
+**Coined metaphor, plus attributing the work to Claude:**
+> Before: The only prod ingredient you need to reproduce it is the default Iceberg catalogs being on.
+> After:  Claude was able to reproduce with the default Iceberg catalogs being on.
+
+Demonstrates two things: (a) "prod ingredient" is an invented figure of speech, say it literally; (b) here
+the claim is an unverified repro assertion with no artifact attached, so naming Claude as the actor is doing
+real work. Contrast the next two pairs.
+
+**Attributing Claude's analysis — a root-cause paragraph that came from Claude reading bytecode:**
+> Claude says, <root-cause paragraph, in Claude's own explanatory voice>
+
+Demonstrates: a derived explanation nobody independently checked. The reader can't eyeball whether it's right,
+and if it's wrong he reasons from a false mechanism, so the provenance marker earns its place. The attributed
+paragraph stays in Claude's register and isn't forced through Anton's voice rules; everything outside the
+attribution stays in his voice.
+
+**Reproducible evidence — do NOT attribute:**
+> Before: Claude ran the tests and they failed on 3.5.3.
+> After:  <paste the test-failure code block>
+
+Demonstrates: the artifact is the proof and anyone can re-run it, so who typed the command is irrelevant.
+Attribution here is strictly weaker than the output itself and faintly undercuts a solid result.
+
+**Vouching — keep the first person, cut the false method:**
+> Before: For DIRP-4667 I also confirmed it by hand on top of the unit tests, ...
+> After:  For DIRP-4667 I also confirmed it on top of the unit tests, ...
+
+Demonstrates: "I confirmed" is a vouch and stays true regardless of who drove the terminal, since Anton read
+the numbers and believes them. "by hand" is the false part, it claims a specific manual method. Watch the
+verb, not the pronoun, and don't hand the whole sentence to Claude to fix two words.
