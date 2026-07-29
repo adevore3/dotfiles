@@ -25,7 +25,9 @@ session_name() {
     start_ts=${line##*$'\t'}
   fi
 
-  [ -z "$start_cwd" ] && start_cwd="${fallback_cwd:-$PWD}"
+  # :- matters: the block above only assigns when the transcript is readable, and the notify hooks run
+  # under `set -u`, where a bare $start_cwd would exit the hook before it could notify.
+  [ -z "${start_cwd:-}" ] && start_cwd="${fallback_cwd:-$PWD}"
 
   name="$(basename "$(dirname "$start_cwd")")/$(basename "$start_cwd")"   # last two path components
 
