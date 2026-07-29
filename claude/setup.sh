@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Symlinks Claude config whose target path can't be hardcoded — the per-project memory
 # dir, keyed by the absolute repo path. Fixed-path files are handled by dotbot link:
-# entries in install.conf.yaml. Idempotent; safe to re-run.
+# entries in install.conf.yaml. Also prunes skill links orphaned by a rename.
+# Idempotent; safe to re-run.
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -31,6 +32,20 @@ link_memory() {
 link_memory dotfiles "$DOTFILES"
 # Global/default project (Claude runs with cwd=$HOME): personal, non-repo memory.
 link_memory home "$HOME"
+
+# Prune skill links this repo orphaned — a symlink into claude/skills/ whose source is gone because the
+# skill was renamed or deleted (e.g. my-mrs -> gitlab). Dotbot creates these links but its `clean` only
+# sweeps ~ and ~/.config, so a rename otherwise leaves a dangling link that Claude still tries to load.
+# Only touch links pointing into OUR skills dir; other repos' skills (the indeed submodule's) are theirs
+# to prune. Matches the same loop in indeed/claude/setup.sh.
+for link in "$HOME/.claude/skills"/*; do
+  [ -L "$link" ] || continue
+  case "$(readlink "$link")" in
+    "$DOTFILES/claude/skills"/*)
+      [ -e "$link" ] || { rm -f "$link"; echo "Pruned stale skills/$(basename "$link")"; }
+      ;;
+  esac
+done
 
 # Hand off to the indeed submodule's own setup when it's checked out (keeps Indeed-specific wiring
 # in that repo; this is just a conditional invocation, no Indeed content in the public dotfiles).
