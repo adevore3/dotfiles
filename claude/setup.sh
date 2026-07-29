@@ -34,4 +34,6 @@ link_memory home "$HOME"
 
 # Hand off to the indeed submodule's own setup when it's checked out (keeps Indeed-specific wiring
 # in that repo; this is just a conditional invocation, no Indeed content in the public dotfiles).
-[ -f "$DOTFILES/indeed/claude/setup.sh" ] && ( cd "$DOTFILES/indeed/claude" && bash setup.sh )
+if [ -f "$DOTFILES/indeed/claude/setup.sh" ]; then
+  ( cd "$DOTFILES/indeed/claude" && bash setup.sh )
+fi
