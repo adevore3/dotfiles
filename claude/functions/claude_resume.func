@@ -14,21 +14,51 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 # Usage: claude_resume [OPTIONS] [filter]
 #
 # Arguments:
-#   filter - Optional substring; only sessions whose cwd contains it are shown
+#   filter - Optional search string, same as -f (matches title or directory)
 #
 # Options:
-#   -n <count>   How many recent sessions to list (default 25)
-#   -h, --help   Print this message
+#   -n <count>                 How many recent sessions to list (default 25)
+#   -f <str>                   Keep sessions whose title OR directory contains <str>
+#   -fs, --find-session <str>  Keep sessions whose title contains <str>
+#   -fd, --find-dir <str>      Keep sessions whose directory contains <str>
+#   -hl, --highlight <str>     Highlight <str> in the title/directory cells without filtering anything
+#   -h, --help                 Print this message
+#
+# All searches are case-insensitive substrings; combining filter flags narrows (AND). -n counts what is
+# left after filtering, so it always caps the rows you actually see. --highlight never filters — it only
+# marks matches, so use it to spot sessions in a wide list.
 #
 # Returns:
 #   0 - Resumed (or nothing to do)
 #   1 - Bad usage / no claude binary / no sessions
 #
 # Examples:
-#   claude_resume            # pick from the 25 most recent sessions
-#   claude_resume spark      # only sessions whose cwd contains "spark"
-#   claude_resume -n 40      # widen the list to 40
+#   claude_resume                        # pick from the 25 most recent sessions
+#   claude_resume spark                  # title or directory contains "spark"
+#   claude_resume -n 40                  # widen the list to 40
+#   claude_resume -fd dotfiles           # only sessions under a dotfiles directory
+#   claude_resume -fs statusline -fd dotfiles   # both must match
+#   claude_resume -n 60 -hl iceberg      # list 60 sessions, flag the ones mentioning iceberg
 #==============================================================================
+# Wrap every case-insensitive occurrence of $2 in $1 with the escapes $3/$4. Results come back in
+# __hl_out (the marked-up text) and __hl_ext (bytes of zero-width escape added, so the caller can keep
+# its column padding honest). Splitting this out keeps the print loop readable.
+function _claude_resume_highlight() {
+  local text="$1" needle="$2" on="$3" off="$4"
+  __hl_out="$text"; __hl_ext=0
+  [[ -n "$needle" ]] || return 0
+  local rest="$text" lrest="${text,,}" lneedle="${needle,,}" len=${#needle} out="" prefix i
+  while [[ "$lrest" == *"$lneedle"* ]]; do
+    prefix="${lrest%%"$lneedle"*}"
+    i=${#prefix}
+    out+="${rest:0:i}${on}${rest:i:len}${off}"
+    rest="${rest:i+len}"
+    lrest="${lrest:i+len}"
+    __hl_ext=$(( __hl_ext + ${#on} + ${#off} ))
+  done
+  __hl_out="${out}${rest}"
+}
+
 function claude_resume() {
   local __usage="
 NAME:
@@ -38,24 +68,67 @@ SYNOPSIS
   claude_resume [OPTIONS] [filter]
 
 OPTIONS:
-  -n <count>    Number of recent sessions to list (default 25)
-  -h, --help    Prints this message
+  -n <count>                  Number of recent sessions to list (default 25)
+  -f <str>                    Match <str> against the session title OR its directory
+  -fs, --find-session <str>   Match <str> against the session title only
+  -fd, --find-dir <str>       Match <str> against the session directory only
+  -hl, --highlight <str>      Mark <str> in the title/directory cells; filters nothing
+  -h, --help                  Prints this message
+
+  Searches are case-insensitive substrings; multiple filter flags must all match.
 
 EXAMPLES:
   claude_resume
   claude_resume spark
   claude_resume -n 40
+  claude_resume -fd dotfiles
+  claude_resume -fs statusline -fd dotfiles
+  claude_resume -n 60 -hl iceberg
 "
 
-  local count=25
-  while [[ "${1:-}" =~ ^-{1,2}.* ]]; do
+  # Options may appear before or after the positional filter, so keep scanning the whole argv instead of
+  # stopping at the first non-flag (`claude_resume spark -n 40` has to honor the -n).
+  local count=25 find_any="" find_session="" find_dir="" highlight=""
+  local -a positional=()
+  while (( $# )); do
     case "$1" in
       -h|--help) echo "$__usage"; return 0;;
-      -n) count="$2"; shift 2;;
-      *) log_error "Invalid option: \"$1\""; echo "$__usage"; return 1;;
+      -n)
+        if [[ ! "${2:-}" =~ ^[1-9][0-9]*$ ]]; then
+          log_error "-n needs a positive integer, got \"${2:-}\""
+          return 1
+        fi
+        count="$2"; shift 2;;
+      -f)
+        [[ $# -ge 2 ]] || { log_error "-f needs a search string"; return 1; }
+        find_any="$2"; shift 2;;
+      -fs|--find-session)
+        [[ $# -ge 2 ]] || { log_error "$1 needs a search string"; return 1; }
+        find_session="$2"; shift 2;;
+      -fd|--find-dir)
+        [[ $# -ge 2 ]] || { log_error "$1 needs a search string"; return 1; }
+        find_dir="$2"; shift 2;;
+      -hl|--highlight)
+        [[ $# -ge 2 ]] || { log_error "$1 needs a search string"; return 1; }
+        highlight="$2"; shift 2;;
+      -*) log_error "Invalid option: \"$1\""; echo "$__usage"; return 1;;
+      *) positional+=("$1"); shift;;
     esac
   done
-  local filter="${1:-}"
+  # A bare positional argument is shorthand for -f; more than one, or one alongside -f, is ambiguous —
+  # say so rather than silently dropping any of them.
+  if (( ${#positional[@]} )); then
+    if (( ${#positional[@]} > 1 )) || [[ -n "$find_any" ]]; then
+      log_error "Pass at most one search string, either positionally or with -f"
+      return 1
+    fi
+    find_any="${positional[0]}"
+  fi
+  # Human-readable summary of the active filters, reused in the header and the not-found message.
+  local desc=""
+  [[ -n "$find_any" ]]     && desc+="${desc:+, }title/dir ~ \"$find_any\""
+  [[ -n "$find_session" ]] && desc+="${desc:+, }title ~ \"$find_session\""
+  [[ -n "$find_dir" ]]     && desc+="${desc:+, }dir ~ \"$find_dir\""
 
   command -v claude >/dev/null || { log_error "'claude' not found on PATH"; return 1; }
 
@@ -83,15 +156,21 @@ EXAMPLES:
   # Everything but full_cwd/tlevel is displayed; full_cwd drives the cd, tlevel ("", warn, crit)
   # drives the token-cell color. Recency is the file mtime; the rest comes from transcript contents.
   local rows
-  rows=$(COUNT="$count" FILTER="$filter" PROJECTS="$projects" \
+  rows=$(COUNT="$count" FIND_ANY="$find_any" FIND_SESSION="$find_session" FIND_DIR="$find_dir" \
+         PROJECTS="$projects" \
          LIVE_SIDS="${live_sids[*]:-}" LIVE_CWDS="$live_cwds_str" python3 - <<'PY'
 import json, glob, os, datetime, re
 from collections import Counter
 
 count  = int(os.environ["COUNT"])
-filt   = os.environ["FILTER"]
 projects = os.environ["PROJECTS"]
 HOME   = os.path.expanduser("~")
+
+# Filters, lowercased for case-insensitive substring matching. find_any matches either field; the two
+# targeted ones match a single field. Whatever is set must match (AND).
+find_any     = os.environ.get("FIND_ANY", "").lower()
+find_session = os.environ.get("FIND_SESSION", "").lower()
+find_dir     = os.environ.get("FIND_DIR", "").lower()
 
 # Sessions the caller found open in a running `claude` process (see the bash side): an exact set of
 # session ids from `--resume`, plus a count of bare `claude` launches per cwd to resolve below.
@@ -186,17 +265,26 @@ for f in glob.glob(os.path.join(projects, "**", "*.jsonl"), recursive=True):
         if d.get("type") == "last-prompt" and d.get("lastPrompt"): last_prompt = d["lastPrompt"]
     if not cwd:
         continue
-    if filt and filt not in cwd:
+    full   = cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
+    # Directory haystack holds both the absolute and the ~-abbreviated form, so "--find-dir ~/dotfiles"
+    # and "--find-dir /home/me/dotfiles" both hit.
+    hay_dir = (cwd + "\n" + full).lower()
+    if find_dir and find_dir not in hay_dir:
         continue
     mtime  = datetime.datetime.fromtimestamp(os.path.getmtime(f))
     sid    = os.path.basename(f)[:-6]  # strip .jsonl
-    full   = cwd.replace(HOME, "~", 1) if cwd.startswith(HOME) else cwd
     tok    = f"{out_tok/1000:.0f}k" if out_tok >= 1000 else str(out_tok)
     tlevel = "crit" if out_tok > 200_000 else "warn" if out_tok > 100_000 else ""
     status = status_of(last_prompt)
     # Generous safety caps only; bash trims title/branch/dir to the width-adaptive columns.
     branch = branch[:120]
     title  = " ".join((ai_title or first_user_text(f)).split())[:120]
+    # Title filters run here, after the title is known (the repo filter already ran, above).
+    hay_title = title.lower()
+    if find_session and find_session not in hay_title:
+        continue
+    if find_any and find_any not in hay_title and find_any not in hay_dir:
+        continue
     rows.append((mtime, sid, cwd, full, status, title, short_path(cwd), branch, n, tok, tlevel))
 
 rows.sort(key=lambda r: r[0], reverse=True)   # newest first (top of the list)
@@ -223,16 +311,20 @@ PY
 )
 
   if [[ -z "$rows" ]]; then
-    log_error "No matching sessions found${filter:+ for filter \"$filter\"}"
+    log_error "No matching sessions found${desc:+ for $desc}"
     return 1
   fi
 
   # Styling — only when writing to a terminal, so piped/redirected output stays clean.
   local zebra="" reset="" bold="" cols=120
+  local hl_on="" hl_off=""
   if [[ -t 1 ]]; then
     zebra=$'\033[48;5;236m'   # subtle background for alternating rows
     reset=$'\033[0m'
     bold=$'\033[1m'
+    # --highlight marks: bold magenta, undone with '22;39' (bold off + default fg) so the zebra bg survives.
+    hl_on=$'\033[1;38;5;207m'
+    hl_off=$'\033[22;39m'
   fi
   # Terminal width drives the flexible columns. Prefer $COLUMNS (kept current by bash), fall back to
   # `tput cols`, then a sane default; clamp so a tiny window still yields a usable layout.
@@ -256,7 +348,8 @@ PY
   # baked into metas (green 'done' escape + multi-byte '…' from truncation) so the zebra pad can
   # account for them. toks/tlevels feed the token coloring.
   local -a sids cwds metas toks tlevels exts
-  local sid full when status title disp branch msgs tok tlevel scell ext
+  local sid full when status title disp branch msgs tok tlevel scell tcell dcell ext
+  local __hl_out="" __hl_ext=0
   while IFS=$'\t' read -r sid full when status title disp branch msgs tok tlevel; do
     sids+=("$sid")
     cwds+=("$full")
@@ -282,13 +375,23 @@ PY
     else
       printf -v scell '%-6s' "$status"
     fi
-    metas+=("$(printf '%-16s │ %s │ %-*s │ %-*s │ %-*s │ %5s' \
-      "$when" "$scell" "$tw" "$title" "$dw" "$disp" "$bw" "$branch" "$msgs")")
+    # Title and directory are padded to width FIRST, then marked up: inserting escapes before padding
+    # would make printf count them toward the field width and skew every column to the right.
+    printf -v tcell '%-*s' "$tw" "$title"
+    printf -v dcell '%-*s' "$dw" "$disp"
+    if [[ -n "$highlight" && -n "$reset" ]]; then
+      _claude_resume_highlight "$tcell" "$highlight" "$hl_on" "$hl_off"
+      tcell="$__hl_out"; ext=$(( ext + __hl_ext ))
+      _claude_resume_highlight "$dcell" "$highlight" "$hl_on" "$hl_off"
+      dcell="$__hl_out"; ext=$(( ext + __hl_ext ))
+    fi
+    metas+=("$(printf '%-16s │ %s │ %s │ %s │ %-*s │ %5s' \
+      "$when" "$scell" "$tcell" "$dcell" "$bw" "$branch" "$msgs")")
     exts+=("$ext")
   done <<< "$rows"
 
   local size=${#sids[@]}
-  log_info "Found $size session(s) (most recent first, ${cols}-col terminal):"
+  log_info "Found $size session(s)${desc:+ matching $desc}${highlight:+, highlighting \"$highlight\"} (most recent first, ${cols}-col terminal):"
   echo
 
   # Build a horizontal rule matching the column widths: a run of '─' per cell, joined with '┼'.
@@ -356,3 +459,4 @@ PY
 }
 
 export -f claude_resume
+export -f _claude_resume_highlight
