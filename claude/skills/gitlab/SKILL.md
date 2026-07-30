@@ -44,6 +44,19 @@ general MR comment. General comments are for MR-wide points.
 
 **Why:** an inline comment shows exactly which line it refers to, so the author doesn't have to guess.
 
+## Push the fix before you reply
+
+When a reply asserts a change ("fixed by…", "reworded to…"), the order is: **edit → commit → push → then post the
+replies**. A reply that describes code not yet on the MR is a claim the reviewer cannot see.
+
+**Why:** CodeRabbit re-verifies each claim by running `git diff` / `rg` against the *pushed* revision, so replying
+first earns "the inspected diff is empty… the finding remains open" and every thread needs a second round. Human
+reviewers hit it the same way — they click the line and read the old code.
+
+If the branch is behind the target branch, check for real conflicts before proposing a rebase:
+`git merge-tree $(git merge-base HEAD origin/master) HEAD origin/master`. A clean merge means a plain push is enough,
+which avoids a force-push — and a force-push always needs Anton's approval first.
+
 ## Always reply in the thread, not top-level
 
 When responding to someone's comment (a reviewer's question, a CodeRabbit finding, a reply in an existing thread),
