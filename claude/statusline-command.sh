@@ -66,10 +66,15 @@ if [[ -n "$transcript" && -f "$transcript" ]]; then
     fi
 fi
 
+# Display only: $cwd itself stays absolute above, since `git -C` and session_name need the real path. The prefix test
+# is anchored on "$HOME" or "$HOME/" so a sibling like /home/adevore2 is left alone instead of becoming "~2".
+disp_cwd="$cwd"
+[[ "$cwd" == "$HOME" || "$cwd" == "$HOME"/* ]] && disp_cwd="~${cwd#"$HOME"}"
+
 printf "[%s] %s λ %s(%s%s)%s" \
     "$sname" \
     "$host" \
     "$node_info" \
-    "$cwd" \
+    "$disp_cwd" \
     "$git_info" \
     "$ctx_info"
