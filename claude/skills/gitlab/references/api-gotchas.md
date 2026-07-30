@@ -136,3 +136,43 @@ error, no warning. Send a JSON body with `--input` instead (recipe in `SKILL.md`
 `position.new_path` / `new_line` are set.
 
 Same family as §1: the API discards what it doesn't recognise and returns success.
+
+## 10. `glab mr create --remove-source-branch` is accepted and ignored
+
+Two flags, two failure modes. `--description-file` does not exist — that one at least errors with `Unknown flag`, so
+it's merely annoying; the working form is `--description "$(cat file.md)"` plus `--no-editor`.
+
+`--remove-source-branch` is the silent one. The MR is created, nothing errors, and reading it back gives:
+
+```
+$ glab api "projects/<id>/merge_requests/<iid>" | jq '.remove_source_branch'
+null
+```
+
+A follow-up PUT with `--field` doesn't fix it either — same drop as §9, again with no error:
+
+```bash
+glab api --method PUT "projects/<id>/merge_requests/<iid>" --field remove_source_branch=true   # no effect
+```
+
+Only a JSON body lands the value:
+
+```bash
+printf '{"remove_source_branch": true}' > /tmp/mr.json
+glab api --method PUT "projects/<id>/merge_requests/<iid>" \
+  --header "Content-Type: application/json" --input /tmp/mr.json
+```
+
+**Then the read-back trap:** after that PUT succeeds, `remove_source_branch` *still* reads `null`. The value surfaces
+under a different key:
+
+```
+$ glab api "projects/<id>/merge_requests/<iid>" | jq '.force_remove_source_branch'
+true
+```
+
+Verifying the key you set therefore reports failure on a write that worked. Read back `force_remove_source_branch`.
+
+Same family as §9, and the general rule behind both: `--field` can only express flat string values, so nested objects
+and booleans are discarded. Prefer `--input` with JSON for **any** non-trivial `glab` write, not just inline-comment
+positions.

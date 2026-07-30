@@ -27,6 +27,16 @@ rather than a wrong host.
 
 Always draft the comment first and show it to Anton before posting; let him approve or edit.
 
+## MR descriptions
+
+State **what changed and why**, plus the verification/testing evidence. Keep out the author's open questions,
+self-flagged debatable choices, and "reviewer, please look at X" invitations — a section like *"Two judgement calls
+worth a look"* gets deleted. If something genuinely needs the reviewer's eyes, raise it as an inline comment on the
+line it concerns.
+
+**Why:** the description is the standing record of the change; a request for a second opinion is conversation, and it
+belongs line-anchored where the reader can see the code it's about.
+
 ## Prefer inline comments
 
 When feedback is specific to particular line(s) of code, post it as an **inline (line-anchored) discussion**, not a
@@ -77,6 +87,25 @@ The numeric project id also works and is shorter for repeated calls; read it fro
 **`iid`** (per-project, what the URL shows) is not the **`id`** (instance-wide); API paths under `projects/…` want the
 `iid`.
 
+## Creating an MR via glab
+
+```bash
+glab mr create --title "..." --description "$(cat /tmp/desc.md)" --no-editor --target-branch master
+```
+
+- There is **no `--description-file`** flag; it errors with `Unknown flag`. Inline the file with
+  `--description "$(cat file.md)"` and pass `--no-editor` so it doesn't block on `$EDITOR`.
+- `--remove-source-branch` is **accepted and ignored** — no error, and the created MR reads
+  `"remove_source_branch": null`. Set it afterwards with a JSON PUT, then read back
+  **`force_remove_source_branch`**, not the key you set (`references/api-gotchas.md` §10):
+
+```bash
+printf '{"remove_source_branch": true}' > /tmp/mr.json
+glab api --method PUT "projects/<id>/merge_requests/<iid>" \
+  --header "Content-Type: application/json" --input /tmp/mr.json
+glab api "projects/<id>/merge_requests/<iid>" | jq '.force_remove_source_branch'   # expect true
+```
+
 ## Posting an inline comment via glab
 
 `glab api --field body=...` does NOT attach a `position` object — the bracketed `position[...]` form fields get
@@ -118,8 +147,13 @@ practice:
   returns plausible, wrong results. Before trusting a parameter you haven't used before, pass an absurd value
   (a far-future date, a nonsense branch) and confirm you get zero rows. `merged_after` is the notorious one — see
   `references/api-gotchas.md` §1.
-- **Read back after every write.** The dropped-`position` bug above is the same failure family: the request returns 201
-  and the result is wrong. Re-fetch and assert the field you cared about actually landed.
+- **Read back after every write — and read back the *right* key.** The dropped-`position` bug above is the same failure
+  family: the request returns 201 and the result is wrong. Re-fetch and assert the field you cared about actually
+  landed, remembering the field that reflects a write isn't always the field you set — `remove_source_branch` shows up
+  as `force_remove_source_branch` (§10), so checking the obvious key reports failure on a write that worked.
+- **Prefer `--input` with JSON over `--field` for any non-trivial write.** `--field` can only express flat string
+  values; nested objects and booleans are dropped silently and the call still succeeds — inline-comment `position`
+  (§9) and `remove_source_branch` (§10) are the same bug.
 - **An empty result is not evidence of nothing.** A typo'd or renamed branch returns `200 []`, not a 404, so a wrong
   ref produces a clean, believable "nothing here" (§2b). When an empty answer would be surprising, validate the ref
   itself with an endpoint that *does* 404.
