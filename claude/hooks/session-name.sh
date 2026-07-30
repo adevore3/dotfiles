@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-# Derives a stable, per-session display name: "<parent>/<leaf> @ <start-time>" where the directory and start time both
-# come from the session's transcript -- i.e. the path Claude started in and when it started. Transcript-derived (not
-# stored) so the name survives reboots and `claude --resume`, pins to the startup dir even after `cd` within the
-# session, and is unique per pane/session rather than per tmux window. Sourced by the statusline and the Slack hooks.
+# Derives a stable, per-session display name: "<parent>/<leaf> @ <start-time>" -- "~/<leaf>" one level under $HOME, a
+# lone "~" in $HOME itself -- where the directory and start time both come from the session's transcript, i.e. the path
+# Claude started in and when it started. Transcript-derived (not stored) so the name survives reboots and
+# `claude --resume`, pins to the startup dir even after `cd` within the session, and is unique per pane/session rather
+# than per tmux window. Sourced by the statusline and the Slack hooks.
 #
 # Usage: session_name "<transcript_path>" "<session_id>" "<fallback_cwd>"
 # Echoes the name; never fails. Falls back to the live cwd (path only) when the transcript isn't readable yet.
 session_name() {
   local transcript="$1" sid="$2" fallback_cwd="${3:-}"
-  local line start_cwd start_ts name when matches
+  local line start_cwd start_ts name when matches short leaf head
 
   # The statusline payload may omit transcript_path; the glob finds the transcript by session id regardless of which
   # project dir it lives under.
@@ -29,7 +30,27 @@ session_name() {
   # under `set -u`, where a bare $start_cwd would exit the hook before it could notify.
   [ -z "${start_cwd:-}" ] && start_cwd="${fallback_cwd:-$PWD}"
 
-  name="$(basename "$(dirname "$start_cwd")")/$(basename "$start_cwd")"   # last two path components
+  # Collapse $HOME to ~ before trimming, so a session started in ~/dotfiles reads "~/dotfiles" instead of
+  # "adevore/dotfiles" -- the username sitting above it is noise. Anchored on "$HOME" or "$HOME/", so a
+  # sibling like /home/adevore2 keeps its real path rather than becoming "~2".
+  short="$start_cwd"
+  if [ "$start_cwd" = "$HOME" ]; then
+    short="~"
+  elif [[ "$start_cwd" == "$HOME"/* ]]; then
+    short="~${start_cwd#"$HOME"}"
+  fi
+
+  # Last two components of that. A lone "~" and a single-component path stay whole; "~/a/b" trims to "a/b",
+  # since by then the ~ is no more informative than any other dropped ancestor.
+  leaf="${short##*/}"
+  head="${short%/*}"
+  if [ -z "$leaf" ] || [ "$head" = "$short" ]; then
+    name="$short"
+  elif [ -n "$head" ]; then
+    name="${head##*/}/$leaf"
+  else
+    name="/$leaf"
+  fi
 
   if [ -n "${start_ts:-}" ]; then
     # ISO (UTC) -> Pacific. Forced to a fixed zone (not the machine's, which is UTC on cloud VMs); America/Los_Angeles

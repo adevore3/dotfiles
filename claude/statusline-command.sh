@@ -6,8 +6,8 @@ sid=$(echo "$input" | jq -r '.session_id // empty')
 transcript=$(echo "$input" | jq -r '.transcript_path // empty')
 model_id=$(echo "$input" | jq -r '.model.id // empty')
 
-# Per-session name: "<parent>/<leaf> @ <start-time>" from the transcript (path it started in + start time). Shared with
-# the Slack notification hooks via session-name.sh.
+# Per-session name: "<parent>/<leaf> @ <start-time>" from the transcript (path it started in + start time), with $HOME
+# shown as ~. Shared with the Slack notification hooks via session-name.sh.
 source ~/.claude/hooks/session-name.sh
 sname=$(session_name "$transcript" "$sid" "$cwd")
 
