@@ -65,6 +65,31 @@ c = json.loads(base64.urlsafe_b64decode(p))
 print(c.get('iss'), c.get('aud'), c.get('exp'))
 ```
 
+## Preflight: check the token before any batch of work
+
+Tokens last about an hour, so a long collection will die mid-run. Run this FIRST rather than discovering it on
+request 40. It reports both the claimed expiry and a live probe, and prints nothing secret:
+
+```bash
+python3 - <<'EOF'
+import base64, json, datetime, os, subprocess
+F = os.path.expanduser(os.environ.get("LSC_HEADER_FILE", "~/.config/lsc/headers"))
+tok = open(F).read().strip().split("Bearer ", 1)[1].strip()
+p = tok.split(".")[1]; p += "=" * (-len(p) % 4)
+c = json.loads(base64.urlsafe_b64decode(p))
+mins = (datetime.datetime.fromtimestamp(c["exp"], datetime.timezone.utc)
+        - datetime.datetime.now(datetime.timezone.utc)).total_seconds() / 60
+code = subprocess.run(["curl","-sS","-o","/dev/null","-w","%{http_code}","-H",f"@{F}","--max-time","20",
+    "https://lsc-manager.sandbox.indeed.net/api/v1/changes?page=0&size=1"], capture_output=True, text=True).stdout
+print(f"claim exp : {'EXPIRED' if mins < 0 else f'{int(mins)} min left'}")
+print(f"live probe: HTTP {code}  ->  {'OK' if code == '200' else 'NOT USABLE'}")
+EOF
+```
+
+Check both lines, not just one. A valid `exp` with a non-200 means the token is well-formed but from the wrong
+authorization server — see the error table below. Under ~10 minutes left, ask for a refresh before starting rather
+than partway through.
+
 ## Endpoints
 
 ```
