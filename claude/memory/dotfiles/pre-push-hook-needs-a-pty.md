@@ -30,6 +30,10 @@ portable, and whether the answer needs delaying differs too — use the line for
   leaves `$REPLY` a clean `y`.
 - **Don't collapse them into one line.** The BSD spelling on util-linux dies with `script: unexpected number of
   arguments` and pushes nothing; the delayed-answer form does work on Linux, it is just needlessly slow there.
+- **`script` without the answer piped in hangs silently, forever.** Dropping the `echo y |` gives the hook a pty
+  with nothing on it, so `read` blocks with no output at all — not the `/dev/tty` error above, and nothing to
+  suggest a prompt is waiting. It looks like a slow network push. Check with
+  `ps -o pid,args -u "$USER" | grep pre-push` and kill the `script` pid.
 
 Expect a wall of pty-echoed progress output; the `16dd9b0..3a04c61  master -> master` line is the confirmation.
 Verify separately with `git log --oneline origin/master..HEAD | wc -l` after a `git fetch`. Related:

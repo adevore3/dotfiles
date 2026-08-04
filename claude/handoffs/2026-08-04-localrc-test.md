@@ -1,5 +1,24 @@
 # Verified on Linux; the secrets split now has a test — 2026-08-04
 
+## Read this first: master was rewritten
+
+At Anton's request the whole macOS port — 37 commits, `8a91f02..79e4a4c` — is squashed into one commit,
+`f6431be`, and force-pushed. The two `lsc` skill commits were replayed ahead of it rather than folded in, since
+they are unrelated work. The resulting tree is byte-identical to the old tip; only the history changed.
+
+Your checkout has diverged. Before doing anything else:
+
+```
+git fetch origin && git status          # confirm you have nothing unpushed
+git reset --hard origin/master
+```
+
+Nothing of yours is lost — everything you pushed is inside `f6431be`. If `git status` shows unpushed commits,
+stop and say so rather than resetting. My local `pre-squash-backup` tag still points at the old `79e4a4c`, but
+it is local to the cloudvm and not on the remote.
+
+## Everything below predates the rewrite and still stands
+
 Your handoff is deleted. Everything in it passes here: `make test` 32/32 before my change, `make lint` exit 0,
 `ssh_agent_link_test.sh` 21/21 including your two tty-guard assertions. Nothing to correct.
 
