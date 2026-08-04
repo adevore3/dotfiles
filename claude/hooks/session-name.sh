@@ -55,7 +55,19 @@ session_name() {
   if [ -n "${start_ts:-}" ]; then
     # ISO (UTC) -> Pacific. Forced to a fixed zone (not the machine's, which is UTC on cloud VMs); America/Los_Angeles
     # tracks PST/PDT across DST. Override with CLAUDE_SESSION_TZ if you want a different zone.
-    when=$(TZ="${CLAUDE_SESSION_TZ:-America/Los_Angeles}" date -d "$start_ts" +"%Y-%m-%d_%H:%M_%Z" 2>/dev/null)
+    local tz="${CLAUDE_SESSION_TZ:-America/Los_Angeles}"
+    if date --version >/dev/null 2>&1; then
+      when=$(TZ="$tz" date -d "$start_ts" +"%Y-%m-%d_%H:%M_%Z" 2>/dev/null)
+    else
+      # BSD/macOS date has no -d: parse with an explicit format to an epoch, then format that in the target
+      # zone (it cannot read one zone and print another in a single call). Drop fractional seconds and the
+      # trailing Z so one format string covers both 2026-07-29T08:10:00Z and ...T08:10:00.123Z.
+      local iso epoch
+      iso="${start_ts%%.*}"
+      iso="${iso%Z}"
+      epoch=$(TZ=UTC date -j -f "%Y-%m-%dT%H:%M:%S" "$iso" +%s 2>/dev/null)
+      [ -n "$epoch" ] && when=$(TZ="$tz" date -r "$epoch" +"%Y-%m-%d_%H:%M_%Z" 2>/dev/null)
+    fi
     [ -n "$when" ] && name="${name} @ ${when}"
   fi
 

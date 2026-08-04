@@ -47,15 +47,31 @@ EXAMPLES:
   local format=${format:-s}
   local supported_formats=["s|seconds","ms|milliseconds","us|microseconds","ns|nanoseconds"]
 
+  # Resolve the unit to a multiplier first, so the sub-second handling below is written once.
+  local -i scale
   case "$format" in
-    "s"|"seconds"       ) date +%s;;
-    "ms"|"milliseconds" ) expr `date +%s%N` / 1000000;;
-    "us"|"microseconds" ) expr `date +%s%N` / 1000;;
-    "ns"|"nanoseconds"  ) date +%s%N;;
+    "s"|"seconds"       ) scale=1;;
+    "ms"|"milliseconds" ) scale=1000;;
+    "us"|"microseconds" ) scale=1000000;;
+    "ns"|"nanoseconds"  ) scale=1000000000;;
     *)
       log_error "Unrecognized unixtime format: \"$format\". Supported formats: ${supported_formats[*]}"
       return 1
       ;;
   esac
+
+  if (( scale == 1 )); then
+    date +%s
+  elif [[ "$(date +%N)" =~ ^[0-9]+$ ]]; then
+    # GNU coreutils: %N is nine zero-padded digits, so %s%N concatenates into a clean nanosecond count.
+    # Probed rather than branched on uname, matching platform_utils.sh.
+    echo "$(( $(date +%s%N) / (1000000000 / scale) ))"
+  else
+    # BSD date has no sub-second support at all -- %N is a GNU extension and BSD emits it literally, which is
+    # what fed the old `expr` a non-numeric argument. Scale whole seconds into the requested unit instead: the
+    # value keeps the right magnitude and is only truncated to the second, the same trade indeed's oll/olv
+    # aliases make.
+    echo "$(( $(date +%s) * scale ))"
+  fi
 }
 

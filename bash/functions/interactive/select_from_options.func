@@ -55,8 +55,15 @@ function select_from_options() {
 
   local command="$1"
 
-  # Builds an array from output of command
-  mapfile -t options < <( eval $command | egrep -v "^[[:space:]]*$" )
+  # Builds an array from output of command. A read loop rather than `mapfile`, which is bash 4+ and so
+  # missing from the bash 3.2 that macOS ships as /bin/bash.
+  # The `|| [ -n ... ]` keeps a final line that has no trailing newline, which `mapfile` preserved and a
+  # bare `while read` would silently drop.
+  local -a options=()
+  local option_line
+  while IFS= read -r option_line || [ -n "$option_line" ]; do
+    options+=("$option_line")
+  done < <( eval $command | egrep -v "^[[:space:]]*$" )
 
   local size=${#options[@]}
 

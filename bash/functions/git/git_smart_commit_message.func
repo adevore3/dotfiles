@@ -98,7 +98,13 @@ function git_smart_commit_message() {
             execute_git_commit "Update $dir_name $filename"
             ;;
           *"alias"*)
-            mapfile -t modified_aliases < <(git diff --cached --unified=0 "$filepath" | \
+            # Read loop rather than `mapfile`, which is bash 4+ and so missing from macOS's bash 3.2.
+            # The `|| [ -n ... ]` keeps a final line with no trailing newline, which `mapfile` preserved.
+            local -a modified_aliases=()
+            local alias_line
+            while IFS= read -r alias_line || [ -n "$alias_line" ]; do
+              modified_aliases+=("$alias_line")
+            done < <(git diff --cached --unified=0 "$filepath" | \
               awk '/^+alias/{p=1} p' | \
               cut -d= -f1 | \
               awk '{print $2}')

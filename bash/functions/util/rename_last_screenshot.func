@@ -48,10 +48,31 @@ EXAMPLES:
 
   local -r new_filename=$(IFS=_ ; echo "$*")
 
-  local -r picture_dir="$HOME/Pictures/Screenshots"
+  # macOS drops screenshots on the Desktop by default, GNOME/KDE into ~/Pictures/Screenshots. Take whichever
+  # exists, honoring SCREENSHOT_DIR when a host puts them somewhere else entirely.
+  local picture_dir="${SCREENSHOT_DIR:-}"
+  if [ -z "$picture_dir" ]; then
+    if [ -d "$HOME/Pictures/Screenshots" ]; then
+      picture_dir="$HOME/Pictures/Screenshots"
+    else
+      picture_dir="$HOME/Desktop"
+    fi
+  fi
+
+  if [ ! -d "$picture_dir" ]; then
+    log_error "Screenshot directory '$picture_dir' does not exist; set SCREENSHOT_DIR"
+    return 1
+  fi
 
   # `ls` is aliased so we explicitly use the original `ls` command
   local -r last_screenshot_filename=$(\ls -t $picture_dir | head -n1)
+
+  # An empty directory otherwise reaches mv as `mv "$picture_dir/" ...`, which fails with a bare
+  # "Invalid argument" that says nothing about the real problem.
+  if [ -z "$last_screenshot_filename" ]; then
+    log_error "No screenshots found in '$picture_dir'"
+    return 1
+  fi
 
   mv "$picture_dir/$last_screenshot_filename" "$picture_dir/$new_filename"
 }

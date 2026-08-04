@@ -12,7 +12,12 @@ function git_short_sha() {
 
 function prompt() {
     local n_commands="\!"
-    local vm="$(hostnamectl | sed -n '2p' | awkp 3)"
+    # hostnamectl is systemd-only, so skip the cloudvm marker where it does not exist (macOS). Unguarded it
+    # runs on EVERY prompt render and trips command_not_found_handle, printing the figlet/cowsay banner.
+    local vm=""
+    if type hostnamectl &> /dev/null; then
+      vm="$(hostnamectl | sed -n '2p' | awkp 3)"
+    fi
     if [ "$vm" = "computer-vm" ]; then
       vm=" ${underline_orange}${bold_orange}$vm${normal}"
     else

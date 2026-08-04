@@ -33,9 +33,16 @@ EXAMPLES:
 
   local pattern=$1
 
-  # Builds an array from output of command
+  # Builds an array from output of command. A read loop rather than `mapfile`, which is bash 4+ and so
+  # missing from the bash 3.2 that macOS ships as /bin/bash.
+  # The `|| [ -n ... ]` keeps a final line that has no trailing newline, which `mapfile` preserved and a
+  # bare `while read` would silently drop.
   # Grep node scripts using list-scripts and remove the starting '*' from each command
-  mapfile -t scripts < <( nlsg $pattern | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' )
+  local -a scripts=()
+  local script_line
+  while IFS= read -r script_line || [ -n "$script_line" ]; do
+    scripts+=("$script_line")
+  done < <( nlsg $pattern | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' )
 
   local size=${#scripts[@]}
 

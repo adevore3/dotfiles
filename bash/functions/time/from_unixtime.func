@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
+source "${DOTFILES}/bash/functions/platform_utils.sh"
 
 declare -p SECONDS_LENGTH &>/dev/null || declare -r SECONDS_LENGTH=10
 declare -p MILLISECONDS_LENGTH &>/dev/null || declare -r MILLISECONDS_LENGTH=13
@@ -117,15 +118,16 @@ EXAMPLES:
     set_log_level_info
   fi
 
+  # date_from_epoch, not `date -d @N`: BSD date has no -d and spells the same thing `-r N`.
   case "$format" in
-    "default"       ) date -d @$unixtime_s;;
-    "utc"           ) date -ud "@$unixtime_s" +'%Y-%m-%d %H:%M:%S';;
-    "date"          ) date -d "@$unixtime_s" +'%Y%m%d';;
-    "date_utc"      ) date -ud "@$unixtime_s" +'%Y%m%d';;
-    "datetime"      ) date -d "@$unixtime_s" +'%Y%m%d%H%M%S';;
-    "datetime_utc"  ) date -ud "@$unixtime_s" +'%Y%m%d%H%M%S';;
-    "date_time"     ) date -d "@$unixtime_s" +'%Y%m%d_%H%M%S';;
-    "date_time_utc" ) date -ud "@$unixtime_s" +'%Y%m%d_%H%M%S';;
+    "default"       ) date_from_epoch "$unixtime_s";;
+    "utc"           ) date_from_epoch -u "$unixtime_s" '%Y-%m-%d %H:%M:%S';;
+    "date"          ) date_from_epoch "$unixtime_s" '%Y%m%d';;
+    "date_utc"      ) date_from_epoch -u "$unixtime_s" '%Y%m%d';;
+    "datetime"      ) date_from_epoch "$unixtime_s" '%Y%m%d%H%M%S';;
+    "datetime_utc"  ) date_from_epoch -u "$unixtime_s" '%Y%m%d%H%M%S';;
+    "date_time"     ) date_from_epoch "$unixtime_s" '%Y%m%d_%H%M%S';;
+    "date_time_utc" ) date_from_epoch -u "$unixtime_s" '%Y%m%d_%H%M%S';;
     *)
       log_error "Should never happen because we validate earlier"
       return 1

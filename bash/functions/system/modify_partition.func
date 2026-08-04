@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
+source "${DOTFILES}/bash/functions/platform_utils.sh"
 
 function modify_partition() {
   local __usage="
@@ -39,6 +40,10 @@ EXAMPLES:
 
   # Specify file name
   modify_partition -d -f run_custom.sh
+
+NOTES:
+  Runs on Linux and macOS. All date and sed handling goes through platform_utils, so no GNU-only spelling is
+  left -- see the comment on update_date for the three that used to be here.
 "
 
   local modify_operator=increase
@@ -92,6 +97,15 @@ EXAMPLES:
   done
 
 
+  # No partition selected means no unit to shift by, and the old code did not check: `date -d "<date> + 1 "` fails,
+  # $new_date ends up empty, and GNU sed then writes that empty string over the real date. Running this with no
+  # flag deleted both dates outright. Checked here rather than defaulting to one, since guessing which partition
+  # was meant is worse than saying so.
+  if [ -z "${selected_partition:-}" ]; then
+    log_error "modify_partition: no partition selected; pass one of -y/-m/-d/-hh (see --help)"
+    return 1
+  fi
+
   if [ ! -f "$file" ]; then
     log_error "Expected file '$file' to exist"
     return 1
@@ -100,7 +114,8 @@ EXAMPLES:
   function update_date() {
     local search_str=$1
 
-    date_str=$(cat $file | fgrep "$search_str" | cut -d= -f2)
+    # grep -F, not fgrep: GNU grep 3.8+ prints an obsolescence warning to stderr for the latter.
+    date_str=$(grep -F -- "$search_str" "$file" | cut -d= -f2)
     regex="([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):[0-9]{2}:[0-9]{2}-[0-9]{2}:[0-9]{2}"
 
 
@@ -120,12 +135,35 @@ EXAMPLES:
           ;;
       esac
 
-      local new_date=$(TZ=UTC+6 date +"%Y-%m-%dT%H:%M:%S%:z" -d "$original_date $operator_symbol $update_amount $selected_partition")
+      # This one line held every GNU-only spelling in the function: relative arithmetic through `date -d`, which
+      # BSD spells `-v+1m`, and `%:z`, which BSD does not have at all -- it emits a literal ":z" and exits 0, so
+      # asking for it there produced corrupt output rather than an error. date_shift and utc_offset_colon cover
+      # both. Shifting to an epoch first keeps the two calls pinned to one instant, and is the only portable way
+      # to get a colon offset, since `%z` is portable and `%:z` is not.
+      #
+      # TZ stays pinned on each call, as before: the base carries -06:00 and relative units resolve in the
+      # current zone, so the two have to agree or a month's shift lands an hour out.
+      local epoch new_date
+      local adjustment="${operator_symbol}${update_amount} ${selected_partition}"
+      if ! epoch=$(TZ=UTC+6 date_shift "$original_date" "$adjustment" '%s'); then
+        log_error "Could not shift $search_str '$original_date' by '$adjustment'"
+        return 1
+      fi
+      new_date="$(TZ=UTC+6 date_from_epoch "$epoch" '%Y-%m-%dT%H:%M:%S')$(TZ=UTC+6 utc_offset_colon "$epoch")"
+
+      # Nothing malformed reaches sed. This edits the file in place, so an empty $new_date would replace the real
+      # date with nothing -- which is exactly what used to happen. Held in a variable: bash 3.2 reads a quoted
+      # =~ operand as a literal string.
+      local new_date_re='^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[+-][0-9]{2}:[0-9]{2}$'
+      if [[ ! "$new_date" =~ $new_date_re ]]; then
+        log_error "Refusing to write a malformed $search_str date: '$new_date'"
+        return 1
+      fi
 
       log_info "old $search_str $original_date"
       log_info "new $search_str $new_date"
 
-      sed -i "s/$search_str\"$original_date/$search_str\"$new_date/g" $file
+      sed_in_place "s/$search_str\"$original_date/$search_str\"$new_date/g" "$file"
 
     else
       log_error "Could not find a '$search_str' string"

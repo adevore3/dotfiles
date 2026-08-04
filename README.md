@@ -29,8 +29,24 @@ git submodule update --init --force --remote
 ### Installation
 
 ```bash
-./install                # Create symlinks via dotbot
-sudo ./env-setup.sh      # Install system dependencies (tmux, vim, jq, etc.)
+./install                # Create symlinks via dotbot, then run env-setup.sh
+```
+
+`./install` runs `env-setup.sh` itself, so there is normally nothing else to do. To run it standalone:
+
+```bash
+./env-setup.sh           # Install system dependencies (tmux, vim, jq, etc.)
+```
+
+Run it **unprivileged** — it elevates per-command with `sudo` where needed, because Homebrew refuses to run
+as root. Works on Debian (via `apt`) and macOS (via Homebrew, which must already be installed).
+
+On macOS, note that the login shell is `zsh` by default while these dotfiles configure `bash`. Point your
+shell at Homebrew's bash so `~/.bashrc` is actually read (`/bin/bash` is 3.2 and too old for some functions):
+
+```bash
+echo /opt/homebrew/bin/bash | sudo tee -a /etc/shells
+chsh -s /opt/homebrew/bin/bash
 ```
 
 ## Development

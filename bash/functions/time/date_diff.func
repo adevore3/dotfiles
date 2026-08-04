@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
+source "${DOTFILES}/bash/functions/platform_utils.sh"
 
 function date_diff() {
   local __usage="
@@ -29,11 +30,19 @@ EXAMPLES:
     return 1
   fi
 
-  local res=$(( $(date -d "$1" +"%s") - $(date -d "$2" +"%s") ))
+  # epoch_from_datetime, not `date -d`: BSD date has no -d and needs an explicit input format instead.
+  local epoch1 epoch2
+  epoch1=$(epoch_from_datetime "$1") || return 1
+  epoch2=$(epoch_from_datetime "$2") || return 1
+
+  local res=$(( epoch1 - epoch2 ))
 
   res=${res#-}
 
   log_info "${res}s"
-  date -d@${res} -u +%H:%M:%S
+
+  # Formatted by arithmetic rather than `date -u +%H:%M:%S` on the difference: that spelling is GNU-only, and
+  # it also wrapped silently at 24h, so a two-day gap printed as 00:00:00.
+  printf '%02d:%02d:%02d\n' $(( res / 3600 )) $(( (res % 3600) / 60 )) $(( res % 60 ))
 }
 

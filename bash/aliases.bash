@@ -30,7 +30,7 @@ alias hdel='history -d'
 alias hg='history | grep'
 alias hgt=$'f(){ history | grep "$1" | tail; unset -f f; }; f'
 alias hist_append_reload='history -a; history -r'
-alias hist_delete_all=$'f(){ sed -i "/$1/d" ~/.bash_history; unset -f f; }; f'
+alias hist_delete_all=$'f(){ sed_in_place "/$1/d" ~/.bash_history; unset -f f; }; f'
 alias hist_disable='set +o history'
 alias hist_enable='set -o history'
 alias hist_top=$'history | awk \'{a[$6]++}END{for(i in a){print a[i] " " i}}\' | sort -rn | head'
@@ -47,7 +47,7 @@ alias ag='alias | grep -i'
 alias ccg='compgen -c | grep -i'
 alias cdp='cd -P'
 alias cfg='compgen -A function | grep -i'
-alias d-d='f(){ date -d @"$1"; unset -f f; }; f'
+alias d-d='f(){ date_from_epoch "$1"; unset -f f; }; f'
 alias diff='diff -W $(tput cols)'
 alias dirs='dirs -v'
 alias ejh='echo $JAVA_HOME'
@@ -65,7 +65,7 @@ alias meh_escaped='echo -n "¯\\\_(ツ)\_/¯" | save_to_all_clipboards'
 alias path='echo $PATH'
 alias pathg='echo $PATH | grep'
 alias pathl='path | tr : "\n" | sort'
-alias ports='sudo netstat -tulanp'
+alias ports='list_listening_ports'
 alias psg='ps fauxwww | grep -v grep | grep'
 alias reload!='. ~/.bashrc'
 alias restart_now='sudo shutdown -r now'
@@ -85,13 +85,13 @@ alias vgd='vi `git diff --name-only`'
 alias vil='vi !$'
 alias vilc='vi $(fc -s)'
 alias watch='watch -c '
-alias xclipf='xclip -sel clip'
+alias xclipf='clipboard_write'
 
 # misc long names
 alias generic_for_loop=$'f(){ local count=$1; local exp_command=$2; for ((i=1; i<=$count; i++)); do eval $exp_command; done; unset -f f; }; f'
 alias kill_process=$'f(){ kill -9 $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 alias locate_directory_with_the_most_files="locate '' | sed 's|/[^/]*$|/|g' | sort | uniq -c | sort -n | tee filesperdirectory.txt | tail"
-alias open_time_picture='xdg-open $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
+alias open_time_picture='open_target $DOTFILES/misc/pictures/backgrounds/is_it_worth_the_time.png'
 alias sudo_kill_process=$'f(){ sudo kill -9 $(ps aux | grep -v grep | grep $1 | awk \'{print $2}\'); unset -f f; }; f'
 
 # function aliases
@@ -135,16 +135,5 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# example of changing an alias based on ostypes
-case $OSTYPE in
-  linux*)
-    alias ostype="echo $OSTYPE"
-    ;;
-  darwin*)
-    alias ostype="echo $OSTYPE"
-    ;;
-  darwin*)
-    alias ostype="echo $OSTYPE"
-    ;;
-esac
+alias ostype="echo $OSTYPE"
 

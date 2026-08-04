@@ -6,7 +6,6 @@
 - clean: ['~', '~/.config']
 
 - link:
-    /etc/apt/apt.conf.d/90assumeyes: bash/90assumeyes
     ~/.bashrc: bash/bashrc
     ~/.gitconfig: git/gitconfig
     ~/.gitignore: git/final_gitignore
@@ -33,7 +32,10 @@
     ~/.claude/skills/gitlab: { path: claude/skills/gitlab, create: true, force: true }
 
 - shell:
-  - command: "sudo /home/$(whoami)/dotfiles/env-setup.sh"
+  # Resolve the script relative to the repo (dotbot runs shell commands from the base dir) instead of
+  # hardcoding /home/$(whoami)/dotfiles — that path does not exist on macOS, where $HOME is under /Users.
+  # Runs unprivileged: env-setup.sh elevates per-command with sudo, since Homebrew refuses to run as root.
+  - command: "./env-setup.sh"
     stdout: true
     stderr: true
     description: "Running env setup script."
@@ -41,4 +43,9 @@
     stdout: true
     stderr: true
     description: "Linking Claude memory dir."
+  # Not a `link:` entry because the *source* path is computed from hostname/uname, which dotbot cannot express.
+  - command: "bash/setup.sh"
+    stdout: true
+    stderr: true
+    description: "Linking per-host localrc and per-platform ssh fragments."
 

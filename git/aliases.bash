@@ -103,7 +103,7 @@ alias git_stash_force_push='git stash show -p | git apply && git stash drop'
 alias git_submodule_update_all='git submodule update --remote --merge'
 alias git_user_commit_count='git shortlog -sn'
 
-# Open url to git related link
-alias open_git_base_url='xdg-open $(git_base_url) >/dev/null 2>&1'
-alias open_git_branch_url='xdg-open $(git_base_url)/tree/$(git symbolic-ref --short HEAD) >/dev/null 2>&1'
+# Open url to git related link. open_target rather than xdg-open, which does not exist on macOS.
+alias open_git_base_url='open_target $(git_base_url)'
+alias open_git_branch_url='open_target $(git_base_url)/tree/$(git symbolic-ref --short HEAD)'
 

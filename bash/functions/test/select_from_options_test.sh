@@ -37,7 +37,8 @@ test_quiet_mode() {
     touch /tmp/test_select/testfile
 
     local result=$(select_from_options -q -d "ls /tmp/test_select")
-    local output_lines=$(echo "$result" | wc -l)
+    # Strip whitespace: BSD/macOS `wc -l` right-pads its count ("       1"), GNU does not.
+    local output_lines=$(echo "$result" | wc -l | tr -d '[:space:]')
     assert_equals "1" "$output_lines" "Quiet mode should have minimal output"
 
     rm -rf /tmp/test_select

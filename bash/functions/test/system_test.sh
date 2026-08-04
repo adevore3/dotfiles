@@ -4,6 +4,7 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 source "${DOTFILES}/bash/functions/test/test_utils.sh"
 source "${DOTFILES}/bash/functions/system/bluetooth_connect.func"
 source "${DOTFILES}/bash/functions/system/extract.func"
+source "${DOTFILES}/bash/functions/system/list_listening_ports.func"
 source "${DOTFILES}/bash/functions/system/myip.func"
 source "${DOTFILES}/bash/functions/system/modify_partition.func"
 
@@ -15,6 +16,11 @@ test_bluetooth_connect_help_flag() {
 test_extract_help_flag() {
     local result=$(extract --help)
     assert_contains "SYNOPSIS" "$result" "extract --help should show usage"
+}
+
+test_list_listening_ports_help_flag() {
+    local result=$(list_listening_ports --help)
+    assert_contains "SYNOPSIS" "$result" "list_listening_ports --help should show usage"
 }
 
 test_myip_help_flag() {
@@ -30,6 +36,7 @@ test_modify_partition_help_flag() {
 log_info "Running system function tests"
 test_bluetooth_connect_help_flag
 test_extract_help_flag
+test_list_listening_ports_help_flag
 test_myip_help_flag
 test_modify_partition_help_flag
 log_info "All system function tests passed!"

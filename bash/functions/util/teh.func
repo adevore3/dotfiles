@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${DOTFILES}/bash/functions/platform_utils.sh"
+
 #==============================================================================
 # Description: Tee helper — run a command, display output, and save it to a
 #              timestamped file (,<command>_<timestamp>) with ANSI codes stripped
@@ -49,5 +51,6 @@ EXAMPLES:
 
   eval "$*" 2>&1 | tee -a "$filename"
 
-  sed -i -r "s/[[:cntrl:]]\[([0-9]{1,3};)*[0-9]{1,3}m//g" "$filename"
+  # sed_in_place, not `sed -i -r`: BSD sed needs an argument to -i and rejects -r (it spells that -E).
+  sed_in_place "s/[[:cntrl:]]\[([0-9]{1,3};)*[0-9]{1,3}m//g" "$filename"
 }

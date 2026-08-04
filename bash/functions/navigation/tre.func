@@ -45,7 +45,13 @@ EXAMPLES:
     return 0
   fi
 
-  mapfile -t ignored_dirs < <(cat .git/config | \
+  # Read loop rather than `mapfile`, which is bash 4+ and so missing from macOS's bash 3.2 /bin/bash.
+  # The `|| [ -n ... ]` keeps a final line with no trailing newline, which `mapfile` preserved.
+  local -a ignored_dirs=()
+  local ignored_line
+  while IFS= read -r ignored_line || [ -n "$ignored_line" ]; do
+    ignored_dirs+=("$ignored_line")
+  done < <(cat .git/config | \
     grep -E '^\[submodule ".+"\]$' | \
     awk '{print $2}' | \
     tr -d '"' | \

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
+source "${DOTFILES}/bash/functions/platform_utils.sh"
 
 # shellcheck disable=SC2155
 function ret() {
@@ -134,7 +135,8 @@ EXAMPLES:
   fi
 
   if [ "$check_expired" == "yes" ]; then
-    local cache_time=$(stat -c "%Y" "$file")
+    # file_mtime_epoch, not `stat -c %Y`: BSD stat has no -c and spells the same field `-f %m`.
+    local cache_time=$(file_mtime_epoch "$file")
     local current_time=$(date +%s)
     local age=$((current_time - cache_time))
 

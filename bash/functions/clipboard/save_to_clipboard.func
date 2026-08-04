@@ -2,12 +2,42 @@
 
 source "${DOTFILES}/bash/functions/log_utils.sh"
 
-function save_to_clipboard() {
-  if [ ! -x "$(command -v xclip)" ]; then
-    log_warn "'xclip' not found"
-    cat
+# Resolve the system clipboard writer: pbcopy on macOS, wl-copy on Wayland, xclip on X11. Prints the command
+# *string* to run -- callers must expand it unquoted, since "xclip -selection c" has to word-split into a
+# program plus two arguments. Prints nothing when no tool is available.
+function _system_clipboard_command() {
+  # pbcopy first: it is always present on macOS, and a mac that also has Homebrew's xclip still wants pbcopy.
+  if command -v pbcopy >/dev/null 2>&1; then
+    echo "pbcopy"
+  # wl-copy only inside a real Wayland session. It is frequently installed on X11 boxes too, where it just
+  # exits with "failed to connect to a Wayland server"; xclip meanwhile still works under Wayland through
+  # XWayland. So gating the native tool on WAYLAND_DISPLAY and falling through to xclip is correct on both.
+  elif [ -n "${WAYLAND_DISPLAY:-}" ] && command -v wl-copy >/dev/null 2>&1; then
+    echo "wl-copy"
+  elif command -v xclip >/dev/null 2>&1; then
+    echo "xclip -selection c"
+  # Last resort: wl-copy exists but WAYLAND_DISPLAY is unset, e.g. a cron or systemd context that dropped it.
+  # Better to try it and let it fail loudly than to report no clipboard at all.
+  elif command -v wl-copy >/dev/null 2>&1; then
+    echo "wl-copy"
+  fi
+}
+
+# Pipe stdin to the system clipboard, echoing nothing back. The portable stand-in for a bare
+# `xclip -sel clip`, which only exists on Linux/X11.
+function clipboard_write() {
+  local clip
+  clip="$(_system_clipboard_command)"
+
+  if [ -z "$clip" ]; then
+    log_warn "no clipboard command found (install xclip, or wl-clipboard on Wayland; macOS uses pbcopy)"
+    return 1
   fi
 
+  $clip
+}
+
+function save_to_clipboard() {
   local __usage="
 NAME:
   save_to_clipboard - read from stdin, save to clipboard and output to stdout
@@ -27,8 +57,17 @@ EXAMPLES:
   echo hello world | save_to_clipboard -q
 "
 
+  # Resolved after the usage text so -h/--help still works on a host with no clipboard tool at all.
+  local clip
+  clip="$(_system_clipboard_command)"
+
   if (( $# == 0 )); then
-    tee >(xclip -selection c) < /dev/stdin
+    if [ -z "$clip" ]; then
+      log_warn "no clipboard command found (install xclip, or wl-clipboard on Wayland; macOS uses pbcopy)"
+      cat
+      return 1
+    fi
+    tee >($clip) < /dev/stdin
   else
     while [[ "$1" =~ ^-{1,2}.* ]]; do
       opt="$1"
@@ -44,8 +83,11 @@ EXAMPLES:
           echo "$__usage"
           return 1;;
         "-q"|"--quiet")
-          xclip -selection c < /dev/stdin
-          return 1;;
+          # Delegates rather than repeating the resolve-and-warn above; -q is exactly clipboard_write. Returns
+          # its status, so a successful copy exits 0 -- this used to `return 1` even after writing, which made
+          # `... | stcq && echo copied` unusable.
+          clipboard_write
+          return $?;;
         *)
           log_error "Invalid option: \"$opt\""
           return 1;;

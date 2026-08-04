@@ -8,6 +8,8 @@ This is a personal dotfiles repository using [dotbot](https://github.com/anishat
 
 ## Installation & Setup
 
+Supports Debian/Ubuntu and macOS. Everything platform-specific branches on `uname -s`.
+
 **Initial setup:**
 ```bash
 ./install
@@ -16,9 +18,14 @@ This runs dotbot to create symlinks and execute the env-setup.sh script.
 
 **Environment setup (installs dependencies):**
 ```bash
-sudo ./env-setup.sh
+./env-setup.sh
 ```
-Installs system packages (tmux, vim, jq, etc.), autojump, cheat, and tmux plugins.
+Installs system packages (tmux, vim, jq, etc.), autojump, cheat, and tmux plugins. Uses `apt` on Linux and
+Homebrew on macOS.
+
+Run it **unprivileged** — it elevates per-command with `sudo` where needed, because Homebrew refuses to run as
+root. Two things break if the whole script runs under `sudo`: Homebrew aborts outright, and on Linux `sudo`'s
+`env_reset` drops `HOME`, so autojump and the tmux plugins install into `/root` where nothing reads them.
 
 **Cloning with submodules:**
 ```bash
@@ -30,6 +37,116 @@ If submodules fail to initialize:
 ```bash
 git submodule update --init --force --remote
 ```
+
+`./install` only initializes the `dotbot` submodule, so run the command above too — otherwise every vim bundle,
+tpm and `indeed/` stay empty directories, and `claude/setup.sh` silently skips the `indeed/` handoff.
+
+### macOS specifics
+
+**The login shell is `zsh` by default, but these dotfiles configure `bash`.** Nothing loads until you point the
+shell at Homebrew's bash — `/bin/bash` is 3.2 (2007) and too old for some constructs:
+
+```bash
+echo /opt/homebrew/bin/bash | sudo tee -a /etc/shells
+chsh -s /opt/homebrew/bin/bash
+```
+
+Homebrew must already be installed; `env-setup.sh` refuses to continue without it.
+
+### Portability
+
+**Use `bash/functions/platform_utils.sh` rather than branching at the call site.** The GNU-vs-BSD flag
+differences that keep breaking this repo are wrapped there once, feature-probed on `--version` (only the GNU
+builds answer) so a mac with Homebrew coreutils ahead of `/usr/bin` takes the GNU path:
+
+| Instead of | Use | Why |
+| --- | --- | --- |
+| `date -d @N` / `date -ud @N` | `date_from_epoch [-u] <epoch> [fmt]` | BSD spells it `-r N` and has no `-d` |
+| `date -d <str> +%s` | `epoch_from_datetime <str>` | BSD needs `-j -f <fmt>` with the format known up front |
+| `date -d "<t> + 1 month"` | `date_shift <t> '+1 month' [fmt]` | BSD spells it `-v+1m`; never hand GNU a *signed* count |
+| `date +%:z` | `utc_offset_colon [epoch]` | BSD has no `%:z` — it prints a literal `:z` and exits 0 |
+| `stat -c %Y` | `file_mtime_epoch <file>` | BSD spells it `-f %m`; `-c` is an illegal option |
+| `sed -i` / `sed -i -r` | `sed_in_place <expr> <file>...` | BSD `-i` needs an argument and rejects `-r` (use `-E`) |
+| `xdg-open` | `open_target <path-or-url>` | macOS has no `xdg-open`; Linux's `open` opens a virtual console |
+| `xclip -sel clip` | `clipboard_write` (or `save_to_clipboard`) | macOS has `pbcopy`; Wayland wants `wl-copy` |
+
+`bash/functions/test/platform_utils_test.sh` asserts identical behavior on whichever `date`/`sed`/`stat` the
+host ships, so the same suite is the portability check on both platforms.
+
+`_system_clipboard_command` (in `save_to_clipboard.func`) resolves `pbcopy` → `wl-copy` → `xclip`, gating
+`wl-copy` on `WAYLAND_DISPLAY` because it is often installed on X11 boxes where it cannot reach a compositor.
+It returns a command **string**, so callers must expand it *unquoted* — `"xclip -selection c"` has to
+word-split into a program plus two arguments. Only one of the three tools exists on any host, so
+`clipboard_test.sh` exercises the other branches against stub executables on a synthetic `PATH`; that is the
+only way to assert the Linux ordering from a mac.
+
+**Portability rules when touching shell code here.** Each of these has already broken this repo on macOS:
+
+- **No `mapfile`/`readarray`** — bash 4+, absent from macOS's `/bin/bash` 3.2. Use a read loop, and include
+  `|| [ -n "$line" ]` so a final line with no trailing newline is not dropped (`mapfile` kept it).
+- **No `/proc`** — no `/proc/loadavg`; use `sysctl -n vm.loadavg`.
+- **No systemd** — no `hostnamectl`; fall back to `hostname -s`. Guard it, since an unguarded miss trips
+  `command_not_found_handle` and prints the figlet/cowsay banner, and `prompt.bash` runs on every render.
+- **No process-owning `netstat`** — BSD netstat has no `-t`/`-u`/`-p` and cannot attribute a socket to a
+  process; `lsof -iTCP -sTCP:LISTEN` is the equivalent. See `list_listening_ports.func`.
+- **`wc -l` right-pads its count** on BSD (`"       1"`). Strip whitespace before comparing.
+- **`ps -o ucomm=` right-pads too**, to `"ssh-agent       "` on Darwin, so an equality test against it is false
+  forever and any guard built on it silently never fires. `ps -o comm=` prints the bare name on both platforms —
+  that is the one to use, and bashrc's agent-reuse guard depends on it.
+- **`#!/usr/bin/env bash`, never `#!/bin/env bash`** — `/bin/env` only exists where `/bin` is merged into
+  `/usr/bin`.
+- **Guard optional tools at startup** (`type foo &> /dev/null && ...`). An unguarded `kubectl`/`hostnamectl`
+  means an error on every new shell.
+- **Never hardcode `/home/$USER`** — see the note on Claude project slugs below.
+- **Don't assume a Linux desktop layout** — screenshots land on `~/Desktop` on macOS, not
+  `~/Pictures/Screenshots`; `xrandr`, `bluetoothctl` and `diodon` have no macOS counterpart at all.
+- **`date_shift`'s GNU branch must never be given a signed count.** Directly after a time, GNU reads `+1` as a
+  *timezone offset*, so `date -d "<t> +1 month"` means "<t> at +01:00, then plus a month", and `- 1 month`
+  becomes -01:00 and then *adds* a month — the wrong direction, silently. The wrapper passes an unsigned count
+  and GNU's own `ago` keyword instead. A base that already carries an offset happens to be immune, which is why
+  `modify_partition` never tripped over it.
+- **BSD `date -j -f` accepts a *partial* match, so never trust its exit status alone.** Given a format that
+  consumes only a prefix it prints `Warning: Ignoring N extraneous characters`, emits an epoch for the prefix,
+  and still exits 0. That silently dropped the trailing offset from `2026-01-01T00:00:00-06:00` and returned a
+  *local-zone* epoch where GNU returned the right instant, and it accepted `...T00:00:00GARBAGE` just as
+  happily. `epoch_from_datetime` now folds stderr into stdout and requires the result to be bare digits — a
+  clean full parse prints nothing else. Any new `-j -f` call site needs the same guard.
+- **A failed `date` must never be allowed to reach a `sed -i`.** `modify_partition` is now portable —
+  `date_shift` for the arithmetic, `utc_offset_colon` for `%:z`, `sed_in_place` for the edit — but porting it
+  exposed a live data-loss bug that had nothing to do with platform. With no partition flag `$selected_partition`
+  was empty, so `date -d "<date> + 1 "` failed, `$new_date` came out empty, and GNU sed wrote that empty string
+  over the real date: running `modify_partition` with no flag *deleted both dates in `run.sh`*. The old note here
+  claimed BSD sed rejecting `-i` was the only thing preventing that, which was true on BSD and false on the
+  platform the function actually ran on. It now refuses without a flag, checks `date_shift`'s exit status, and
+  pattern-matches `$new_date` before writing. `modify_partition_test.sh` drives all of it against a throwaway
+  `run.sh`; its expected values are literals taken from the pre-port GNU implementation, verified equal across a
+  96-case matrix, so the same assertions hold on BSD.
+- **An SSH agent existing is not the same as an SSH agent working.** macOS always exports a launchd agent in
+  `SSH_AUTH_SOCK` and it is usually *empty*, so bashrc's `-S` test repointed the shared `~/.ssh/ssh_auth_sock`
+  link at a useless agent, and the local-agent fallback — gated on the socket merely existing — skipped itself.
+  Result: no key, every push failing `Permission denied (publickey)`, and nothing visibly wrong. Both now gate
+  on `_ssh_agent_has_keys` (`ssh-add -l`: 0 keys, 1 reachable-but-empty, 2 unreachable), and the adopt step
+  refuses to replace a keyed link with an empty agent — otherwise opening one terminal breaks ssh in every
+  running tmux pane, since they all read that one link. `bash/functions/test/ssh_agent_link_test.sh` drives the
+  real block out of `bashrc` against live agents. Two further guards, both added after watching it misbehave:
+  the fallback binds its agent to a **fixed** socket (`~/.ssh/ssh_agent_own_sock`) so repeated shells share one
+  instead of orphaning a fresh agent apiece — four leaked in a single nested-shell test — and it only runs
+  `ssh-add` when `[ -t 0 ]`, since an interactive-but-ttyless shell otherwise printed a passphrase prompt
+  nothing could answer and leaked an agent doing it. Note the probe is wrapped in `timeout` *where available*: a
+  stale agent socket can accept a connection and never answer, and macOS has no `timeout` of its own (Homebrew
+  coreutils ships it as `gtimeout`), so it must degrade to a bare call rather than assume it.
+- **tmux copy goes through `$copy_command`** in `tmux.conf`, not a hardcoded `pbcopy`. tmux-yank overrides
+  those `bind-key` lines once tpm loads, so the binds are only the fallback for the plugin not loading —
+  `@override_copy_command` is what actually decides the tool. Two traps, both verified by driving a real yank
+  and watching which binary gets exec'd (`list-keys` alone will mislead you):
+  - **Set `@override_copy_command` before the `run '.../tpm'` line.** yank reads it while building its binds;
+    setting it lower in the file is silently too late.
+  - **Keep `$VAR` out of `$copy_command`.** tmux escapes the `$` when interpolating into the option, so the
+    copy-pipe shell sees a literal `$WAYLAND_DISPLAY` — non-empty, making any such test read true. This is why
+    the tmux string resolves pbcopy → xclip only, while `_system_clipboard_command` can gate on Wayland.
+
+  Without the override, yank's own detection prefers `wl-copy` on nothing more than the binary existing, so
+  installing `wl-clipboard` (which `env-setup.sh` now does) breaks copy on any X11 Linux box.
 
 ## Development Commands
 
@@ -132,6 +249,80 @@ This pattern allows each tool directory (git/, tmux/, vim/, etc.) to independent
 
 - **misc/** - Miscellaneous utilities
   - `scripts/` - Code analysis tools (cloc, line counting)
+
+- **claude/** - Claude Code configuration
+  - `CLAUDE.md`, `settings.json`, `statusline-command.sh` - global config, symlinked by dotbot
+  - `hooks/` - session-name, notification and session-coordination hooks
+  - `skills/`, `memory/` - skills and per-project memory, symlinked into `~/.claude/`
+  - `setup.sh` - links whatever dotbot cannot, because the target path is computed (see below)
+
+### Per-host and per-platform config
+
+**`bash/setup.sh` links the config whose *source* path is computed**, which dotbot's `link:` cannot express.
+Same division of labor as `claude/setup.sh`, and dotbot invokes it the same way. Two jobs:
+
+- `~/.localrc` → `bash/localrc_<hostname -s>`, falling back to `bash/localrc_<uname -s>`. Hostname first
+  because two hosts can share an OS and still want different content — the cloudvm and a Linux laptop are both
+  `Linux`. `~/.localrc` is sourced by `bashrc` *before* the `*.func` files, so helpers like
+  `conditionally_prefix_path` are not defined yet; guards there have to be written inline.
+- `~/.ssh/config.d/00-common.conf` always, plus `10-<uname -s>.conf` when one exists, and it **prunes
+  fragments belonging to other platforms**. A pruned fragment that is a link into the repo is deleted; anything
+  else is renamed to `.pre-dotfiles`, which is outside the `*.conf` glob and so defuses it just as well without
+  discarding content the script did not create.
+
+**Secrets go in `~/.localrc.secrets`, never in a tracked `localrc_*`.** `bashrc` sources it immediately after
+`~/.localrc`, so a secret overrides any tracked default, and git never sees it. This exists because `~/.localrc`
+is now a *symlink into the repo*: a real file holding credentials there would be displaced to
+`~/.localrc.pre-dotfiles` by `bash/setup.sh` and the tracked file linked over it — no error, but every new shell
+silently loses the exports, and the obvious "fix" is to paste secrets into git.
+
+**The cloudvm is migrated.** `GLAB_TOKEN`, `SLACK_WEBHOOK_URL` and `NTFY_TOPIC` moved to `~/.localrc.secrets`
+(mode 600); `~/.localrc` keeps only the non-secret `DEVOPSCLOUD_ROOT`. All four are live in a fresh login shell.
+The macbook has no secrets in `~/.localrc` — all three are unset there — so the hazard is dormant on that host
+rather than absent.
+
+What is left there is now benign: `~/.localrc` is still a *real file*, so adding a candidate filename would
+displace it to `~/.localrc.pre-dotfiles` and cost `DEVOPSCLOUD_ROOT` rather than a credential. Whoever adds one
+should carry that export into it.
+
+Note hostname keying does not help the cloudvm: `hostname -s` is `ip-10-217-86-67`, derived from the private IP,
+so it changes if the instance is replaced. That leaves `localrc_Linux`, shared with the Linux laptop — the thing
+hostname-first was meant to avoid.
+
+**A per-platform ssh fragment is not a nicety — an unrecognized option is fatal.** `UseKeychain` is an Apple
+extension, and Linux OpenSSH answers it with `Bad configuration option: usekeychain` and
+`terminating, 1 bad configuration options`, which takes ssh down entirely rather than ignoring one line. So it
+cannot live in a shared file. Three behaviors make the split work, all verified:
+
+- A missing `Include` path — literal or glob, missing file or missing directory — is silently ignored, so the
+  same config ships to a host where the fragment is absent.
+- ssh takes the **first** value it obtains for an option, so the `Include` must *precede* any conflicting
+  `Host` block. `bash/setup.sh` prepends it for that reason.
+- `~/.ssh/config` itself is deliberately **not** tracked. OrbStack and installers like it append to that file,
+  and symlinking it into the repo would dirty the checkout on every such write — the same problem
+  `claude/settings.json` already has. Only the fragments are tracked.
+
+### Claude config & memory linking
+
+Fixed-path files (`~/.claude/settings.json`, hooks, skills) are plain dotbot `link:` entries in
+`install.conf.yaml`. Anything whose *target path has to be computed* lives in `claude/setup.sh` instead, which
+dotbot invokes as a shell command. `indeed/claude/setup.sh` is the same idea for work-specific wiring, and the
+public script hands off to it when the submodule is checked out.
+
+**Per-project memory is keyed by the repo's absolute checkout path**, with `/` turned into `-`:
+`/home/adevore/dotfiles` becomes `~/.claude/projects/-home-adevore-dotfiles/memory`. So **derive the slug from
+`$HOME` (or the repo path), never from `/home/$USER`** — a hardcoded `/home` builds slugs Claude never looks up
+on macOS, and the memory silently fails to load rather than erroring. Strip a trailing slash before
+slugifying, or `$HOME=/home/adevore/` yields a double dash:
+
+```bash
+HOME_SLUG="${HOME%/}"
+HOME_SLUG="${HOME_SLUG//\//-}"
+```
+
+Both setup scripts are idempotent and safe to re-run; each verifies its symlinks resolve and exits non-zero if
+one dangles. dotbot's `clean:` only sweeps `~` and `~/.config`, so each script prunes its own orphaned skill
+links — a renamed skill otherwise leaves a dangling link that Claude still tries to load.
 
 ### Key Utilities
 

@@ -3,6 +3,11 @@
 # Run all test scripts
 set -uo pipefail
 
+# Resolve the repo root from this script's own location and EXPORT it. Each test runs in a child bash that
+# sources "$DOTFILES/...", and the var is only already set when a bash login shell defined it — not when
+# `make test` runs from zsh, the macOS default shell. With `set -u` an unset DOTFILES aborts immediately.
+export DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+
 # Source common utilities
 source "${DOTFILES}/bash/functions/log_utils.sh"
 

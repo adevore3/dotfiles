@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Per-host config for this MacBook. bash/setup.sh links ~/.localrc here, keyed on `uname -s`.
+#
+# This file is TRACKED, so nothing secret goes in it — credentials belong in ~/.localrc.secrets, which bashrc
+# sources straight after this one and which git never sees.
+
+# OrbStack's own installer appended this to ~/.profile, which is both macOS-specific and a tracked file. Its
+# init hardcodes an absolute /Users/adevore path, so it belongs in per-host config. The orb/docker binaries
+# themselves come from root-owned /usr/local/bin symlinks and do not depend on this; the init only adds
+# ~/.orbstack/bin to PATH and wires up bash completions.
+#
+# Guarded against re-sourcing: OrbStack's init does a bare `export PATH="$PATH":~/.orbstack/bin`, so every
+# nested shell appended another copy (2 -> 3 -> 4 measured). conditionally_prefix_path would be the tidy fix
+# but is not defined yet — bashrc sources ~/.localrc well before the *.func files.
+case ":${PATH}:" in
+  *":${HOME}/.orbstack/bin:"*) ;;
+  *) source ~/.orbstack/shell/init.bash 2> /dev/null || : ;;
+esac
