@@ -199,6 +199,15 @@ installing_template "cheat" install_cheat
 log_info "Installing tmux plugins"
 install_tmux_plugins || FAILURES="$FAILURES tmux-plugins"
 
+# Hand off to the indeed submodule's subsystem setup when it is checked out, guarded the same way
+# claude/setup.sh guards its own handoff so a clone without the private submodule still installs cleanly.
+# It belongs in env-setup.sh rather than its own dotbot entry because these are dependency installs, and folding
+# it into FAILURES reports a broken subsystem alongside everything else instead of letting it pass silently.
+if [ -f "$DOTFILES/indeed/setup.sh" ]; then
+  log_info "Running Indeed subsystem setup"
+  bash "$DOTFILES/indeed/setup.sh" || FAILURES="$FAILURES indeed-setup"
+fi
+
 log_info 'Things that may manually need installing/updating:'
 log_info '  * Update gitignore: concat_multiple_gitignores'
 log_info '  * Set .localrc per host'
