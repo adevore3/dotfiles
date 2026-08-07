@@ -6,9 +6,15 @@
 - **Always ask before destructive commands** (force push, reset --hard, rm -rf, branch deletion) regardless of context.
 
 ## Git Workflow — MUST FOLLOW
-- **Always pull/fetch the default branch (main/master) before starting branch work, and branch from an up-to-date
-  tip.** Before pushing, rebasing, or opening an MR, re-sync with the latest default branch too. This avoids landing
-  changes that conflict with work already merged — especially an overlapping fix touching the same file/ticket.
+- **An up-to-date default branch is a hard pre-req for starting any new work.** Before fetching or fast-forwarding
+  anything, confirm the working tree is clean (`git status --short`) and nothing is unpushed (`git log --branches
+  --not --remotes --oneline`). If there are uncommitted or unpushed changes, stop and ask — never stash, commit,
+  discard, or force anything to clear the way. Then, before creating a branch or worktree, `git fetch --prune origin`
+  and fast-forward the default branch (main/master); never branch from a stale local tip.
+  Confirm it actually landed (`git status -sb` showing no divergence, or `git rev-list --count HEAD..origin/<default>`
+  = 0) instead of assuming the fetch was enough — a main checkout left sitting at a pre-merge commit is the usual case,
+  including right after your own MR merges. Re-sync again before pushing, rebasing, or opening an MR. This avoids
+  landing changes that conflict with work already merged — especially an overlapping fix touching the same file/ticket.
 - **Branch names:** `adevore/<ticket>/<short-description>`, e.g. `adevore/DIRP-XXXX/adding-feature`. Lowercase,
   hyphen-separated description; keep it short.
 - **Work in a dedicated worktree — except this repo.** For any repo *other than* the dotfiles repo (`~/dotfiles`) and
@@ -20,6 +26,15 @@
   anything untracked or gitignored goes with it and there's no way back. Run `git status --short --ignored` and look at
   what's there, especially `out/` (run logs, captured metadata, test evidence) — that content exists nowhere else. Copy
   anything worth keeping into the main checkout's `out/<ticket>/` first, then confirm before removing the worktree.
+- **When a ticket is done, clean up in this order: worktree → branch → default branch.** Trigger is the ticket being
+  closed *and* the merge confirmed — verify it (MR state is `merged`, or the commit is reachable from the default
+  branch), not just that CI went green. Then: account for untracked files per the bullet above, `git worktree remove
+  <path>`, `git branch -d <branch>`, and finally `git fetch --prune` + fast-forward the default branch in the main
+  checkout so the next task starts clean. Leaving these behind is exactly what makes the next piece of work branch from
+  a stale tip.
+- **This standing instruction authorizes that one `git branch -d`** — a merged-branch cleanup after a confirmed merge is
+  routine, not something to ask about each time. Use plain `-d` so git refuses if the branch isn't actually merged.
+  Everything else in the destructive-command rule still needs asking: `-D`, unmerged branches, and remote deletions.
 - **First commit message:** lead with the ticket, e.g. `DIRP-XXXX added feature`, optionally a short body explaining
   the change — keep it terse. GitLab uses the first commit's message as the default squash message on merge, so make it
   the good one. Later commits on the branch can be simpler/one-liners.
