@@ -38,6 +38,16 @@
         ]
       }
     ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/session-title.sh"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
