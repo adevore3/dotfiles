@@ -93,6 +93,26 @@ look" — no obligation to resolve on the spot; (b) substantive — reference th
 "LGTM" when warranted, say what's needed and why, note the unblock ("once this is fixed, we can merge
 this in"). Pick the lighter mode unless the reply genuinely needs to resolve something.
 
+### Replying to review findings you've accepted
+
+Default to **one line**: "Good catch, fixed." or just "Fixed." A reviewer who was right about a one-line
+change doesn't need a paragraph justifying it, and explaining anyway reads as over-answering a point they
+already made correctly.
+
+Add explanation only when it earns its place — the reviewer's framing was subtly off, or there's context
+they couldn't have seen from the diff (e.g. the race they flagged can't actually fire because an earlier MR
+already applied that resource). One or two short paragraphs, not a writeup.
+
+Two specific don'ts:
+
+- **No commit SHAs to humans.** Not "fixed in dcf616d" — they can see the new commits in the MR, so the
+  hash is noise. Citing the fix commit *is* fine replying to **CodeRabbit** or another bot, which doesn't
+  track thread state the same way.
+- **Never "as you wrote it"** / "as you suggested" / "exactly as you described". Don't narrate the
+  reviewer's own suggestion back at them.
+
+Vary the opener across a multi-thread review rather than repeating "Good catch" on every one.
+
 ## Attributing Claude's work
 
 Claude does most of the hands-on work, so "who did it" is not the question. **Attribute when attribution
@@ -147,6 +167,9 @@ and don't force it through the voice rules above. Everything outside the attribu
 - Presenting an unverified Claude-derived explanation as Anton's own conclusion — attribute or hedge it.
 - Attributing everything to Claude — it buries Anton's judgment and reads as disclaiming responsibility.
 - Claiming a specific method Anton didn't use ("I confirmed it by hand") — cut the false detail, keep the vouch.
+- Citing the fix commit to a human reviewer ("fixed in dcf616d") — fine for bots, noise for people.
+- "as you wrote it" / "as you suggested" — don't narrate the reviewer's suggestion back at them.
+- A paragraph of justification on an accepted one-line review fix where "Good catch, fixed." was the answer.
 
 ## Self-check before delivering
 
@@ -164,6 +187,7 @@ and don't force it through the voice rules above. Everything outside the attribu
 - [ ] Attribution earning its place — unchecked derived explanations marked ("Claude says, ..."), plain
       reproducible evidence left unattributed, vouches kept in the first person?
 - [ ] Right register (Slack / doc comment / PR) and its courtesy level?
+- [ ] Accepted review findings answered in one line, no commit SHA to a human, no "as you wrote it"?
 - [ ] Slack formatting correct — three backticks for blocks, single backticks inline, `*bold*`, no
       pipe-tables?
 - [ ] Would a reader with *their* context (not yours) understand every claim?
