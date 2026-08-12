@@ -103,13 +103,23 @@ Add explanation only when it earns its place — the reviewer's framing was subt
 they couldn't have seen from the diff (e.g. the race they flagged can't actually fire because an earlier MR
 already applied that resource). One or two short paragraphs, not a writeup.
 
-Two specific don'ts:
+Four specific don'ts:
 
 - **No commit SHAs to humans.** Not "fixed in dcf616d" — they can see the new commits in the MR, so the
   hash is noise. Citing the fix commit *is* fine replying to **CodeRabbit** or another bot, which doesn't
   track thread state the same way.
 - **Never "as you wrote it"** / "as you suggested" / "exactly as you described". Don't narrate the
   reviewer's own suggestion back at them.
+- **Don't explain back why the reviewer was right.** "Agreed, that was more about how I worked out the
+  catalog behaviour than anything a template user needs. Cut to two lines..." → "Agreed, cut to two
+  lines...". They made the point; restating their reasoning is over-answering.
+- **Don't grade your own fix.** "reworded in plain language", "cleaned it up nicely", "much clearer now" —
+  cut the adjective, they can see the result. "dropped the term and reworded" is enough.
+
+The shape for an accepted finding is **action, plus any pointer the reader needs, then stop.** A follow-up MR
+number or a caveat they couldn't know earns its place; nothing else does. Both bullets above come from real
+replies Anton had to edit after they were posted, so treat this as a cut-on-the-way-out step, not just a
+guideline you have read.
 
 Vary the opener across a multi-thread review rather than repeating "Good catch" on every one.
 
@@ -170,6 +180,7 @@ and don't force it through the voice rules above. Everything outside the attribu
 - Citing the fix commit to a human reviewer ("fixed in dcf616d") — fine for bots, noise for people.
 - "as you wrote it" / "as you suggested" — don't narrate the reviewer's suggestion back at them.
 - A paragraph of justification on an accepted one-line review fix where "Good catch, fixed." was the answer.
+- Restating the reviewer's own reasoning back at them, or grading your own fix ("reworded in plain language").
 
 ## Self-check before delivering
 
@@ -188,6 +199,8 @@ and don't force it through the voice rules above. Everything outside the attribu
       reproducible evidence left unattributed, vouches kept in the first person?
 - [ ] Right register (Slack / doc comment / PR) and its courtesy level?
 - [ ] Accepted review findings answered in one line, no commit SHA to a human, no "as you wrote it"?
+- [ ] Every clause in that reply either the action or a pointer the reader needs, with no restatement of the
+      reviewer's reasoning and no adjective grading your own fix?
 - [ ] Slack formatting correct — three backticks for blocks, single backticks inline, `*bold*`, no
       pipe-tables?
 - [ ] Would a reader with *their* context (not yours) understand every claim?

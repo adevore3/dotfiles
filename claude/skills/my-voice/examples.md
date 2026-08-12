@@ -142,3 +142,30 @@ Attribution here is strictly weaker than the output itself and faintly undercuts
 Demonstrates: "I confirmed" is a vouch and stays true regardless of who drove the terminal, since Anton read
 the numbers and believes them. "by hand" is the false part, it claims a specific manual method. Watch the
 verb, not the pronoun, and don't hand the whole sentence to Claude to fix two words.
+
+### From two MR thread replies to a reviewer (both padded the same way)
+
+Anton edited both notes in GitLab after they were posted. The rule they violate is already in the SKILL
+(accepted findings get one line), which is the point: knowing the rule isn't enough, the padding has to be
+cut on the way out.
+
+**Self-praise about your own fix:**
+> Before: ...so I dropped the term and reworded in plain language.
+> After:  ...so I dropped the term and reworded.
+
+Demonstrates: "in plain language" characterizes the quality of the change. The reviewer can see what it reads
+like now, so grading your own edit is dead weight.
+
+**Explaining back why the reviewer was right:**
+> Before: Agreed, that was more about how I worked out the catalog behaviour than anything a template user
+>         needs. Cut to two lines saying use the helper rather than your own `DROP TABLE`, with the ticket
+>         left in for the detail. Also in !106.
+> After:  Agreed, cut to two lines saying use the helper rather than your own `DROP TABLE`, with the ticket
+>         left in for the detail. Also in !106.
+
+Demonstrates: the reviewer's comment was "most of the context here isnt meaningful to users of the template",
+so the cut clause restates his own point back at him. What survives is the action plus the pointer to the
+follow-up MR, which is the whole reply.
+
+The general shape for an accepted finding: **action, plus any pointer the reader needs, and stop.** A
+follow-up MR number or a caveat they couldn't know earns its place; a justification of their point does not.
