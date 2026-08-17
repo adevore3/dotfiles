@@ -167,6 +167,9 @@ practice:
 - **Prefer `--input` with JSON over `--field` for any non-trivial write.** `--field` can only express flat string
   values; nested objects and booleans are dropped silently and the call still succeeds — inline-comment `position`
   (§9) and `remove_source_branch` (§10) are the same bug.
+- **`--input` needs `--header "Content-Type: application/json"` — `glab` does not set it.** Without it the API rejects
+  the write with `HTTP 415 {"error":"The provided content-type '' is not supported."}`. Every `--input` recipe above
+  carries the header for this reason; it is the one part that looks like boilerplate and isn't.
 - **An empty result is not evidence of nothing.** A typo'd or renamed branch returns `200 []`, not a 404, so a wrong
   ref produces a clean, believable "nothing here" (§2b). When an empty answer would be surprising, validate the ref
   itself with an endpoint that *does* 404.
