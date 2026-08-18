@@ -153,12 +153,14 @@ only way to assert the Linux ordering from a mac.
   failing `Permission denied (publickey)` the moment the local agent took the link** — while code.corp, which does
   know the cloudvm's key, kept working. Two lessons paid for there. Preferring a local agent silently changes *which
   identity* every remote sees, so any remote that only knew the forwarded keys has to be re-registered (or pointed at
-  `SSH_AUTH_SOCK_FORWARDED`); check with `ssh -T` per host rather than assuming. As of 2026-08-18 the cloudvm's
-  `~/.ssh/id_ed25519` is registered on **neither** host — `glab api --hostname code.corp.indeed.com user/keys` lists
-  only two laptop keys plus an expired "Sourcegraph Campaign", and `curl -sS https://github.com/adevore3.keys` serves
-  two keys that are not it — so the persistent agent currently authenticates nowhere and git rides the forwarded agent
-  via the `Match host ... exec` blocks in `ssh/config.d/00-common.conf` and `indeed/ssh/config.d/30-indeed.conf`. Those
-  two endpoints are the authority on what a host will accept; a comment claiming otherwise has already been wrong once. And the capture of the forwarded path
+  `SSH_AUTH_SOCK_FORWARDED`); check with `ssh -T` per host rather than assuming. The cloudvm's `~/.ssh/id_ed25519` is
+  now registered on both (2026-08-18, no expiry — code.corp as "Work Cloudvm"), so the persistent agent authenticates
+  everywhere on its own and the two `Match host ... exec` blocks that briefly routed git back at the forwarded agent
+  have both been deleted. `SSH_AUTH_SOCK_FORWARDED` stays as the escape hatch for the next host that trusts the laptop
+  and not this machine. The authority on what a host accepts is
+  `glab api --hostname code.corp.indeed.com user/keys` and `curl -sS https://github.com/adevore3.keys`, never a comment
+  in this repo — one here asserted a registered "Work Cloudvm" key months before there was one, which is why the
+  failure it caused named the wrong problem. And the capture of the forwarded path
   has to sit *above* both relink branches — it was originally inside the adopt branch, which does not run on the login
   that first starts our own agent, so the escape hatch was unset in precisely the session that needed it. Verified by driving both the old and
   new logic out of `bashrc` under `script -qec` through login → disconnect → reconnect: the old one goes `keys=NO` at

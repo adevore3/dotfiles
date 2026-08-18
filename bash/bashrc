@@ -77,11 +77,13 @@ _ssh_agent_needs_own() {
 
 # Remember this connection's forwarded socket under a name of its own, before anything below points the shared
 # link away from it. Only the *upstream* agent holds the laptop's keys, and a host can perfectly well trust those
-# and not this machine's: github.com knows a laptop key and not the cloudvm's, so the moment the local agent below
-# took over the link, `git push` there started failing `Permission denied (publickey)` while code.corp — which does
-# know the cloudvm's key — kept working. Hence the escape hatch, `SSH_AUTH_SOCK="${SSH_AUTH_SOCK_FORWARDED}" git
-# push`, and hence it lives here rather than in either branch below: on the login that first starts our own agent
-# neither branch runs, so setting it there left it unset in exactly the session that needed it.
+# and not this machine's — so preferring our own agent below silently changes which identity every remote sees.
+# That cost was paid for real: neither github.com nor code.corp had the cloudvm's key when the local agent first
+# took the link, and both pushes died `Permission denied (publickey)` at once. Both have it now (2026-08-18), so
+# nothing routes through this today; it stays as the escape hatch for the next such host,
+# `SSH_AUTH_SOCK="${SSH_AUTH_SOCK_FORWARDED}" ssh ...`, and as the thing to reach for when a remote starts refusing
+# this machine's key. It lives here rather than in either branch below because on the login that first starts our
+# own agent neither branch runs, so setting it there left it unset in exactly the session that needed it.
 #
 # Guarded on SSH_CONNECTION so the name never describes something that was not forwarded, and skipped when
 # SSH_AUTH_SOCK is already our own link — a nested shell has no forwarded path to see and inherits this through the
