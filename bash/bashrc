@@ -34,6 +34,11 @@ if [ -r ~/.localrc.secrets ]; then source ~/.localrc.secrets; fi
 # local-agent fallback at the bottom of this file.
 SSH_AUTH_SOCK_LINK="${HOME}/.ssh/ssh_auth_sock"
 
+# Our own agent's fixed paths. Declared up here rather than inside the fallback that creates them, because the
+# adopt rule below now has to *prefer* this socket — see _ssh_agent_needs_own for why.
+SSH_OWN_AGENT_SOCK="${HOME}/.ssh/ssh_agent_own_sock"
+SSH_OWN_AGENT_PIDFILE="${HOME}/.ssh/ssh_agent_own_pid"
+
 # Does the agent behind a socket actually hold identities? `ssh-add -l` exits 0 with keys, 1 when the agent is
 # reachable but empty, and 2 when it cannot be reached — so this distinguishes a *working* agent from merely an
 # agent. Testing `-S` alone is not enough on macOS, which always exports a launchd agent in SSH_AUTH_SOCK that
@@ -53,11 +58,54 @@ _ssh_agent_has_keys() {
   fi
 }
 
-# Adopt the inherited agent when it carries keys, or when whatever the link points at does not. The second
-# clause is what stops a fresh macOS login shell from overwriting a working link with the empty launchd agent —
-# without it, opening a terminal silently breaks ssh for every existing tmux pane too, since they all read the
-# same link.
-if [[ -S "${SSH_AUTH_SOCK:-}" && "${SSH_AUTH_SOCK}" != "${SSH_AUTH_SOCK_LINK}" ]]; then
+# Does this host need an agent of its own? Three cases, checked in order:
+#   - we already have a keyed one -> no, and this is the common path
+#   - nothing keyed is reachable through the link -> yes; this was the whole of the old gate
+#   - the link is keyed, but we are inside an ssh session, so what keys it is a forwarded socket that dies with
+#     the connection -> yes
+#
+# The third case is the new one and the reason a forwarded-agent host never grew a persistent agent. Keyed on
+# SSH_CONNECTION rather than a per-host flag for two reasons: the property that actually matters is exactly "the
+# only agent on offer belongs to this connection", and a flag would have to be set before this point in the file,
+# which rules out the per-host config.bash files sourced further down. A local terminal on the macbook has
+# SSH_CONNECTION unset, so the launchd agent plus UseKeychain stays the answer there and nothing prompts.
+_ssh_agent_needs_own() {
+  _ssh_agent_has_keys "${SSH_OWN_AGENT_SOCK}" && return 1
+  _ssh_agent_has_keys "${SSH_AUTH_SOCK_LINK}" || return 0
+  [ -n "${SSH_CONNECTION:-}" ]
+}
+
+# Remember this connection's forwarded socket under a name of its own, before anything below points the shared
+# link away from it. Only the *upstream* agent holds the laptop's keys, and a host can perfectly well trust those
+# and not this machine's: github.com knows a laptop key and not the cloudvm's, so the moment the local agent below
+# took over the link, `git push` there started failing `Permission denied (publickey)` while code.corp — which does
+# know the cloudvm's key — kept working. Hence the escape hatch, `SSH_AUTH_SOCK="${SSH_AUTH_SOCK_FORWARDED}" git
+# push`, and hence it lives here rather than in either branch below: on the login that first starts our own agent
+# neither branch runs, so setting it there left it unset in exactly the session that needed it.
+#
+# Guarded on SSH_CONNECTION so the name never describes something that was not forwarded, and skipped when
+# SSH_AUTH_SOCK is already our own link — a nested shell has no forwarded path to see and inherits this through the
+# export instead. Not unset at the bottom of the file for the same reason.
+if [[ -n "${SSH_CONNECTION:-}" && -S "${SSH_AUTH_SOCK:-}" && "${SSH_AUTH_SOCK}" != "${SSH_AUTH_SOCK_LINK}" ]]; then
+  export SSH_AUTH_SOCK_FORWARDED="${SSH_AUTH_SOCK}"
+fi
+
+# A keyed agent of *ours* wins outright, because it is the only one whose lifetime is not this ssh connection's.
+# `ssh -A` gets you a socket that sshd creates at /tmp/ssh-*/agent.<its pid> and **unlinks when the connection
+# ends**, so the laptop's agent keeps running with its keys while this link dangles — which is what looked like
+# the agent "expiring" on the cloudvm. Every dropped connection (that host gets ServerAliveInterval 60 and the
+# default CountMax 3, so ~3 minutes of a closed lid is enough) broke ssh in every already-running tmux pane at
+# once, until the next login shell happened to repoint the link. Nothing local existed to fall back on either:
+# ~/.ssh/ssh_agent_own_sock had never once been created there, because the fallback below only fired when the
+# link held no keys and the just-adopted forwarded socket always did.
+#
+# Otherwise adopt the inherited agent when it carries keys, or when whatever the link points at does not. That
+# second clause is what stops a fresh macOS login shell from overwriting a working link with the empty launchd
+# agent — without it, opening a terminal silently breaks ssh for every existing tmux pane too, since they all
+# read the same link.
+if _ssh_agent_has_keys "${SSH_OWN_AGENT_SOCK}"; then
+  ln -sf "${SSH_OWN_AGENT_SOCK}" "${SSH_AUTH_SOCK_LINK}"
+elif [[ -S "${SSH_AUTH_SOCK:-}" && "${SSH_AUTH_SOCK}" != "${SSH_AUTH_SOCK_LINK}" ]]; then
   if _ssh_agent_has_keys "${SSH_AUTH_SOCK}" || ! _ssh_agent_has_keys "${SSH_AUTH_SOCK_LINK}"; then
     ln -sf "${SSH_AUTH_SOCK}" "${SSH_AUTH_SOCK_LINK}"
   fi
@@ -85,32 +133,30 @@ if [[ $PROMPT ]]; then
     export PS1=$PROMPT
 fi
 
-# Local-agent fallback: when nothing reachable through the symlink holds a key, start an agent and add one.
-# Gated on *identities* rather than on the socket existing — an empty-but-live agent satisfied the old `! -S`
-# test and skipped this entirely, which is exactly how macOS ended up with a linked launchd agent and no key.
-# SSH_AGENT_DISABLE suppresses this, for a host that should rely purely on a forwarded agent. NOTHING SETS IT
-# TODAY — an earlier version of this comment claimed cloudvm did, and it does not; what actually kept the block
-# from firing there was the old `! -S "$link"` test being false whenever the link existed. So the keyed-agent
-# test above is now the only thing between a new shell and this block on a forwarded-agent host, and if that
-# agent is ever live-but-empty (connecting without `-A`, or a stale link) every shell and tmux pane starts an
-# agent and prompts. A host that wants it off should export it from its own config.bash, which bashrc sources
-# above this point — indeed/cloudvm/config.bash already detects cloudvm and is the place for it.
+# Local-agent fallback: when _ssh_agent_needs_own says so, start an agent and add a key to it. Gated on
+# *identities* rather than on the socket existing — an empty-but-live agent satisfied the original `! -S` test and
+# skipped this entirely, which is exactly how macOS ended up with a linked launchd agent and no key. It now also
+# fires when the link is keyed only by this connection's forwarded socket, which is the case that never used to
+# reach here at all; the fixed socket path below is what makes that a one-time cost rather than a prompt per
+# login, since the agent then outlives every disconnect and the adopt rule above prefers it from then on.
 #
-# This prompts for the key's passphrase, but only once per agent lifetime: the adopt rule above will not clobber
-# the keyed link this creates, so later shells find keys here and skip the block.
-if [[ -z "${SSH_AGENT_DISABLE:-}" ]] && ! _ssh_agent_has_keys "${SSH_AUTH_SOCK_LINK}"; then
+# SSH_AGENT_DISABLE suppresses this, for a host that should rely purely on a forwarded agent and accept losing it
+# whenever the connection drops. NOTHING SETS IT TODAY. A host that wants it off should export it from its own
+# config.bash — except that bashrc sources those *below* the adopt rule, so it only reaches this block; that is
+# fine, since with no agent of ours the adopt rule falls through to its original behavior anyway.
+if [[ -z "${SSH_AGENT_DISABLE:-}" ]] && _ssh_agent_needs_own; then
   # A fixed socket path, so repeated shells share one agent. Letting ssh-agent pick its own path meant every
   # terminal and tmux pane started a fresh one and orphaned it — four in a single nested-shell test. The pid is
   # recorded beside it because the socket cannot identify the process: `ssh-agent -k` kills whatever
   # SSH_AGENT_PID names and ignores SSH_AUTH_SOCK entirely, so in a fresh shell — which has no SSH_AGENT_PID —
   # it just prints "SSH_AGENT_PID not set, cannot kill agent" and the following rm strands a live agent with no
-  # socket. That is the leak this block exists to prevent.
-  SSH_OWN_AGENT_SOCK="${HOME}/.ssh/ssh_agent_own_sock"
-  SSH_OWN_AGENT_PIDFILE="${HOME}/.ssh/ssh_agent_own_pid"
-
+  # socket. That is the leak this block exists to prevent. Both paths are set at the top of the file now, because
+  # the adopt rule reads them too.
+  #
   # Only prompt where there is a terminal to prompt on. Without this, any interactive-but-ttyless shell (a
   # tool's `bash -ic`, a hook) printed a passphrase prompt nothing could answer and leaked an agent doing it.
-  if ! _ssh_agent_has_keys "${SSH_OWN_AGENT_SOCK}" && [ -t 0 ]; then
+  # No keyed-agent test here: _ssh_agent_needs_own has already established we do not have one.
+  if [ -t 0 ]; then
     # Retire our own keyless agent rather than orphaning it, since ssh-agent will not rebind an existing path.
     # Only ever a pid we wrote, and only when it is still an ssh-agent: pids get reused, and `-k` does a bare
     # kill without checking what it is aimed at.
@@ -132,11 +178,16 @@ if [[ -z "${SSH_AGENT_DISABLE:-}" ]] && ! _ssh_agent_has_keys "${SSH_AUTH_SOCK_L
     ssh-add
   fi
 
-  [ -S "${SSH_OWN_AGENT_SOCK}" ] && ln -sf "${SSH_OWN_AGENT_SOCK}" "${SSH_AUTH_SOCK_LINK}"
-  unset SSH_OWN_AGENT_SOCK SSH_OWN_AGENT_PIDFILE
+  # Same shape as the adopt rule, and for the same reason: take the link when our agent is keyed, or when
+  # whatever holds it is not. Reaching here unkeyed means `ssh-add` was cancelled or the passphrase mistyped, and
+  # now that a live forwarded socket can still be keying the link, an unconditional relink would spend one typo
+  # on breaking ssh in every tmux pane.
+  if _ssh_agent_has_keys "${SSH_OWN_AGENT_SOCK}" || ! _ssh_agent_has_keys "${SSH_AUTH_SOCK_LINK}"; then
+    [ -S "${SSH_OWN_AGENT_SOCK}" ] && ln -sf "${SSH_OWN_AGENT_SOCK}" "${SSH_AUTH_SOCK_LINK}"
+  fi
 fi
 # Always reach the agent through the symlink when something is backing it.
 [ -S "${SSH_AUTH_SOCK_LINK}" ] && export SSH_AUTH_SOCK="${SSH_AUTH_SOCK_LINK}"
-unset SSH_AUTH_SOCK_LINK
-unset -f _ssh_agent_has_keys
+unset SSH_AUTH_SOCK_LINK SSH_OWN_AGENT_SOCK SSH_OWN_AGENT_PIDFILE
+unset -f _ssh_agent_has_keys _ssh_agent_needs_own
 

@@ -135,6 +135,36 @@ only way to assert the Linux ordering from a mac.
   nothing could answer and leaked an agent doing it. Note the probe is wrapped in `timeout` *where available*: a
   stale agent socket can accept a connection and never answer, and macOS has no `timeout` of its own (Homebrew
   coreutils ships it as `gtimeout`), so it must degrade to a bare call rather than assume it.
+- **A forwarded agent is not a persistent one, and preferring it is what made the cloudvm's agent look like it kept
+  "expiring".** `ssh -A` gets you a socket sshd creates at `/tmp/ssh-*/agent.<pid>` and **unlinks when the connection
+  ends** — the laptop's agent is still running with its keys, but `~/.ssh/ssh_auth_sock` dangles and ssh dies in every
+  tmux pane at once. Two things conspired: the BOXY block gives `*.cvm.indeed.net` `ServerAliveInterval 60` with the
+  default `CountMax 3`, so ~3 minutes of a closed lid tears the connection down (now overridden to 30×25 from
+  `indeed/ssh/config.d/30-indeed.conf`, which wins because the config.d `Include` is prepended above the
+  DO-NOT-EDIT block and ssh keeps the first value); and the local-agent fallback never fired there, because the adopt
+  step repointed the link at the fresh forwarded socket first and the gate only asked whether the link held *keys*.
+  `~/.ssh/ssh_agent_own_sock` had never once been created on that host. So the gate is now
+  `_ssh_agent_needs_own`, which also fires when a keyed link is backed by a socket belonging to this connection —
+  keyed on `SSH_CONNECTION` rather than a per-host flag, since any flag would have to be set above the adopt rule and
+  the per-host `config.bash` files are sourced well below it. A keyed agent of ours then wins the adopt outright, and
+  the forwarded socket stays reachable as `SSH_AUTH_SOCK_FORWARDED` for hosts that trust the laptop's keys and not
+  this machine's. Cost is one passphrase per agent lifetime instead of per login. **That last part is not
+  hypothetical: github.com knows a laptop key and not the cloudvm's, so `git push` on the dotfiles remote started
+  failing `Permission denied (publickey)` the moment the local agent took the link** — while code.corp, which does
+  know the cloudvm's key, kept working. Two lessons paid for there. Preferring a local agent silently changes *which
+  identity* every remote sees, so any remote that only knew the forwarded keys has to be re-registered (or pointed at
+  `SSH_AUTH_SOCK_FORWARDED`); check with `ssh -T` per host rather than assuming. As of 2026-08-18 the cloudvm's
+  `~/.ssh/id_ed25519` is registered on **neither** host — `glab api --hostname code.corp.indeed.com user/keys` lists
+  only two laptop keys plus an expired "Sourcegraph Campaign", and `curl -sS https://github.com/adevore3.keys` serves
+  two keys that are not it — so the persistent agent currently authenticates nowhere and git rides the forwarded agent
+  via the `Match host ... exec` blocks in `ssh/config.d/00-common.conf` and `indeed/ssh/config.d/30-indeed.conf`. Those
+  two endpoints are the authority on what a host will accept; a comment claiming otherwise has already been wrong once. And the capture of the forwarded path
+  has to sit *above* both relink branches — it was originally inside the adopt branch, which does not run on the login
+  that first starts our own agent, so the escape hatch was unset in precisely the session that needed it. Verified by driving both the old and
+  new logic out of `bashrc` under `script -qec` through login → disconnect → reconnect: the old one goes `keys=NO` at
+  the disconnect, the new one stays keyed. That harness is deliberately *not* committed — `script`'s syntax differs on
+  BSD, the same reason `ssh_agent_link_test.sh` leaves the `[ -t 0 ]` branch to real terminal use — so the committed
+  tests assert the decisions (adopt, gate, relink) against live agents instead.
 - **tmux copy goes through `$copy_command`** in `tmux.conf`, not a hardcoded `pbcopy`. tmux-yank overrides
   those `bind-key` lines once tpm loads, so the binds are only the fallback for the plugin not loading —
   `@override_copy_command` is what actually decides the tool. Two traps, both verified by driving a real yank

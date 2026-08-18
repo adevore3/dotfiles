@@ -12,17 +12,25 @@ source "${DOTFILES}/bash/functions/test/test_utils.sh"
 
 BASHRC="${DOTFILES}/bash/bashrc"
 
-# The helper and the adopt block, verbatim from bashrc.
+# The helpers and the adopt block, verbatim from bashrc.
 eval "$(sed -n '/^_ssh_agent_has_keys()/,/^}/p' "$BASHRC")"
+eval "$(sed -n '/^_ssh_agent_needs_own()/,/^}/p' "$BASHRC")"
 # Single quotes are deliberate: the pattern must reach sed as the literal text in bashrc, unexpanded.
 # shellcheck disable=SC2016
-ADOPT_BLOCK=$(sed -n '/^if \[\[ -S "\${SSH_AUTH_SOCK:-}"/,/^fi$/p' "$BASHRC")
+ADOPT_BLOCK=$(sed -n '/^if _ssh_agent_has_keys "\${SSH_OWN_AGENT_SOCK}"/,/^fi$/p' "$BASHRC")
+# The capture of this connection's forwarded socket, which has to happen before either relink.
+# shellcheck disable=SC2016
+CAPTURE_BLOCK=$(sed -n '/^if \[\[ -n "\${SSH_CONNECTION:-}" && -S "\${SSH_AUTH_SOCK:-}"/,/^fi$/p' "$BASHRC")
 # The fallback's retire step, which kills a previous keyless agent of ours before rebinding its socket. Ends at
 # the `fi` indented four spaces; the `fi` inside it sits at twelve.
 # shellcheck disable=SC2016
 RETIRE_BLOCK=$(sed -n '/^    if \[ -r "\${SSH_OWN_AGENT_PIDFILE}" \]/,/^    fi$/p' "$BASHRC")
+# The fallback's closing relink, which must not aim the shared link at an agent worse than what it already has.
+# shellcheck disable=SC2016
+RELINK_BLOCK=$(sed -n '/^  if _ssh_agent_has_keys "\${SSH_OWN_AGENT_SOCK}"/,/^  fi$/p' "$BASHRC")
 
-if [ -z "$ADOPT_BLOCK" ] || [ -z "$RETIRE_BLOCK" ] || ! type _ssh_agent_has_keys > /dev/null 2>&1; then
+if [ -z "$ADOPT_BLOCK" ] || [ -z "$RETIRE_BLOCK" ] || [ -z "$RELINK_BLOCK" ] || [ -z "$CAPTURE_BLOCK" ] \
+  || ! type _ssh_agent_has_keys > /dev/null 2>&1 || ! type _ssh_agent_needs_own > /dev/null 2>&1; then
   echo "FAIL: could not extract the agent logic from $BASHRC — did a block move or get reworded?"
   exit 1
 fi
@@ -50,9 +58,13 @@ start_agent() {
 
 KEYED_SOCK="$WORK_DIR/keyed.sock"
 EMPTY_SOCK="$WORK_DIR/empty.sock"
+# Stands in for ~/.ssh/ssh_agent_own_sock: an agent of ours, which outlives any one ssh connection.
+OWN_KEYED_SOCK="$WORK_DIR/own_keyed.sock"
 start_agent "$KEYED_SOCK"
 SSH_AUTH_SOCK="$KEYED_SOCK" ssh-add "$WORK_DIR/key" > /dev/null 2>&1
 start_agent "$EMPTY_SOCK"
+start_agent "$OWN_KEYED_SOCK"
+SSH_AUTH_SOCK="$OWN_KEYED_SOCK" ssh-add "$WORK_DIR/key" > /dev/null 2>&1
 
 # --- _ssh_agent_has_keys classification ---
 
@@ -72,11 +84,14 @@ assert_equals "no" "$(_ssh_agent_has_keys "$WORK_DIR/regular_file" && echo yes |
 
 # --- the adopt decision ---
 
-# Runs the real block with a scratch link, and reports which socket the link ends up on.
+# Runs the real block with a scratch link, and reports which socket the link ends up on. The third argument is
+# our own agent's socket; omitting it is the "no local agent has ever been started here" case.
 adopt_result() {
   local inherited="$1" link_target="$2"
   local SSH_AUTH_SOCK_LINK="$WORK_DIR/link"
-  # Both locals are read by the eval'd block below, not by this function directly.
+  # These locals are read by the eval'd block below, not by this function directly.
+  # shellcheck disable=SC2034
+  local SSH_OWN_AGENT_SOCK="${3:-}"
   # shellcheck disable=SC2034
   local SSH_AUTH_SOCK="$inherited"
   rm -f "$SSH_AUTH_SOCK_LINK"
@@ -104,14 +119,107 @@ assert_equals "empty.sock" "$(adopt_result "$EMPTY_SOCK" "$WORK_DIR/dead.sock")"
 assert_equals "empty.sock" "$(adopt_result "$EMPTY_SOCK" "")" \
   "adopt: an empty inherited agent is taken when no link exists"
 
+# The cloudvm regression. A forwarded socket carries keys but dies with the ssh connection, so adopting it over
+# an agent of our own is what left the link dangling on every disconnect and broke ssh in all the tmux panes.
+assert_equals "own_keyed.sock" "$(adopt_result "$KEYED_SOCK" "$KEYED_SOCK" "$OWN_KEYED_SOCK")" \
+  "adopt: our own keyed agent wins over a keyed inherited socket"
+assert_equals "own_keyed.sock" "$(adopt_result "$KEYED_SOCK" "$WORK_DIR/dead.sock" "$OWN_KEYED_SOCK")" \
+  "adopt: our own keyed agent wins over a keyed inherited socket even from a dead link"
+assert_equals "own_keyed.sock" "$(adopt_result "" "" "$OWN_KEYED_SOCK")" \
+  "adopt: our own keyed agent is taken when nothing was inherited"
+
+# ...but only a *keyed* one. A half-started agent of ours must never displace a working inherited socket.
+assert_equals "keyed.sock" "$(adopt_result "$KEYED_SOCK" "$EMPTY_SOCK" "$EMPTY_SOCK")" \
+  "adopt: an empty agent of ours does not block adopting a keyed inherited socket"
+
+# --- capturing this connection's forwarded socket ---
+#
+# The only agent holding the laptop's keys is the upstream one, and github.com trusts a laptop key but not this
+# machine's -- so pushes there fail the moment our own agent takes the link, unless the forwarded socket is still
+# reachable by name. The regression this guards is where the capture used to live: inside the adopt branch, which
+# does not run on the login that first starts our agent, leaving it unset in the one session that needed it.
+
+capture_result() {
+  local SSH_AUTH_SOCK_LINK="$WORK_DIR/link"
+  # Both are read by the eval'd block, not by this function directly.
+  # shellcheck disable=SC2034
+  local SSH_AUTH_SOCK="$1"
+  # shellcheck disable=SC2034
+  local SSH_CONNECTION="$2"
+  local SSH_AUTH_SOCK_FORWARDED=""
+  eval "$CAPTURE_BLOCK"
+  basename "${SSH_AUTH_SOCK_FORWARDED:-none}"
+}
+
+assert_equals "keyed.sock" "$(capture_result "$KEYED_SOCK" "10.0.0.1 1 10.0.0.2 22")" \
+  "capture: a forwarded socket is remembered before anything repoints the link"
+assert_equals "none" "$(capture_result "$KEYED_SOCK" "")" \
+  "capture: nothing is remembered outside an ssh session"
+assert_equals "none" "$(capture_result "$WORK_DIR/link" "10.0.0.1 1 10.0.0.2 22")" \
+  "capture: our own link is never mistaken for a forwarded socket"
+assert_equals "none" "$(capture_result "" "10.0.0.1 1 10.0.0.2 22")" \
+  "capture: nothing is remembered when no agent was inherited"
+
 # --- the fallback gate ---
 #
-# The fallback must fire on a reachable-but-empty link. Gating on `-S` is what silently skipped it.
+# Three ways to need an agent of our own. The `-S` test silently skipped the second; the third did not exist,
+# which is why a forwarded-agent host never got a persistent agent at all.
 
-assert_equals "fires" "$(_ssh_agent_has_keys "$EMPTY_SOCK" && echo skipped || echo fires)" \
-  "fallback: fires when the link points at an empty agent"
-assert_equals "skipped" "$(_ssh_agent_has_keys "$KEYED_SOCK" && echo skipped || echo fires)" \
-  "fallback: skipped when the link points at a keyed agent"
+# Runs the real gate: link target, our own socket, and whether we are inside an ssh session.
+needs_own() {
+  local SSH_AUTH_SOCK_LINK="$WORK_DIR/link"
+  # Both are read by _ssh_agent_needs_own, not by this function directly.
+  # shellcheck disable=SC2034
+  local SSH_OWN_AGENT_SOCK="$2"
+  # shellcheck disable=SC2034
+  local SSH_CONNECTION="$3"
+  rm -f "$SSH_AUTH_SOCK_LINK"
+  [ -n "$1" ] && ln -sf "$1" "$SSH_AUTH_SOCK_LINK"
+  _ssh_agent_needs_own && echo yes || echo no
+}
+
+assert_equals "yes" "$(needs_own "$EMPTY_SOCK" "" "")" \
+  "gate: fires when the link points at an empty agent"
+assert_equals "yes" "$(needs_own "$WORK_DIR/dead.sock" "" "")" \
+  "gate: fires when the link dangles"
+
+# The new case, and the whole point of the fix: the link works, but only because a forwarded socket is keying
+# it, and that socket is unlinked the moment the connection drops.
+assert_equals "yes" "$(needs_own "$KEYED_SOCK" "" "10.0.0.1 1 10.0.0.2 22")" \
+  "gate: fires when a keyed link is backed by this ssh connection's forwarded socket"
+
+# A local terminal on the macbook: the launchd agent plus UseKeychain is the right answer there, and starting a
+# second agent would prompt for a passphrase for no reason.
+assert_equals "no" "$(needs_own "$KEYED_SOCK" "" "")" \
+  "gate: skipped when a keyed link is not tied to an ssh connection"
+
+# Idempotence, which is what keeps it to one passphrase per agent rather than one per login or tmux pane.
+assert_equals "no" "$(needs_own "$OWN_KEYED_SOCK" "$OWN_KEYED_SOCK" "10.0.0.1 1 10.0.0.2 22")" \
+  "gate: skipped once we already have a keyed agent of our own"
+
+# --- the fallback's closing relink ---
+#
+# Reached when the agent was started but `ssh-add` did not key it -- a cancelled or mistyped passphrase. Now
+# that a forwarded socket can still be keying the link, pointing it at that empty agent would break ssh for
+# every pane as the price of one typo.
+
+relink_result() {
+  local link_target="$1"
+  local SSH_AUTH_SOCK_LINK="$WORK_DIR/link"
+  # shellcheck disable=SC2034
+  local SSH_OWN_AGENT_SOCK="$2"
+  rm -f "$SSH_AUTH_SOCK_LINK"
+  [ -n "$link_target" ] && ln -sf "$link_target" "$SSH_AUTH_SOCK_LINK"
+  eval "$RELINK_BLOCK"
+  basename "$(readlink "$SSH_AUTH_SOCK_LINK" 2> /dev/null || echo none)"
+}
+
+assert_equals "own_keyed.sock" "$(relink_result "$KEYED_SOCK" "$OWN_KEYED_SOCK")" \
+  "relink: a newly keyed agent of ours takes the link"
+assert_equals "keyed.sock" "$(relink_result "$KEYED_SOCK" "$EMPTY_SOCK")" \
+  "relink: a cancelled passphrase leaves a working forwarded link alone"
+assert_equals "empty.sock" "$(relink_result "$WORK_DIR/dead.sock" "$EMPTY_SOCK")" \
+  "relink: an empty agent of ours still beats a dangling link"
 
 # --- retiring our own keyless agent ---
 #
