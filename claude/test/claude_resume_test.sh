@@ -142,8 +142,21 @@ out="$(FAKE_CLAUDE_LOG="$TMP/claude.log" HOME="$FAKE_HOME" PATH="$TMP/bin:$PATH"
   timeout 20 bash -c 'source "$DOTFILES/claude/functions/claude_resume.func"; claude_resume < /dev/null; echo "rc=$?"' 2>&1)"
 assert_contains "rc=0" "$out" "end of input quits cleanly"
 
-# 11. --clean sweeps the session whose directory is gone. Last, since it deletes from the fake HOME.
+# 11. A custom title — what hooks/session-title.sh records under ~/.claude/state/session-title — outranks the
+# transcript's own. Late in the file: from here on the newest session shows the ticket instead of its prompt.
+mkdir -p "$FAKE_HOME/.claude/state/session-title"
+printf '%s' '{"override":false,"set_key":"DIRP-1","set_title":"DIRP-1 the ticket title","asks":0}' \
+  > "$FAKE_HOME/.claude/state/session-title/11111111-0000-4000-8000-000000000001.json"
+out="$(run_wrapper q -l)"
+assert_contains "DIRP-1 the ticket title" "$out" "the recorded custom title is what the table shows"
+out="$(run_wrapper q -l -fs "live directory")"
+assert_contains "Found 1 session(s)" "$out" "the title it replaced is still searchable"
+
+# 12. --clean sweeps the session whose directory is gone. Last, since it deletes from the fake HOME.
 STALE="$FAKE_HOME/.claude/projects/proj/22222222-0000-4000-8000-000000000002.jsonl"
+# The hook leaves one of these behind for nearly every session, so the sweep has to take it too.
+STALE_STATE="$FAKE_HOME/.claude/state/session-title/22222222-0000-4000-8000-000000000002.json"
+printf '%s' '{"override":false,"set_key":"","set_title":"","asks":0,"prompts":3}' > "$STALE_STATE"
 exists() { [[ -e "$1" ]] && echo yes || echo no; }
 
 : > "$TMP/claude.log"
@@ -161,6 +174,7 @@ out="$(run_wrapper y --clean)"
 assert_contains "[INFO] Deleted 1 session(s)" "$out" "answering y deletes the stale session"
 assert_contains "rc=0" "$out" "--clean exits 0"
 assert_equals "no" "$(exists "$STALE")" "the stale transcript is gone"
+assert_equals "no" "$(exists "$STALE_STATE")" "and so is its session-title state file"
 assert_equals "yes" "$(exists "$FAKE_HOME/.claude/projects/proj")" "a project dir still holding a transcript is kept"
 assert_contains "final_pwd=$PWD" "$out" "--clean leaves the shell where it was"
 assert_equals "" "$(cat "$TMP/claude.log")" "--clean never launches claude"

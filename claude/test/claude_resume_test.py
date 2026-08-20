@@ -148,6 +148,7 @@ class ReadTranscriptTest(TranscriptFixture):
         self.assertEqual(session.cwd, f"{self.home}/work", "first cwd wins — it decides where the transcript lives")
         self.assertEqual(session.branch, "feature/x", "latest branch wins")
         self.assertEqual(session.title, "Final title", "latest ai-title wins")
+        self.assertEqual(session.ai_title, session.title, "with no custom title the two are the same")
         self.assertEqual(session.messages, 4)
         self.assertEqual(session.out_tokens, 150)
         self.assertEqual(session.status, "done")
@@ -238,9 +239,74 @@ class ScanSessionsTest(TranscriptFixture):
         self.assertEqual([s.sid for s in cr.scan_sessions(self.projects, self.home)], ["aaa", "mmm", "zzz"])
 
 
+class CustomTitleTest(TranscriptFixture):
+    """The title session-title.sh recorded outranks the transcript's own (see load_custom_titles)."""
+
+    def setUp(self):
+        super().setUp()
+        self.state = Path(self.home) / ".claude" / "state" / "session-title"
+        self.state.mkdir(parents=True)
+
+    def write_state(self, sid, payload):
+        path = self.state / f"{sid}.json"
+        with open(path, "w") as handle:
+            handle.write(payload if isinstance(payload, str) else json.dumps(payload))
+        return path
+
+    def titled_transcript(self, sid, ai_title="AI title"):
+        return self.write(sid, [
+            {"type": "user", "cwd": f"{self.home}/work", "message": {"role": "user", "content": "opening prompt"}},
+            {"type": "ai-title", "aiTitle": ai_title},
+        ], subdir=sid)
+
+    def test_a_recorded_title_replaces_the_ai_one(self):
+        self.titled_transcript("sid-1")
+        self.write_state("sid-1", {"set_title": "DIRP-1 Do the thing", "override": False})
+        session = cr.scan_sessions(self.projects, self.home, cr.load_custom_titles(self.state))[0]
+        self.assertEqual(session.title, "DIRP-1 Do the thing")
+        self.assertEqual(session.ai_title, "AI title", "the AI title stays available to filters")
+
+    def test_a_session_with_no_recorded_title_keeps_the_ai_one(self):
+        self.titled_transcript("sid-2")
+        session = cr.scan_sessions(self.projects, self.home, cr.load_custom_titles(self.state))[0]
+        self.assertEqual(session.title, "AI title")
+
+    def test_an_empty_recorded_title_falls_back(self):
+        # What the hook writes for a session it asked about but never titled — not a title, so not a replacement.
+        self.titled_transcript("sid-3")
+        self.write_state("sid-3", {"set_title": "   ", "override": False})
+        session = cr.scan_sessions(self.projects, self.home, cr.load_custom_titles(self.state))[0]
+        self.assertEqual(session.title, "AI title")
+
+    def test_titles_are_normalized_like_the_transcript_ones(self):
+        self.write_state("sid-4", {"set_title": f"  DIRP-4  {'x' * 200}\n"})
+        self.assertEqual(cr.load_custom_titles(self.state)["sid-4"], f"DIRP-4 {'x' * 200}"[: cr.FIELD_CAP])
+
+    def test_unreadable_state_files_are_skipped_not_fatal(self):
+        self.write_state("sid-5", "{ not json")
+        self.write_state("sid-6", "[]")  # right shape for JSON, wrong shape for a state file
+        self.write_state("sid-7", {"set_title": 42})
+        self.write_state("sid-8", {"set_title": "DIRP-8"})
+        self.assertEqual(cr.load_custom_titles(self.state), {"sid-8": "DIRP-8"})
+
+    def test_a_missing_state_dir_is_not_an_error(self):
+        self.assertEqual(cr.load_custom_titles(self.state / "nope"), {})
+
+    def test_state_dir_honors_the_hooks_env_override(self):
+        self.assertEqual(cr.custom_title_dir("/home/u"), Path("/home/u/.claude/state/session-title"))
+        with mock.patch.dict(os.environ, {cr.STATE_DIR_ENV: "/tmp/elsewhere"}):
+            self.assertEqual(cr.custom_title_dir("/home/u"), Path("/tmp/elsewhere"))
+
+
 class FiltersTest(unittest.TestCase):
-    def session(self, title="Refactor the widget", cwd="/home/u/proj/alpha"):
-        return cr.Session(sid="s", cwd=cwd, mtime=0, title=title, home="/home/u")
+    def session(self, title="Refactor the widget", cwd="/home/u/proj/alpha", ai_title=""):
+        return cr.Session(sid="s", cwd=cwd, mtime=0, title=title, ai_title=ai_title, home="/home/u")
+
+    def test_title_filter_also_matches_a_replaced_ai_title(self):
+        renamed = self.session(title="DIRP-1 Widget rollout", ai_title="Refactor the widget")
+        self.assertTrue(cr.Filters(title="DIRP-1").matches(renamed))
+        self.assertTrue(cr.Filters(title="refactor").matches(renamed), "the ticket title must not hide the topic")
+        self.assertTrue(cr.Filters(anywhere="refactor").matches(renamed))
 
     def test_title_filter_is_case_insensitive(self):
         self.assertTrue(cr.Filters(title="WIDGET").matches(self.session()))
@@ -582,6 +648,14 @@ class CleanTest(TranscriptFixture):
         (self.memory_source / "MEMORY.md").write_text("keep me\n")
         (self.projects / "gone-proj" / "memory").symlink_to(self.memory_source)
 
+        # session-title.sh leaves one of these per session, titled or not, so the sweep has to take it too.
+        self.state = Path(self.home) / ".claude" / "state" / "session-title"
+        self.state.mkdir(parents=True)
+        self.stale_state = self.state / "stale-1.json"
+        self.stale_state.write_text('{"override": false, "set_title": "", "prompts": 3}')
+        self.kept_state = self.state / "kept-1.json"
+        self.kept_state.write_text('{"override": false, "set_title": "", "prompts": 1}')
+
     def clean(self, typed, argv=()):
         """Run --clean end-to-end with `typed` answering the confirmation. Returns (exit code, stdout)."""
         options = cr.parse_args(["--clean", *argv])
@@ -590,7 +664,7 @@ class CleanTest(TranscriptFixture):
         sessions = [s for s in sessions if options.filters.matches(s)]
         out = io.StringIO()
         with mock.patch.object(sys, "stdin", io.StringIO(typed)), contextlib.redirect_stdout(out):
-            code = cr.run_clean(sessions, cr.Layout.for_width(140), options, self.projects)
+            code = cr.run_clean(sessions, cr.Layout.for_width(140), options, self.projects, self.state)
         return code, strip(out.getvalue())
 
     def test_confirming_deletes_the_stale_sessions_and_their_sidecar(self):
@@ -601,6 +675,14 @@ class CleanTest(TranscriptFixture):
         self.assertFalse(self.stale.exists())
         self.assertFalse(self.stale_other.exists())
         self.assertFalse(self.sidecar.exists(), "the '<sid>/' sidecar dir goes with the transcript")
+        self.assertFalse(self.stale_state.exists(), "and so does the session-title state file")
+        self.assertTrue(self.kept_state.exists(), "a session that was not swept keeps its state file")
+
+    def test_a_missing_state_file_is_not_an_error(self):
+        self.stale_state.unlink()
+        code, out = self.clean("y\n")
+        self.assertEqual(code, 0, out)
+        self.assertIn("Deleted 2 session(s)", out)
 
     def test_the_emptied_project_dir_is_pruned_but_the_memory_target_survives(self):
         _, out = self.clean("y\n")

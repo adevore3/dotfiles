@@ -12,7 +12,8 @@ when the user quits. Without --result-file those two lines go to stdout instead 
 the script directly; the wrapper always passes one).
 
 Everything a session displays is read out of its transcript rather than inferred from the project dir
-name under ~/.claude/projects, whose `/`->`-` munging is lossy and cannot be reversed.
+name under ~/.claude/projects, whose `/`->`-` munging is lossy and cannot be reversed. The one exception
+is the custom session title, which Claude never writes to the transcript — see load_custom_titles.
 
 --clean is the one mode that writes to that tree: it deletes the sessions whose launch directory has
 since been removed. It never reports a pick, so the wrapper just exits.
@@ -125,7 +126,8 @@ class Session:
     sid: str
     cwd: str  # absolute launch dir — what the shell cds to
     mtime: float
-    title: str = ""
+    title: str = ""  # what the Title column shows: the custom title if there is one, else ai_title
+    ai_title: str = ""  # the transcript's own title, kept so filters still match what the session was about
     branch: str = ""
     messages: int = 0
     out_tokens: int = 0
@@ -199,6 +201,8 @@ def read_transcript(path: Path, home: str) -> Session | None:
             if kind == "user" and not first_user_text:
                 first_user_text = _first_text((entry.get("message") or {}).get("content"))
             # Claude writes the auto-generated session name as repeated 'ai-title' entries; keep the last.
+            # In practice every entry in a transcript holds the same string — it is generated once from the
+            # opening prompt and never revisited, which is why a custom title outranks it (see scan_sessions).
             if kind == "ai-title" and entry.get("aiTitle"):
                 ai_title = entry["aiTitle"]
             # Output tokens (what Claude generated) are a rough measure of session size.
@@ -213,11 +217,13 @@ def read_transcript(path: Path, home: str) -> Session | None:
     if not cwd:
         return None
     exists = os.path.isdir(cwd)
+    transcript_title = " ".join((ai_title or first_user_text).split())[:FIELD_CAP]
     return Session(
         sid=path.name[: -len(".jsonl")],
         cwd=cwd,
         mtime=path.stat().st_mtime,
-        title=" ".join((ai_title or first_user_text).split())[:FIELD_CAP],
+        title=transcript_title,
+        ai_title=transcript_title,
         branch=branch[:FIELD_CAP],
         messages=messages,
         out_tokens=out_tokens,
@@ -228,8 +234,43 @@ def read_transcript(path: Path, home: str) -> Session | None:
     )
 
 
-def scan_sessions(projects_dir: Path, home: str) -> list[Session]:
+# The custom session title — what claude/hooks/session-title.sh sets from the Jira ticket, or what you typed
+# yourself — never reaches the transcript: Claude keeps `currentSessionTitle` out of band and writes only the
+# AI-generated one there. So the hook's own state file is the record to read. It is keyed by session id, it
+# outlives the process, and the hook records a hand-set title too, not just the ones it chose.
+# ~/.claude/sessions/<pid>.json carries the same title, but only while that pid is alive, and it falls back to an
+# auto-generated name ("dotfiles-55") when nothing set one — worse than the AI title, and indistinguishable from
+# a real title once read. Not a source worth having.
+STATE_DIR_ENV = "CLAUDE_SESSION_TITLE_STATE"
+
+
+def custom_title_dir(home: str) -> Path:
+    """Where session-title.sh keeps its state — same env override the hook honors, which is what the tests set."""
+    return Path(os.environ.get(STATE_DIR_ENV) or Path(home) / ".claude" / "state" / "session-title")
+
+
+def load_custom_titles(state_dir: Path) -> dict[str, str]:
+    """Session id -> custom title, for every session session-title.sh has a title on file for."""
+    titles: dict[str, str] = {}
+    try:
+        paths = list(state_dir.glob("*.json"))
+    except OSError:
+        return titles
+    for path in paths:
+        try:
+            with open(path, errors="ignore") as handle:
+                data = json.load(handle)
+        except (OSError, ValueError):
+            continue  # a half-written or hand-mangled state file is not worth failing the listing over
+        title = data.get("set_title") if isinstance(data, dict) else None
+        if isinstance(title, str) and title.strip():
+            titles[path.name[: -len(".json")]] = " ".join(title.split())[:FIELD_CAP]
+    return titles
+
+
+def scan_sessions(projects_dir: Path, home: str, custom_titles: dict[str, str] | None = None) -> list[Session]:
     """Every resumable session under a ~/.claude/projects tree, newest first."""
+    custom_titles = custom_titles or {}
     sessions = []
     for path in projects_dir.rglob("*.jsonl"):
         if "subagents" in path.parts:  # subagent transcripts aren't resumable sessions
@@ -239,6 +280,9 @@ def scan_sessions(projects_dir: Path, home: str) -> list[Session]:
         except OSError:
             continue
         if session:
+            # A custom title wins: it names the ticket the session is actually on, while the AI title is fixed
+            # at whatever the opening prompt was about. ai_title stays behind it for filtering.
+            session.title = custom_titles.get(session.sid) or session.title
             sessions.append(session)
     # sid breaks mtime ties so the order never depends on directory-walk order.
     sessions.sort(key=lambda s: (-s.mtime, s.sid))
@@ -326,7 +370,9 @@ class Filters:
     directory: str = ""  # -fd/--find-dir
 
     def matches(self, session: Session) -> bool:
-        title = session.title.lower()
+        # Both titles, so retitling a session after a ticket does not hide it from a search for what it was
+        # about — the displayed title is the ticket, the AI one still remembers the opening prompt.
+        title = f"{session.title}\n{session.ai_title}".lower()
         # Both spellings of the directory, so `-fd ~/dotfiles` and `-fd /home/me/dotfiles` both hit.
         directory = f"{session.cwd}\n{session.home_cwd}".lower()
         if self.directory and self.directory.lower() not in directory:
@@ -573,8 +619,13 @@ def prompt_confirm(question: str, stdin=None, stderr=None) -> bool:
 # ---------------------------------------------------------------------------------------------------
 
 
-def remove_session_files(session: Session) -> tuple[list[str], list[str]]:
-    """Delete one session's transcript and its '<sid>/' sidecar dir (tool-results, subagents).
+def remove_session_files(session: Session, state_dir: Path | None = None) -> tuple[list[str], list[str]]:
+    """Delete one session's transcript, its '<sid>/' sidecar dir (tool-results, subagents), and the
+    session-title state file that goes with it.
+
+    That state file exists for nearly every session, titled or not — the hook counts prompts in it to
+    tell a ticket you are working on from one you mentioned — so leaving it behind would turn a swept
+    project into a directory of orphans nothing ever reads again.
 
     Returns (removed paths, error messages) rather than raising: one unreadable session should not
     abandon the rest of the sweep.
@@ -582,7 +633,10 @@ def remove_session_files(session: Session) -> tuple[list[str], list[str]]:
     transcript = Path(session.path)
     removed: list[str] = []
     errors: list[str] = []
-    for target in (transcript, transcript.parent / session.sid):
+    targets = [transcript, transcript.parent / session.sid]
+    if state_dir:
+        targets.append(state_dir / f"{session.sid}.json")
+    for target in targets:
         try:
             if target.is_symlink() or target.is_file():
                 target.unlink()
@@ -617,12 +671,12 @@ def prune_project_dir(directory: Path) -> bool:
     return True
 
 
-def delete_sessions(stale: list[Session], projects: Path) -> int:
+def delete_sessions(stale: list[Session], projects: Path, state_dir: Path | None = None) -> int:
     """Delete every stale session, then prune the project dirs left without a transcript. 1 on error."""
     errors: list[str] = []
     deleted = 0
     for session in stale:
-        removed, failed = remove_session_files(session)
+        removed, failed = remove_session_files(session, state_dir)
         errors.extend(failed)
         if removed:
             deleted += 1
@@ -640,7 +694,8 @@ def delete_sessions(stale: list[Session], projects: Path) -> int:
     return 1 if errors else 0
 
 
-def run_clean(sessions: list[Session], layout: Layout, options: Options, projects: Path) -> int:
+def run_clean(sessions: list[Session], layout: Layout, options: Options, projects: Path,
+              state_dir: Path | None = None) -> int:
     """--clean: list the sessions whose launch directory is gone, then delete them on confirmation.
 
     Filters still apply, so a sweep can be narrowed with -fd. -n does not: capping a cleanup would
@@ -664,7 +719,7 @@ def run_clean(sessions: list[Session], layout: Layout, options: Options, project
     if not prompt_confirm(f"Delete these {len(stale)} session(s) and their transcripts?"):
         log_info("Nothing deleted")
         return 0
-    return delete_sessions(stale, projects)
+    return delete_sessions(stale, projects, state_dir)
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -681,7 +736,8 @@ SYNOPSIS
 OPTIONS:
   -n <count>                  Number of recent sessions to list (default 25)
   -f <str>                    Match <str> against the session title OR its directory
-  -fs, --find-session <str>   Match <str> against the session title only
+  -fs, --find-session <str>   Match <str> against the session title only (the shown title or, when that is a
+                              custom one, the AI title it replaced)
   -fd, --find-dir <str>       Match <str> against the session directory only
   -hl, --highlight <str>      Mark <str> in the title/directory cells; filters nothing
   -l, --list                  Print the table and stop — no prompt, nothing resumed
@@ -820,14 +876,16 @@ def main(argv: list[str] | None = None) -> int:
         log_error(f"No Claude projects dir at {projects}")
         return 1
 
-    sessions = [s for s in scan_sessions(projects, home) if options.filters.matches(s)]
+    state_dir = custom_title_dir(home)
+    sessions = [s for s in scan_sessions(projects, home, load_custom_titles(state_dir))
+                if options.filters.matches(s)]
     # Live detection runs across every match, then the list is capped: a bare `claude` claims the
     # newest transcript from its directory whether or not that row made the cut.
     assign_live(sessions, discover_live())
     layout = Layout.for_width(terminal_width())
 
     if options.clean:
-        return run_clean(sessions, layout, options, projects)
+        return run_clean(sessions, layout, options, projects, state_dir)
 
     if not sessions:
         described = options.filters.describe()

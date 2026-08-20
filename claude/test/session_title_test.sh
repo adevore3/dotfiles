@@ -1,9 +1,10 @@
 #!/bin/bash
 # Tests session-title.sh: the UserPromptSubmit hook that titles a session after the Jira ticket being worked on.
-# Verifies prompt-first detection, the branch/dir fallback, asking instead of guessing when two keys collide or a new
-# key appears mid-session, answering a pending question by full key or bare number, remembering declines, the ask cap,
-# and the permanent back-off once the session has been renamed by hand. Uses temp state/cache dirs and an unreadable
-# netrc, so nothing here touches the real ~/.claude state or the network.
+# Verifies prompt-first detection, the branch/dir fallback, the corroboration a key needs once it turns up past the
+# opening prompt, asking instead of guessing when two keys collide or a new key appears mid-session, answering a
+# pending question by full key or bare number, remembering declines, the ask cap, and the permanent back-off once the
+# session has been renamed by hand. Uses temp state/cache dirs and an unreadable netrc, so nothing here touches the
+# real ~/.claude state or the network.
 set -uo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -118,6 +119,37 @@ out=$(run s1 "" /tmp 'and DIRP-4676 and DIRP-4667 too')
 assert_empty "$out" "the ask cap stops it nagging"
 unset ASKS
 
+# --- a passing mention does not title an untitled session ---------------------------------------------------------
+# The opening prompt may title outright; after that a key has to be corroborated, or quoting a ticket renames the
+# session you are in. This is the case that misnamed the hook itself, quoting a key out of a claude_resume listing.
+
+new_env
+run s1 "" /tmp 'what does claude_resume show in its title column' >/dev/null
+out=$(run s1 "" /tmp 'I see "Implement DIRP-4683 ticket" in the listing, where does that come from')
+assert_empty "$out" "a ticket quoted mid-session does not title the session"
+assert_equals "" "$(jq -r .set_title "$STATE/s1.json")" "and nothing is recorded as its title"
+assert_equals "1" "$(jq -r '.seen["DIRP-4683"]' "$STATE/s1.json")" "the sighting is counted for next time"
+out=$(run s1 "" /tmp 'ok lets actually fix DIRP-4683')
+assert_equals "DIRP-4683" "$(title_of "$out")" "naming it in a second prompt is the corroboration it needed"
+
+new_env
+run s1 "" /tmp 'no tickets in this one' >/dev/null
+out=$(run s1 "" /tmp 'DIRP-4683 and again DIRP-4683, same prompt')
+assert_empty "$out" "the same key twice in one prompt is one sighting"
+assert_equals "1" "$(jq -r '.seen["DIRP-4683"]' "$STATE/s1.json")" "sightings count prompts, not occurrences"
+
+new_env
+WT="$BASE/spark-hivesupport-DIRP-4689"; mkdir -p "$WT"
+run s1 "" /tmp 'starting on something unrelated' >/dev/null
+out=$(run s1 "" "$WT" 'now have a look at DIRP-4689')
+assert_equals "DIRP-4689" "$(title_of "$out")" "a key the working directory also names is corroborated at once"
+
+new_env
+run s1 "" /tmp 'nothing to see yet' >/dev/null
+run s1 "" /tmp 'context from DIRP-4683 and DIRP-4698' >/dev/null
+out=$(run s1 "" /tmp 'more on DIRP-4683 and DIRP-4698')
+assert_contains "DIRP-4683, DIRP-4698" "$(ask_of "$out")" "two corroborated keys still ask rather than guess"
+
 # --- manual rename wins permanently ----------------------------------------------------------------------------
 
 new_env
@@ -125,8 +157,13 @@ run s1 "" /tmp 'start on DIRP-4683' >/dev/null
 out=$(run s1 "force skipper migrate clean up" /tmp 'anything on DIRP-4689')
 assert_empty "$out" "a hand-set title is not overwritten"
 assert_equals "true" "$(jq -r .override "$STATE/s1.json")" "the hand-set title records a permanent override"
+assert_equals "force skipper migrate clean up" "$(jq -r .set_title "$STATE/s1.json")" \
+  "the hand-set title is recorded, since claude_resume displays this field"
 out=$(run s1 "force skipper migrate clean up" /tmp 'now DIRP-4667 please')
 assert_empty "$out" "back-off survives later prompts"
+out=$(run s1 "renamed again" /tmp 'and more work')
+assert_empty "$out" "a second rename still says nothing"
+assert_equals "renamed again" "$(jq -r .set_title "$STATE/s1.json")" "the record follows a later rename"
 
 # A session renamed before the hook ever fired has no set_title to compare against, and must still be left alone.
 new_env

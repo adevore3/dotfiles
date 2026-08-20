@@ -10,6 +10,9 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 #              does the cd and the `claude --resume`. When the session exits you are left in that
 #              directory.
 #
+#              The Title column prefers the session's custom title — the ticket hooks/session-title.sh
+#              named it after, or one you set by hand — and falls back to Claude's AI-generated title.
+#
 # Usage: claude_resume [OPTIONS] [filter]
 #
 # Arguments:
@@ -18,7 +21,8 @@ source "${DOTFILES}/bash/functions/log_utils.sh"
 # Options:
 #   -n <count>                 How many recent sessions to list (default 25)
 #   -f <str>                   Keep sessions whose title OR directory contains <str>
-#   -fs, --find-session <str>  Keep sessions whose title contains <str>
+#   -fs, --find-session <str>  Keep sessions whose title contains <str> (either the shown title or, where a
+#                              custom title replaced it, the AI-generated one)
 #   -fd, --find-dir <str>      Keep sessions whose directory contains <str>
 #   -hl, --highlight <str>     Highlight <str> in the title/directory cells without filtering anything
 #   -l, --list                 Print the table and stop — no prompt, nothing resumed
