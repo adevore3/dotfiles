@@ -23,8 +23,29 @@ function _system_clipboard_command() {
   fi
 }
 
-# Pipe stdin to the system clipboard, echoing nothing back. The portable stand-in for a bare
-# `xclip -sel clip`, which only exists on Linux/X11.
+# Refuse a FILE list that cannot be read in full, before a single byte reaches the clipboard. Letting cat
+# fail mid-pipeline still hands the clipboard whatever it managed to emit, so one bad path clobbers the
+# clipboard with partial content on the way to returning 1 -- a typo would destroy what you were holding. A
+# directory counts as unreadable here: cat rejects it and copies nothing, which wipes the clipboard just as
+# thoroughly.
+function _clipboard_files_readable() {
+  local file
+  for file in "$@"; do
+    if [ -d "$file" ]; then
+      log_error "cannot copy $file: is a directory"
+      return 1
+    fi
+
+    if [ ! -r "$file" ]; then
+      log_error "cannot read $file"
+      return 1
+    fi
+  done
+}
+
+# Copy stdin -- or the contents of any FILE arguments -- to the system clipboard, echoing nothing back. The
+# portable stand-in for a bare `xclip -sel clip`, which only exists on Linux/X11.
+# shellcheck disable=SC2120  # FILE arguments arrive from the `xclipf` alias, which shellcheck cannot see
 function clipboard_write() {
   local clip
   clip="$(_system_clipboard_command)"
@@ -34,7 +55,21 @@ function clipboard_write() {
     return 1
   fi
 
-  $clip
+  if (( $# == 0 )); then
+    $clip
+    return $?
+  fi
+
+  _clipboard_files_readable "$@" || return 1
+
+  # cat does the reading rather than the clipboard tool, because only xclip accepts file arguments: pbcopy
+  # rejects them and wl-copy would copy the path text itself. Forwarding "$@" would be a silent wrong-content
+  # copy on two of the three platforms.
+  local statuses
+  cat -- "$@" | $clip
+  statuses=("${PIPESTATUS[@]}")
+  (( statuses[0] == 0 )) || return "${statuses[0]}"
+  return "${statuses[1]}"
 }
 
 function save_to_clipboard() {
@@ -55,44 +90,69 @@ EXAMPLES:
   echo hello world | save_to_clipboard
 
   echo hello world | save_to_clipboard -q
+
+  save_to_clipboard notes.txt
+
+  save_to_clipboard -q notes.txt
 "
+
+  # Options first, so whatever is left is the FILE list. Parsing used to sit inside an else branch reached
+  # only when there was at least one argument, which left a bare `save_to_clipboard <file>` matching nothing
+  # and returning 0 without copying or printing a thing.
+  while [[ "${1:-}" =~ ^-{1,2}.* ]]; do
+    opt="$1"
+    shift;
+    current_arg="${1:-}"
+    if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
+      log_warn "You may have left an argument blank. Double check your command"
+      return 1
+    fi
+
+    case "$opt" in
+      "-h"|"--help")
+        echo "$__usage"
+        return 1;;
+      "-q"|"--quiet")
+        # Delegates rather than repeating the resolve-and-warn below; -q is exactly clipboard_write, including
+        # its FILE handling. Returns its status, so a successful copy exits 0 -- this used to `return 1` even
+        # after writing, which made `... | stcq && echo copied` unusable.
+        clipboard_write "$@"
+        return $?;;
+      *)
+        log_error "Invalid option: \"$opt\""
+        return 1;;
+    esac
+  done
 
   # Resolved after the usage text so -h/--help still works on a host with no clipboard tool at all.
   local clip
   clip="$(_system_clipboard_command)"
 
-  if (( $# == 0 )); then
-    if [ -z "$clip" ]; then
-      log_warn "no clipboard command found (install xclip, or wl-clipboard on Wayland; macOS uses pbcopy)"
+  if [ -z "$clip" ]; then
+    log_warn "no clipboard command found (install xclip, or wl-clipboard on Wayland; macOS uses pbcopy)"
+    if (( $# == 0 )); then
       cat
-      return 1
+    else
+      cat -- "$@"
     fi
-    tee >($clip) < /dev/stdin
-  else
-    while [[ "$1" =~ ^-{1,2}.* ]]; do
-      opt="$1"
-      shift;
-      current_arg="$1"
-      if [[ ! "$opt" =~ ^(-h|--help)$ ]] && [[ "$current_arg" =~ ^-{1,2}.* ]]; then
-        log_warn "You may have left an argument blank. Double check your command"
-        return 1
-      fi
-
-      case "$opt" in
-        "-h"|"--help")
-          echo "$__usage"
-          return 1;;
-        "-q"|"--quiet")
-          # Delegates rather than repeating the resolve-and-warn above; -q is exactly clipboard_write. Returns
-          # its status, so a successful copy exits 0 -- this used to `return 1` even after writing, which made
-          # `... | stcq && echo copied` unusable.
-          clipboard_write
-          return $?;;
-        *)
-          log_error "Invalid option: \"$opt\""
-          return 1;;
-      esac
-    done
+    return 1
   fi
+
+  # No FILE arguments means stdin, and `cat --` with no operands would read stdin anyway -- but only where
+  # cat's getopt swallows the `--`, which is not worth betting the mac on.
+  if (( $# == 0 )); then
+    tee >($clip) < /dev/stdin
+    return $?
+  fi
+
+  _clipboard_files_readable "$@" || return 1
+
+  # Same contract either way: copy it, and still print it. cat reads the files for the same reason
+  # clipboard_write does not hand them to the clipboard tool directly.
+  local statuses
+  cat -- "$@" | tee >($clip)
+  statuses=("${PIPESTATUS[@]}")
+  (( statuses[0] == 0 )) || return "${statuses[0]}"
+  return "${statuses[1]}"
 }
 
