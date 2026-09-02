@@ -151,6 +151,18 @@ glab api --method POST "projects/<id>/merge_requests/<iid>/discussions" \
 - Delete a wrong note: `glab api --method DELETE "projects/<id>/merge_requests/<iid>/notes/<note_id>"`.
 - Always verify after posting: re-fetch the discussion and confirm `position.new_path`/`new_line` are set.
 
+### When `POST .../notes` returns 401, try GraphQL before concluding writes are broken
+
+The REST notes endpoint and the GraphQL `createNote` mutation fail independently — **a 401 on the former does not mean
+you cannot comment.** Other REST writes (`PUT` on the MR) were unaffected the whole time this happened, so "writes are
+broken" was the wrong diagnosis; it cost a week of replies sitting undelivered in `out/`. Diagnose *which* endpoint
+failed before scoping the outage.
+
+`createNote` needs global ids, not iids:
+
+- `noteableId: "gid://gitlab/MergeRequest/<numeric .id>"` — the **instance-wide `.id`**, not the per-project `.iid`
+- `discussionId: "gid://gitlab/Discussion/<hash>"` to reply in an existing thread
+
 ## Rules that keep you honest
 
 GitLab's API fails quietly far more often than it errors. Each of these has produced a confident, wrong answer in
