@@ -67,6 +67,30 @@
 ## Code Style
 - **Comments and prose wrap at 120 characters, not 80.** Applies to every source language (Bash, Gradle/Groovy, Java/Scala, Python, YAML, HCL, Makefiles, Dockerfile, etc.) AND to markdown doc files (READMEs) — column-wrap markdown prose at 120 too; do not leave one-paragraph-per-line. Keep the prose itself terse — width is for fewer wrap points, not longer sentences. Leave unwrappable constructs alone: markdown table rows, long URLs, and single long tokens (e.g. fully-qualified config keys).
 
+## Numbers in durable text — MUST FOLLOW
+Applies anywhere text outlives the moment it was written: code comments, READMEs and knowledge-base docs, Confluence
+pages, Jira descriptions, commit messages, memory files. None of it can refresh itself, so a figure describing
+*current state* will lie to someone later, and silently. Sort every number into one of two kinds before writing it.
+
+- **Evidence — keep it, and date it.** A measurement that settles a question stays true, because it is a result
+  rather than a state ("compacted: 0 of 372 ingested; never-compacted: 8,403 of 8,420 — 2026-08-24"). Give the date
+  and enough method to re-run it. Stripping evidence is not caution: it forces the next reader to redo the
+  investigation before they can trust the conclusion.
+- **Inventory — generalize it, and hand over the re-count.** Counts, totals, rates, backlog depths, row counts, file
+  sizes, cluster inventories, "N teams do X". State the *mechanism* and the direction, then give the command instead
+  of the value. Prefer "hours, not minutes" to a computed figure that decays with the input it came from.
+
+Two tests settle most cases:
+
+- **Would a reader act differently if this number were wrong by 10x?** If yes, it must be dated and sourced. If
+  nothing changes, it is decoration — cut it.
+- **Are you about to write "this may have changed" or "re-measure before quoting"?** That is the tell that the number
+  is carrying an argument it cannot support. Restate the claim so it does not depend on the magnitude.
+
+Never track a moving quantity across several dates in prose — that is a dashboard, and prose is not one. In a code
+comment the same rule means: document the invariant or the threshold that drives the behaviour, not the measurement
+you happened to take of it.
+
 ## User Environment
 - Shell: bash with vi mode
 - Dotfiles: `~/dotfiles/` managed by dotbot, with modular bash functions, tmux, vim, git configs
