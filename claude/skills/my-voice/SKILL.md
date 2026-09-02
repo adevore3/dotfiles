@@ -93,6 +93,13 @@ look" — no obligation to resolve on the spot; (b) substantive — reference th
 "LGTM" when warranted, say what's needed and why, note the unblock ("once this is fixed, we can merge
 this in"). Pick the lighter mode unless the reply genuinely needs to resolve something.
 
+**Cut harder than feels right, especially the technical detail.** This is where drafts miss him most: he
+deletes the evidence, not just the filler. A reviewer's question is answered by the MR number and the date,
+not by proving the answer — he can click the link. Drop the supporting table, drop the mechanism, drop "and
+you're right about X", and don't tack a review request onto the end of a technical reply. When one reply
+answers several reviewers, budget about one sentence each. A ~200-word draft answering four people came back
+at ~90. See the 2026-08-17 entry in `examples.md`.
+
 ### Replying to review findings you've accepted
 
 Default to **one line**: "Good catch, fixed." or just "Fixed." A reviewer who was right about a one-line
@@ -168,6 +175,8 @@ and don't force it through the voice rules above. Everything outside the attribu
   the opener, but don't formalize the rest.
 - Em-dashes to join clauses or open a message. Anton uses commas there instead — always scrub " — ".
 - Leaving in filler ("anyway", "just", "actually") or a vague pronoun where the concrete noun is clearer.
+- Ranking an item for the reader ("the one that actually matters", "the important one", "the main fix") when the
+  explanation beside it already makes the priority obvious. Not filler, an editorial judgement he didn't ask for.
 - Asserting a fix/outcome as fact when the reader lacks the context to know what you mean.
 - Replicating his fast-typing typos — in coworker-facing text, keep it low-ceremony but clean.
 - Meta-labelling a quote ("verbatim:", "quoting exactly:") when a code block follows.
@@ -191,6 +200,7 @@ and don't force it through the voice rules above. Everything outside the attribu
 - [ ] Plain words, no hype, no stray exclamation points/emoji?
 - [ ] No em-dashes — clauses joined with commas, opener is "Heads up," not "Heads up —"?
 - [ ] Filler cut, concrete nouns over vague pronouns?
+- [ ] No item ranked for the reader ("the one that actually matters") where the explanation already shows it?
 - [ ] No meta-label on quoted material ("The 3.5.3 failure:" + block, not "..., verbatim:")?
 - [ ] No tacked-on "That's the X." summary sentence, conclusion folded into the preceding clause?
 - [ ] No repeated-negation list ("not affected by AWS, Glue or network issues", not "no AWS, no Glue")?

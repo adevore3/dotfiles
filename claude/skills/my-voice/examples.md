@@ -169,3 +169,64 @@ follow-up MR, which is the whole reply.
 
 The general shape for an accepted finding: **action, plus any pointer the reader needs, and stop.** A
 follow-up MR number or a caveat they couldn't know earns its place; a justification of their point does not.
+
+### From a GitLab reply answering four reviewers at once (2026-08-17, freshness-spark-functions!35)
+
+Anton edited the draft down by hand and posted it himself. ~210 words became ~90. The direction is the same at
+every cut: **one clause per person, and the technical detail goes.**
+
+This is the correction that matters most, because it is not about filler. Drafts tend to keep the *evidence* on
+the theory that it earns the claim. He deletes the evidence and keeps the claim.
+
+**The supporting proof goes, even though it was the answer to a direct question.**
+> Before: …indeed-gradle-resolve-rules!1031 merged on the 13th and master carries
+>         `com.indeed:freshness-udf-4.1_2.13`. `freshness-spark-testing-*` doesn't need an entry, neither line has
+>         one. And you're right about why the splits exist, the libraries that have Scala sources can't be
+>         single-published at all, this repo is the unusual one in having none.
+> After:  …indeed-gradle-resolve-rules!1031 merged on the 13th
+
+csalch had asked "will this require a resolve rules change?". The MR number and the date answer it and he can click
+through; everything after that was me proving the answer, then agreeing at length with his separate point. Note
+what this also kills: **"and you're right about X" is never worth a clause** — same as the explaining-back
+anti-pattern above, one register up.
+
+**A whole comparison table went, in a reply about a signature incompatibility.** The draft backed "the fluent API is
+identical in both builds, the constructor and withLogLevel are the only members that differ" with a five-row
+before/after table of method signatures, then a paragraph naming the replacement call, the commit sha and the test
+counts. He kept the one sentence and deleted all of it. The reviewers can read the diff.
+
+**A conclusion the reader can draw themselves goes too.**
+> Before: The hivesupport one is a ScalaTest spec so it doesn't drop into the JUnit tests here, but it pointed me
+>         at the fix.
+> After:  The hivesupport one is a ScalaTest spec so it doesn't drop into the JUnit tests here
+
+"But it pointed me at the fix" is credit-giving that the next paragraph already implies by describing the fix.
+
+**Don't tack a review request onto a technical reply.** The draft ended `@dford sounds like you're the owner now,
+could you take a look?`. Cut entirely. A reply answering three people is not the place to open a fourth thread;
+asking for review is its own message.
+
+**Not a lesson from this pass:** the posted version had no backticks and no trailing periods. That was an artifact
+of how he copy/pasted the text, not a preference — he confirmed he does want backticks. Do not infer formatting
+rules from a hand-edited paste; infer them only when he says so.
+
+### From a Slack message introducing three related MRs (2026-08-21, spark history server)
+
+He deleted four words from one bullet before posting, and called them fluff.
+
+> Before: `drp-cluster-state!55` — the one that actually matters, the shared history server was compacting those
+>         rolling logs and corrupting them, which is what made the apps disappear
+> After:  `drp-cluster-state!55` — the shared history server was compacting those rolling logs and corrupting them,
+>         which is what made the apps disappear
+
+**Don't rank the items for the reader.** "the one that actually matters", "the important one", "the main fix", "the
+interesting bit" — the explanation sitting next to each link already establishes which one carries the weight, so
+the ranking adds no information and just tells the reader what to think.
+
+This is *not* the same as the generic-filler rule (core voice 13). "just", "actually" and "anyway" are empty words;
+this is a whole editorial judgement he did not ask for. It belongs with the tacked-on summary fragment (15) and
+explaining-back: all three are the draft reaching past the content to direct the reader's conclusion. Write what each
+thing is and stop, the priority falls out on its own.
+
+Worth noting he kept everything else in that message, including a sentence explaining that the third MR was *not*
+related to the other two. Accuracy that changes how the reader treats an item stays; ranking that only flatters it goes.
