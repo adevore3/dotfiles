@@ -37,6 +37,18 @@ line it concerns.
 **Why:** the description is the standing record of the change; a request for a second opinion is conversation, and it
 belongs line-anchored where the reader can see the code it's about.
 
+## Reference every MR as `group/repo!iid` — never bare `!52`
+
+**Unconditional, including for an MR in the repo you are writing in**, and the same for issues (`group/repo#123`).
+GitLab resolves a bare `!49` against whichever repo the text lives in, so a cross-repo citation silently auto-links an
+unrelated MR — nothing errors, the link just points somewhere wrong. On `data-infra/ephemeral-emr-terraform!302` a bare
+`!49` linked that repo's own MR 49 (merged Jun 2022) and a reviewer read several comments as proposing changes to a
+four-year-old MR; the thread had to be untangled and the references fixed by hand.
+
+Making it unconditional is the point: an "only when cross-repo" version requires a judgement call per reference, and
+that is what makes the mistake recur. Applies to MR descriptions, comments, and inline discussions alike — and outside
+GitLab, see the global `CLAUDE.md`, since a bare `!52` in Jira links to nothing at all.
+
 ## Prefer inline comments
 
 When feedback is specific to particular line(s) of code, post it as an **inline (line-anchored) discussion**, not a

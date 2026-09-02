@@ -38,6 +38,14 @@
 - **First commit message:** lead with the ticket, e.g. `DIRP-XXXX added feature`, optionally a short body explaining
   the change — keep it terse. GitLab uses the first commit's message as the default squash message on merge, so make it
   the good one. Later commits on the branch can be simpler/one-liners.
+- **Always write MR and issue references fully qualified: `group/repo!iid` and `group/repo#123`.** Never bare `!52` or
+  `#123`, *even for an MR in the repo you are writing in*. This applies everywhere a human or a linker reads the
+  reference — GitLab MR descriptions and comments, Jira descriptions and comments, commit messages, code and terraform
+  comments, design docs, Slack. GitLab resolves a bare `!49` against whichever repo the text lives in, so a cross-repo
+  citation silently auto-links an unrelated MR: on `data-infra/ephemeral-emr-terraform!302` a bare `!49` linked that
+  repo's own MR 49, merged in Jun 2022, and a reviewer spent the thread responding to a four-year-old change. In Jira a
+  bare `!52` links to nothing at all. The rule is unconditional precisely so there is no per-reference judgement call
+  about whether this one happens to be same-repo — that judgement call is what makes the mistake recur.
 
 ## Secrets & Credentials — MUST FOLLOW
 - **A secret's literal text must NEVER appear in a command you emit.** Tool calls are recorded in the
