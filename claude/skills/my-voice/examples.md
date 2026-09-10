@@ -230,3 +230,36 @@ thing is and stop, the priority falls out on its own.
 
 Worth noting he kept everything else in that message, including a sentence explaining that the third MR was *not*
 related to the other two. Accuracy that changes how the reader treats an item stays; ranking that only flatters it goes.
+
+### From the DIRP-4698 consumer-migration pings (2026-08 to 2026-09, five repos)
+
+**Different evidence from every other entry here.** Anton did not edit these — he approved each one as drafted. What
+graded them was whether they worked, so treat the shapes below as outcome evidence, not as corrections he made.
+
+**The ask has to name the action that unblocks.** `butterfly/data-consistency-index-builder!120` sat 17 days on this:
+
+> Could you review, or point me at the right reviewer?
+
+That repo requires zero approvals. The MR was already green and mergeable, so "review" named a step that did not
+exist and the real one went unsaid. Reframed, it merged in about four hours:
+
+> This repo doesn't require any approvals, so there's nothing to review-gate on, it's green and mergeable and just
+> needs someone to press merge. Could you, or point me at whoever should?
+
+The lesson is not politeness or length, both versions are the same size. Check what the repo actually gates on
+(`approvals_required`, pipeline settings) and ask for *that*.
+
+**Address the group the repo names, not two people from `git log`.** `elephant/dataset-joiner!542` went two weeks
+addressed to the last two committers. Its CODEOWNERS is `* @mrp-data-offline`; re-addressed to the group it got a
+reply the next day and merged. Both individuals were *in* that group, so the picks weren't wrong, the routing was.
+
+**Lead with why you picked them, and give them an out.** Every ping that landed opened with the reason:
+
+> @mferenczi sorry to pull you in, you handled butterfly/data-consistency-index-builder!119 so you're probably the
+> right person for this one.
+
+then closed with "Could you, or point me at whoever should?". Nobody replied wrong-person across five repos.
+
+**Don't imply they're late.** The re-ping after six days of silence was "bumping this one" plus what changed since
+(another MR merged, so this is now the last blocker). No "following up again", no "as mentioned above". He was
+active the whole time and simply hadn't got to it, which is the normal case.

@@ -1,9 +1,10 @@
 ---
 name: my-voice
 description: >-
-  Write short-form text in Anton's personal voice — Slack messages, doc / code-review comments, and
-  PR descriptions or review replies. Use when Anton asks to draft, rewrite, or "say this in my voice /
-  my style / how I'd write it," or when composing Slack, doc-comment, or PR text on his behalf.
+  Write short-form text in Anton's personal voice — Slack messages, doc / code-review comments,
+  PR descriptions or review replies, and cold asks to another team to review or merge an MR. Use when
+  Anton asks to draft, rewrite, or "say this in my voice / my style / how I'd write it," when composing
+  Slack, doc-comment, or PR text on his behalf, or when pinging or nudging someone about an MR.
 ---
 
 # Writing in Anton's voice
@@ -92,6 +93,23 @@ Hedged and collaborative — you're inviting a response, not issuing an order.
 look" — no obligation to resolve on the spot; (b) substantive — reference the ticket (PROJ-1234),
 "LGTM" when warranted, say what's needed and why, note the unblock ("once this is fixed, we can merge
 this in"). Pick the lighter mode unless the reply genuinely needs to resolve something.
+
+**Asking someone else to review or merge your MR** — a cold ask to another team, not a reply in your own thread.
+Three things carry it, and the ask itself is the one that gets skipped:
+
+- **Name the action that actually unblocks you.** Not "could you take a look" by default. If the repo needs an
+  approval, ask for the approval; if it requires none and is already green, say it just needs a merge. Getting this
+  wrong is what makes an MR sit, because the reader does the thing you literally asked for, and it wasn't the
+  blocking one. See the 2026-09 entry in `examples.md`.
+- **Say why you picked them**, in the opening clause: "you're the two most recent committers here", "you handled
+  group/repo!119 so you're probably the right person". A cold ping with no reason reads as spam and gives them
+  nothing to redirect with. Pair it with an out, "or point me at the right reviewer", so declining is easy.
+- **Route to the group when the repo names one.** CODEOWNERS is the mechanism the repo already defines; addressing
+  two people personally instead lets each of them read it as the other's problem.
+
+Context still precedes the ask, and it is genuinely cold: the reader has not heard of your ticket, your upstream
+change, or why any of it is their concern. One short paragraph of background, then the ask. Keep the courtesy light,
+"sorry to pull you in" is enough, and never imply they are late.
 
 **Cut harder than feels right, especially the technical detail.** This is where drafts miss him most: he
 deletes the evidence, not just the filler. A reviewer's question is answered by the MR number and the date,
