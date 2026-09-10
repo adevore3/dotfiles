@@ -1,4 +1,8 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Read",
@@ -12,10 +16,6 @@
     "defaultMode": "dontAsk"
   },
   "model": "opus[1m]",
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
   "hooks": {
     "SessionStart": [
       {
@@ -88,12 +88,10 @@
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": true,
+    "indeed-global@indeed-ai-marketplace": true,
+    "vetting-mcp-server@indeed-ai-marketplace": true
   },
-  "theme": "dark-daltonized",
-  "editorMode": "vim",
-  "verbose": true,
-  "autoCompactEnabled": false,
   "extraKnownMarketplaces": {
     "indeed-ai-marketplace": {
       "source": {
@@ -101,5 +99,9 @@
         "url": "git@code.corp.indeed.com:ai4dp/indeed-ai-marketplace.git"
       }
     }
-  }
+  },
+  "theme": "dark-daltonized",
+  "editorMode": "vim",
+  "verbose": true,
+  "autoCompactEnabled": false
 }
