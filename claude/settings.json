@@ -8,12 +8,51 @@
       "Read",
       "Glob",
       "Grep",
-      "Bash",
       "Edit",
       "Write",
-      "Edit(/home/adevore/.claude/projects/**/memory/**)"
+      "Edit(~/.claude/projects/**/memory/**)",
+      "Bash(ls:*)",
+      "Bash(cd:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(jq:*)",
+      "Bash(git:*)",
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(pytest:*)",
+      "Bash(./gradlew:*)",
+      "Bash(go test:*)",
+      "Bash(make:*)",
+      "Bash(shellcheck:*)",
+      "Bash(python3:*)",
+      "Bash(glab mr view:*)",
+      "Bash(aws:*)",
+      "Bash(curl -sS --netrc-file ~/.config/atlassian/confluence.netrc:*)",
+      "Bash(curl -sS -G --netrc-file ~/.config/atlassian/confluence.netrc:*)",
+      "Bash(curl -sS -H @$HOME/.config/lsc/headers:*)",
+      "Bash(curl -sS https://github.com/adevore3.keys)"
     ],
-    "defaultMode": "dontAsk"
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
+      "Read(./**/*secret*.properties)",
+      "Read(./**/*local*.properties)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.ssh/id_*)",
+      "Read(~/.ssh/*.pem)",
+      "Read(~/.localrc.secrets)"
+    ],
+    "ask": [
+      "Bash(npm install:*)",
+      "WebFetch"
+    ],
+    "defaultMode": "auto"
   },
   "model": "opus[1m]",
   "hooks": {
@@ -103,5 +142,6 @@
   "theme": "dark-daltonized",
   "editorMode": "vim",
   "verbose": true,
-  "autoCompactEnabled": false
+  "autoCompactEnabled": false,
+  "autoCompactWindow": 500000
 }
