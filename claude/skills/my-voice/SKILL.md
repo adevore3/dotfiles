@@ -118,6 +118,13 @@ you're right about X", and don't tack a review request onto the end of a technic
 answers several reviewers, budget about one sentence each. A ~200-word draft answering four people came back
 at ~90. See the 2026-08-17 entry in `examples.md`.
 
+**Don't volunteer a correction the reader doesn't need in order to act.** Being right is not sufficient reason to
+say it. On a post-apply reply he cut an entire paragraph establishing that the reviewer's premise about that week's
+metrics had been wrong: nothing depended on it, so it read as relitigating an approval already given. Moving such a
+sentence to the end is not enough, cut it. And open with the action you took ("Merged and applied.") rather than a
+clause describing its outcome, which the figures that follow already carry. See the 2026-09-21 entry in
+`examples.md`.
+
 ### Replying to review findings you've accepted
 
 Default to **one line**: "Good catch, fixed." or just "Fixed." A reviewer who was right about a one-line

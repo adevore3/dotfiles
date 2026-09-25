@@ -263,3 +263,47 @@ then closed with "Could you, or point me at whoever should?". Nobody replied wro
 **Don't imply they're late.** The re-ping after six days of silence was "bumping this one" plus what changed since
 (another MR merged, so this is now the last blocker). No "following up again", no "as mentioned above". He was
 active the whole time and simply hadn't got to it, which is the normal case.
+
+### From an MR reply reporting a post-apply result (2026-09-21, DIRP-4802 / ephemeral-emr-terraform!327)
+
+A reviewer approved with "We will need to run them today once fixed - for weekly metrics". Drafted reply:
+
+> Both run after the apply and both published. emr_metrics came out Total 152, Danger 1 at 0.66%; graviton Total
+> 160, Graviton 56.25%.
+>
+> One visible change: the account we can't reach now logs instead of being swallowed, 757663740574, where
+> Dpe-Account-Access-Role doesn't trust us. One cluster has been missing from the count all along.
+>
+> This week was never at risk either way, the scheduled run published on time at 12:01Z before the fix.
+
+Anton posted:
+
+> Merged and applied. emr_metrics came out Total 152, Danger 1 at 0.66%; graviton Total 160, Graviton 56.25%.
+> One account now logs instead of being swallowed, 757663740574, where Dpe-Account-Access-Role doesn't work. Only
+> one cluster has been missing
+
+Six changes, and the numbers survived untouched — the data was the point, the framing around it was not.
+
+**Open with the action you took, not a status description.** "Both run after the apply and both published" became
+"Merged and applied." He states what he did; the reader infers "published" from the figures that follow. A clause
+describing the outcome of your own action is almost always redundant next to the outcome itself.
+
+**Cut meta-labels that announce the next sentence.** "One visible change:" went entirely. So did "the account we
+can't reach", which re-described something the error message names. "One account now logs instead of being
+swallowed" carries it.
+
+**Plain words beat domain jargon when the jargon adds nothing.** "Dpe-Account-Access-Role doesn't trust us" became
+"doesn't work". Trust policies are the precise mechanism, and he still cut it: the reader needs to know the hop
+fails, not which IAM construct denies it. Reach for the mechanism only when someone has to act on it.
+
+**"Only" to right-size a small number.** "One cluster has been missing from the count all along" became "Only one
+cluster has been missing". Same fact, but `only` tells the reader not to panic, and the trailing "from the count all
+along" was doing nothing the tense didn't already do.
+
+**Drop a correction the reader does not need in order to act.** The whole third paragraph went. It was defensive —
+establishing that the reviewer's premise about this week's metrics was wrong. Nothing depended on it, so it read as
+relitigating an approval he had already been given. Being right is not sufficient reason to say it. Note this is the
+*second* cut of that sentence: an earlier draft had it first, and moving it last was not enough.
+
+**No trailing period on the closing fragment, and no blank line between two short lines.** Two lines, not three
+paragraphs.
