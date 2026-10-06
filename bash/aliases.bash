@@ -1,13 +1,22 @@
+source "${DOTFILES}/bash/functions/platform_utils.sh"
+
 # ls aliases
 alias l='ls -a'
 alias la='ls -AF'
 alias ll.='ls -ld .[!.]?*' # list hidden files
 alias ll='ls -alh'
 alias llsym='ls -lA | grep "\->"' # list symlinks
-alias ls='ls -G'
 
-if [ $(uname) = "Linux" ]; then
-  alias ls="ls --color=always"
+# -G colorizes on BSD ls, but on GNU ls it means --no-group, which *deletes the group column* from every
+# long listing. So this is feature-probed rather than branched on `uname -s`, for the same reason
+# platform_utils.sh is: this mac has Homebrew coreutils ahead of /bin, so a Darwin check picks -G and hands
+# GNU ls a flag that silently reshapes its output. `ret -f` parsed `ls -l` by column number and broke on it.
+# --color=auto, not =always: forcing escapes even when stdout is a pipe corrupts anything reading ls output,
+# which is the same class of failure one level down (`llsym` above pipes ls into grep).
+if ls_is_gnu; then
+  alias ls='ls --color=auto'
+else
+  alias ls='ls -G'
 fi
 
 # navigating

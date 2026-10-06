@@ -18,6 +18,9 @@ function sed_is_gnu() { sed --version >/dev/null 2>&1; }
 # True when `stat` is GNU coreutils, i.e. supports -c.
 function stat_is_gnu() { stat --version >/dev/null 2>&1; }
 
+# True when `ls` is GNU coreutils, i.e. reads -G as --no-group rather than as "colorize".
+function ls_is_gnu() { ls --version >/dev/null 2>&1; }
+
 # date_from_epoch [-u] <epoch> [<strftime-format>]
 #
 # Format a Unix epoch. GNU spells the input `-d @N`, BSD spells it `-r N`. The format is given without the

@@ -93,19 +93,24 @@ EXAMPLES:
       if [ -f "$file" ]; then
         echo "$file"
       else
-        local partial_match_file=$(ls /tmp/*.out | grep $joined_arguments | head -n 1)
-        if [ -z "$partial_match_file" ] || [ "$partial_match_file" == *"cannot access"* ]; then
+        # Short-format `ls` is one name per line into a pipe on both GNU and BSD. Resolved once rather
+        # than run twice, and `\ls` so an `ls` alias cannot add flags to it.
+        local partial_match_file=$(\ls /tmp/*.out 2>/dev/null | grep -- "$joined_arguments" | head -n 1)
+        if [ -z "$partial_match_file" ]; then
           log_error "Unable to find an output file in /tmp matching $joined_arguments"
-        else
-          ls /tmp/*.out | grep $joined_arguments | head -n 1
+          return 1
         fi
+
+        echo "$partial_match_file"
       fi
     fi
   }
 
   local joined_arguments=$(join_by - $@)
 
-  local file=$(determine_file $joined_arguments)
+  # determine_file reads $joined_arguments out of this scope; its status is not readable through the
+  # assignment (`local` supplies its own), so an unresolved file is caught by the emptiness check below.
+  local file=$(determine_file)
 
   if [ "$check_exists" == "yes" ]; then
     if [ -f "$file" ]; then
@@ -117,8 +122,10 @@ EXAMPLES:
     return 0
   fi
 
-  if [[ "$file" =~ ^ERROR ]]; then
-    echo $file
+  # Nothing resolved: determine_file has already said why. Returning here matters because the fallthrough
+  # at the end of this function is `cat $file`, which with an empty $file reads *stdin* - so a typo'd name
+  # used to sit there looking hung until Ctrl-D, then exit 0.
+  if [ -z "$file" ]; then
     return 1
   fi
 
@@ -129,7 +136,20 @@ EXAMPLES:
   fi
 
   if [ "$return_n_files" == "yes" ]; then
-    cat "$(ls -lt /tmp/*.out | sed -n 1,${num_files}p | awk '{print $9}')"
+    if ! [[ "$num_files" =~ ^[1-9][0-9]*$ ]]; then
+      log_error "-f takes a count of files, got \"$num_files\""
+      return 1
+    fi
+
+    # `ls -t` short format, never `ls -lt` picked apart by column number: the long-format field count is
+    # not a stable interface. GNU ls drops the group column when it is passed -G (which BSD ls reads as
+    # "colorize", so the `ls` alias supplies it), shifting the name out of $9 and silently yielding an
+    # empty filename. `\ls` so no alias can reach this, and a read loop so each file is a separate cat
+    # argument - the old quoted command substitution collapsed a multi-file selection into one bad path.
+    local output_file
+    \ls -t /tmp/*.out 2>/dev/null | head -n "$num_files" | while read -r output_file; do
+      cat "$output_file"
+    done
 
     return 0
   fi

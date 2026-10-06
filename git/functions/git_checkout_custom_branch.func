@@ -57,7 +57,7 @@ EXAMPLES:
   local -r joined_arguments=$(IFS=- ; echo "${args[*]}")
 
   local -r git_branch="jira/$(whoami)/$joined_arguments"
-  local -r branch_name_length=$(expr length $git_branch)
+  local -r branch_name_length=${#git_branch}
 
   local -r hostname_max_length=100 # Marvin sets it to 63 but haven't run into this issue in a while
   local -r prefix_length=13 # multibranch hostname is prepended w/ "branch-build-" which is 13 chars
