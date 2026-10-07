@@ -202,6 +202,11 @@ practice:
 - **`glab` outside a git repo is unauthenticated** — it infers the host from the current directory's git remote and
   falls back to `gitlab.com`. Pass `--hostname <host>` (or set `GITLAB_HOST`) whenever the cwd isn't the target repo
   (§6).
+- **`glab config set <key> <value>` without `--global` writes the *repository's* config**, `.git/glab-cli/config.yml`,
+  not `~/.config/glab-cli/config.yml`. Outside a repo it errors (`failed to write config: not a Git repository`), which
+  is the harmless case. Inside one it **succeeds silently** and sets a key scoped to that checkout alone — a `host` set
+  this way reads back correctly from that directory and does nothing anywhere else, so the next call from elsewhere
+  still resolves the old host. Pass `--global` unless per-repo scope is genuinely what you want.
 - **Retry transient failures once or twice** before reporting them. Connection resets against these endpoints are
   common and not meaningful; a 403/404 will never succeed on retry, so don't retry those.
 - **Never present a partial result as complete.** If a call failed or a page cap was hit, say which and why.
