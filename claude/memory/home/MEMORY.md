@@ -1,3 +1,5 @@
 - [ntfy phone notifications](ntfy-notifications.md) — outbound-only via Stop hook; user rejected inbound bridge for threat-model reasons
 - [VM scheduled auto-stop](vm-scheduled-autostop.md) — "unexpected shutdowns" are a ~10h AWS EC2 auto-stop, not crashes
 - [claude_resume command](claude-resume-command.md) — dotfiles function to pick/cd/resume a recent Claude session
+- [system-setup apt keyrings](system-setup-apt-keyrings.md) — Kubernetes-repo failure is stale GH CLI/Chrome keyrings; docker_prune 60s timeout
+- [gate-cli adoption](gate-cli-adoption.md) — installed as a gap-filler (Proctor/IQL/Trino) only; the permission rule is what makes safe/unsafe mean anything
