@@ -208,5 +208,62 @@ class TestMain(unittest.TestCase):
         self.assertFalse(self.state.exists())
 
 
+class TestDriftDetection(unittest.TestCase):
+    """Drift is anything in the live file that no fragment accounts for and no other writer owns."""
+
+    def test_an_entry_we_applied_is_not_drift(self):
+        live = {"permissions": {"allow": ["Bash(ls:*)"]}}
+        found = sm.drift(live=live, states=[{"permissions": {"allow": ["Bash(ls:*)"]}}])
+        self.assertEqual(found, [])
+
+    def test_an_entry_no_state_accounts_for_is_drift(self):
+        live = {"permissions": {"allow": ["Bash(ls:*)", "Bash(surprise:*)"]}}
+        found = sm.drift(live=live, states=[{"permissions": {"allow": ["Bash(ls:*)"]}}])
+        self.assertEqual([d.value for d in found], ["Bash(surprise:*)"])
+
+    def test_both_state_files_are_consulted(self):
+        """A base-only run must not report the Indeed fragment's rules as drift."""
+        live = {"permissions": {"allow": ["Bash(ls:*)", "Bash(private:*)"]}}
+        states = [{"permissions": {"allow": ["Bash(ls:*)"]}},
+                  {"permissions": {"allow": ["Bash(private:*)"]}}]
+        self.assertEqual(sm.drift(live=live, states=states), [])
+
+    def test_keys_other_writers_own_are_not_drift(self):
+        live = {
+            "extraKnownMarketplaces": {"x": {}},
+            "theme": "dark",
+            "hooks": {"Stop": [{"hooks": [{"type": "command",
+                                           "command": "~/.claude/session-logging-hooks/hooks/events/stop.sh"}]}]},
+        }
+        self.assertEqual(sm.drift(live=live, states=[]), [])
+
+    def test_a_foreign_hook_outside_the_known_owners_is_drift(self):
+        live = {"hooks": {"Stop": [{"hooks": [{"type": "command", "command": "mystery.sh"}]}]}}
+        found = sm.drift(live=live, states=[])
+        self.assertEqual([d.path for d in found], ["hooks.Stop"])
+
+    def test_drift_reports_the_path_so_you_know_where_it_goes(self):
+        live = {"permissions": {"ask": ["Bash(whatever:*)"]}}
+        found = sm.drift(live=live, states=[])
+        self.assertEqual(found[0].path, "permissions.ask")
+
+
+class TestDriftClassification(unittest.TestCase):
+    def test_an_account_id_is_private(self):
+        self.assertEqual(sm.classify("Bash(aws --profile p *) against account 123456789012"), "private")
+
+    def test_a_credential_path_is_private(self):
+        self.assertEqual(sm.classify("Bash(curl -sS --netrc-file ~/.config/x/y.netrc:*)"), "private")
+
+    def test_a_plain_generic_tool_rule_is_public(self):
+        self.assertEqual(sm.classify("Bash(ls:*)"), "public")
+        self.assertEqual(sm.classify("Bash(npm test:*)"), "public")
+
+    def test_anything_unrecognised_defaults_to_private(self):
+        """Fail-safe direction: a wrong private guess costs nothing, a wrong public one is permanent."""
+        self.assertEqual(sm.classify("Bash(some-internal-wrapper deploy:*)"), "private")
+        self.assertEqual(sm.classify("**Key internal services**: some-role-name"), "private")
+
+
 if __name__ == "__main__":
     unittest.main()

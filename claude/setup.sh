@@ -65,3 +65,19 @@ fi
 if [ -f "$DOTFILES/indeed/claude/setup.sh" ]; then
   ( cd "$DOTFILES/indeed/claude" && bash setup.sh )
 fi
+
+# Report settings the fragments do not account for. Runs last, so every fragment set has written its
+# state file first — otherwise the other set's rules all look like drift. The merge never removes what
+# it did not apply (that is what protects a rule added through /permissions), so without this notice
+# such entries accumulate silently and ./install cannot reproduce them on another machine. The glob is
+# a path pattern, not Indeed content, so naming it here discloses nothing.
+if command -v python3 >/dev/null 2>&1; then
+  state_args=()
+  for state in "$HOME"/.claude/.dotfiles-settings.*.state.json; do
+    [ -f "$state" ] && state_args+=(--state "$state")
+  done
+  if [ "${#state_args[@]}" -gt 0 ]; then
+    python3 "$DOTFILES/claude/settings_merge.py" --report-drift \
+      --settings "$HOME/.claude/settings.json" "${state_args[@]}"
+  fi
+fi

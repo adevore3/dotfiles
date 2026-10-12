@@ -127,6 +127,107 @@ def merge(live: dict, fragments: list[dict], state: dict) -> tuple[dict, dict]:
     return nxt, desired
 
 
+# --- drift reporting -------------------------------------------------------------------------------
+#
+# The merge never removes something it did not apply, which is what protects a rule added by hand
+# through /permissions. The cost is that such entries accumulate invisibly. Drift reporting is the
+# other half: it names everything in the live file that no fragment accounts for, so it can be
+# reconciled into one deliberately. It only ever reports — nothing here writes a fragment.
+
+# Keys and hook commands owned by someone else. Reporting these would bury the real signal.
+#   seed keys  - deliberately the user's, via /config
+#   marketplace/plugins/hooks below - setup-ai4dp merges these in unattended
+_FOREIGN_KEYS = frozenset({
+    "extraKnownMarketplaces", "enabledPlugins", "theme", "model", "editorMode", "verbose",
+    "autoCompactEnabled", "attribution", "statusLine", "skipAutoPermissionPrompt",
+    "skipDangerousModePermissionPrompt", "effortLevel", "modelSettings", "fastMode",
+})
+_FOREIGN_HOOK_MARKERS = ("session-logging-hooks", "marketplace-instrumentation-hooks")
+
+# Shapes that make an entry sensitive. Deliberately short; the default is private, so this list only
+# needs to catch what is obviously sensitive, not everything that is.
+_SENSITIVE = (
+    r"\b\d{12}\b",                                   # AWS account id
+    r"netrc|credentials|\.pem\b|secret|token|headers",  # credential material
+    r"assume-role|_role\b|Role\b",                   # IAM / service roles
+    r"tfstate|workspace|--profile",                  # deployment targets
+)
+
+# Rules safe to call public. This has to be an explicit list of tools, not a pattern: no shape
+# distinguishes `Bash(npm test:*)` from `Bash(some-internal-wrapper deploy:*)` — both are lowercase
+# words with a space — and that indistinguishability is exactly the uncertainty that must fall private.
+# Add a tool here only when its name discloses nothing about where you work.
+_GENERIC_TOOLS = frozenset({
+    "ls", "cd", "cat", "head", "tail", "find", "grep", "rg", "jq", "git", "npm", "pytest",
+    "./gradlew", "go", "make", "shellcheck", "python3", "python", "sed", "awk", "wc", "diff",
+    "mkdir", "cp", "mv", "touch", "echo", "printf", "test", "which", "env", "node", "yarn", "pnpm",
+})
+_BARE_TOOLS = frozenset({"Read", "Glob", "Grep", "Edit", "Write"})
+
+
+class Drift:
+    """One live entry that no fragment accounts for."""
+
+    def __init__(self, path: str, value: Any):
+        self.path, self.value = path, value
+
+    def __repr__(self) -> str:  # makes a failing assertion readable
+        return f"Drift({self.path!r}, {self.value!r})"
+
+    def __eq__(self, other: Any) -> bool:
+        return isinstance(other, Drift) and (self.path, self.value) == (other.path, other.value)
+
+
+def classify(value: Any) -> str:
+    """Suggest which fragment an entry belongs in. Defaults to private when uncertain."""
+    import re
+
+    text = value if isinstance(value, str) else json.dumps(value)
+    if any(re.search(p, text) for p in _SENSITIVE):
+        return "private"
+    if text in _BARE_TOOLS:
+        return "public"
+    # The tool name is everything up to the first colon, space, or closing paren: `Bash(ls:*)` -> `ls`,
+    # `Bash(npm test:*)` -> `npm`, `Bash(./gradlew:*)` -> `./gradlew`.
+    match = re.match(r"^Bash\(([^\s:)]+)", text)
+    if match and match.group(1) in _GENERIC_TOOLS:
+        return "public"
+    return "private"
+
+
+def _is_foreign_hook(group: Any) -> bool:
+    if not isinstance(group, dict):
+        return False
+    commands = [h.get("command", "") for h in group.get("hooks", []) if isinstance(h, dict)]
+    return any(marker in c for c in commands for marker in _FOREIGN_HOOK_MARKERS)
+
+
+def drift(live: dict, states: list[dict]) -> list[Drift]:
+    """Return live entries that no state file accounts for and no other writer owns."""
+    accounted: dict = {}
+    for state in states:
+        accounted = _deep_merge(accounted, state)
+
+    found: list[Drift] = []
+
+    def walk(live_node: Any, known: Any, path: str) -> None:
+        if isinstance(live_node, dict):
+            for key, value in live_node.items():
+                if not path and key in _FOREIGN_KEYS:
+                    continue
+                sub = known.get(key) if isinstance(known, dict) else None
+                walk(value, sub, f"{path}.{key}" if path else key)
+        elif isinstance(live_node, list):
+            known_ids = {_hook_identity(i) for i in known} if isinstance(known, list) else set()
+            for item in live_node:
+                if _hook_identity(item) in known_ids or _is_foreign_hook(item):
+                    continue
+                found.append(Drift(path, item))
+
+    walk(live, accounted, "")
+    return found
+
+
 def _load(path: Path) -> dict:
     if not path.exists():
         return {}
@@ -153,15 +254,42 @@ def _write_atomic(path: Path, data: dict) -> None:
         raise
 
 
+def _report_drift(settings_path: Path, state_paths: list[Path]) -> int:
+    """Print live entries no fragment accounts for. Always exits 0: this is a notice, not a failure."""
+    found = drift(_load(settings_path), [_load(p) for p in state_paths if p.exists()])
+    if not found:
+        return 0
+
+    print(f"\n[WARN] {len(found)} setting(s) in {settings_path} are not in any fragment.", file=sys.stderr)
+    print("       A session or the UI added them, so ./install cannot reproduce them on another", file=sys.stderr)
+    print("       machine and they are not under review. Move each into a fragment to adopt it,", file=sys.stderr)
+    print("       or delete it from the settings file to drop it.", file=sys.stderr)
+    print("       Suggested destination defaults to private: a wrong private guess costs nothing,", file=sys.stderr)
+    print("       a wrong public one is permanent in git history. Confirm each one yourself.", file=sys.stderr)
+    for item in found:
+        text = item.value if isinstance(item.value, str) else json.dumps(item.value)
+        print(f"       [{classify(item.value):>7}] {item.path}: {text[:100]}", file=sys.stderr)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Merge settings fragments into a Claude Code settings file.")
     ap.add_argument("fragments", nargs="*", help="fragment JSON files, applied in the order given")
     ap.add_argument("--settings", required=True, help="path to the live settings.json")
-    ap.add_argument("--state", required=True, help="path to the applied-state file")
+    ap.add_argument("--state", required=True, action="append",
+                    help="applied-state file; repeat in --report-drift mode to cover every fragment set")
     ap.add_argument("--dry-run", action="store_true", help="report what would change, write nothing")
+    ap.add_argument("--report-drift", action="store_true",
+                    help="report live entries no fragment accounts for, and write nothing")
     args = ap.parse_args(argv)
 
-    settings_path, state_path = Path(args.settings), Path(args.state)
+    if args.report_drift:
+        return _report_drift(Path(args.settings), [Path(p) for p in args.state])
+
+    if len(args.state) != 1:
+        raise SystemExit("[ERROR] --state may only be given once when merging")
+
+    settings_path, state_path = Path(args.settings), Path(args.state[0])
     fragments = [_load(Path(p)) for p in args.fragments]
     if not fragments:
         return 0
