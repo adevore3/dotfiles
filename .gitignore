@@ -3,3 +3,4 @@ workspace/**
 bash/cron/crontab-final
 docs/
 11390/
+claude/settings.json

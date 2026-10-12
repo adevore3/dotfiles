@@ -18,7 +18,10 @@
 
 - link:
     ~/.claude/CLAUDE.md: { path: claude/CLAUDE.md, force: true }
-    ~/.claude/settings.json: { path: claude/settings.json, force: true }
+    # NOT ~/.claude/settings.json — deliberately not linked. Claude Code writes to it (/config, /model, the auto-mode
+    # environment survey), and this repo is public, so a link sent those writes straight into it. setup-ai4dp also
+    # merges into that file and writes atomically (temp + rename), which replaces a symlink with a real file, so the
+    # link would not even survive. claude/setup.sh merges claude/settings.d/* into it instead.
     ~/.claude/statusline-command.sh: { path: claude/statusline-command.sh, force: true }
     ~/.claude/hooks/notify-lib.sh: { path: claude/hooks/notify-lib.sh, create: true, force: true }
     ~/.claude/hooks/session-name.sh: { path: claude/hooks/session-name.sh, force: true }

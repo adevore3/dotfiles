@@ -47,6 +47,19 @@ for link in "$HOME/.claude/skills"/*; do
   esac
 done
 
+# Merge this repo's settings fragments into ~/.claude/settings.json. That file is deliberately NOT a
+# dotbot link: Claude Code writes to it (/config, /model, the auto-mode environment survey) and this repo
+# is public, so a link sent those writes into it. setup-ai4dp also merges into the same file, so nobody
+# owns it — each writer merges its own keys. Each fragment set keeps its OWN state file; a shared one
+# would have the two invocations clobber each other's record and silently stop removing dropped rules.
+if command -v python3 >/dev/null 2>&1; then
+  python3 "$DOTFILES/claude/settings_merge.py" "$DOTFILES"/claude/settings.d/*.json \
+    --settings "$HOME/.claude/settings.json" \
+    --state "$HOME/.claude/.dotfiles-settings.base.state.json"
+else
+  echo "python3 not found — skipped the settings merge" >&2
+fi
+
 # Hand off to the indeed submodule's own setup when it's checked out (keeps Indeed-specific wiring
 # in that repo; this is just a conditional invocation, no Indeed content in the public dotfiles).
 if [ -f "$DOTFILES/indeed/claude/setup.sh" ]; then
