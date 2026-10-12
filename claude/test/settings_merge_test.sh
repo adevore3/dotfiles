@@ -58,6 +58,22 @@ import json
 print(list(json.load(open('$SETTINGS'))['extraKnownMarketplaces'])[0])
 ")" "a foreign marketplace entry is untouched"
 
+# Both fragment sets applied, not just the base one. The Indeed setup.sh cds away mid-script, so a
+# relative path resolved at its tail silently skipped its whole merge — ./install reported
+# "skipped the Indeed settings merge" and exited 0, so only an assertion catches it.
+if [ -d "$ROOT/indeed/claude/settings.d" ]; then
+  assert_equals "yes" "$(python3 -c "
+import json
+s = json.load(open('$SETTINGS'))
+rules = s['permissions']['allow'] + s['permissions'].get('ask', [])
+frag = json.load(open('$ROOT/indeed/claude/settings.d/50-indeed.json'))['merge']['permissions']
+want = frag['allow'] + frag.get('ask', [])
+print('yes' if want and all(r in rules for r in want) else 'no')
+")" "every Indeed fragment rule is present after setup"
+  assert_equals "yes" "$([ -s "$FAKE_HOME/.claude/.dotfiles-settings.indeed.state.json" ] && echo yes || echo no)" \
+    "the Indeed fragment set wrote its own state file"
+fi
+
 # A seeded pref already set by the user is not reverted.
 assert_equals "light" "$(python3 -c "import json; print(json.load(open('$SETTINGS'))['theme'])")" \
   "setup.sh does not revert a theme the user changed"
