@@ -307,3 +307,32 @@ relitigating an approval he had already been given. Being right is not sufficien
 
 **No trailing period on the closing fragment, and no blank line between two short lines.** Two lines, not three
 paragraphs.
+
+## 2026-10-20 — a Slack ask to the team, DIRP-4861
+
+Three rounds of cuts on one message, all in the same direction. The draft:
+
+> iupload prod hasn't been able to deploy since Oct 15. The JAVA-6925 upgrade regenerated `build.lock` without
+> `tomcat-embed-core` and the follow-up dropped the tomcat declaration, so nothing supplies a
+> `ServletWebServerFactory` and every pod since has failed to start. The two pods serving prod are from August.
+>
+> `imhotep/iupload!56` drops the `spring-boot-starter-jetty` exclusion, which is what was blocking the Jetty H2C
+> starter that's already on the classpath. Verified locally: master dies before creating a web server, the branch
+> starts Jetty 12 on 8080.
+>
+> No approvals required on this repo, so it just needs a merge once CI is green. Glen or Dylan, can one of you have
+> a look? More in DIRP-4861.
+
+Anton posted paragraphs one and two, with the full MR URL, and nothing after "Verified locally".
+
+**Full URLs in Slack, not `group/repo!iid`.** The qualified short form is for writing to Claude and for GitLab and
+Jira text, where it auto-links. In Slack it does not resolve, so paste the URL.
+
+**Addressing named people in a team channel is wrong when the ask is to the team.** Naming two of them lets each
+read it as the other's problem, and the reason for naming them (most recent committers) is a cold-ask device. In
+his own team's channel, no addressee.
+
+**"Verified locally" is the whole claim; the verification is not.** The before/after detail went, and this is the
+same cut as the 2026-08-17 and 2026-09-21 entries, now three sessions running. Nobody deciding whether to look at
+an MR needs to know which port Jetty bound. The evidence belongs in the MR description, which is where someone goes
+to challenge it. Say that it was verified and stop.
