@@ -34,7 +34,13 @@
   a stale tip.
 - **This standing instruction authorizes that one `git branch -d`** — a merged-branch cleanup after a confirmed merge is
   routine, not something to ask about each time. Use plain `-d` so git refuses if the branch isn't actually merged.
-  Everything else in the destructive-command rule still needs asking: `-D`, unmerged branches, and remote deletions.
+  **It also authorizes `-D` after a squash merge**, which is the normal shape here: GitLab replaces the branch's commits
+  with a single new one, so the branch tip is not an ancestor of the default branch and plain `-d` always refuses even
+  though the work landed. Prove it landed first — `git diff <branch-tip> origin/<default>` must come back empty, i.e.
+  the branch's tree is identical to the default branch. With that check passing, delete without asking; the diff is
+  what separates this case from a genuinely unmerged branch.
+  Everything else in the destructive-command rule still needs asking: `-D` on a branch whose tree differs from the
+  default branch, and remote deletions.
 - **First commit message:** lead with the ticket, e.g. `DIRP-XXXX added feature`, optionally a short body explaining
   the change — keep it terse. GitLab uses the first commit's message as the default squash message on merge, so make it
   the good one. Later commits on the branch can be simpler/one-liners.
@@ -66,6 +72,18 @@
 
 ## Code Style
 - **Comments and prose wrap at 120 characters, not 80.** Applies to every source language (Bash, Gradle/Groovy, Java/Scala, Python, YAML, HCL, Makefiles, Dockerfile, etc.) AND to markdown doc files (READMEs) — column-wrap markdown prose at 120 too; do not leave one-paragraph-per-line. Keep the prose itself terse — width is for fewer wrap points, not longer sentences. Leave unwrappable constructs alone: markdown table rows, long URLs, and single long tokens (e.g. fully-qualified config keys).
+- **Comments are too verbose — recurring correction, treat it as standing.** Two lines per comment, five for a file
+  header. If a block runs past that it is a design doc in the wrong place.
+  - **Comment the why, never the what.** The reader can see that the statement grants `sqs:*`; what they can't see is
+    that the actions in use can't be enumerated because the data events are off.
+  - **Cut the evidence, keep the conclusion.** The call counts, the dates, the ruled-out alternatives belong in the MR
+    description or the ticket, which is where someone goes to challenge the conclusion.
+  - **One clause per idea.** Drop "deliberately", "on purpose", "it is worth noting", and any sentence restating the
+    previous one in other words.
+  - **Point instead of explaining.** A ticket reference beats a paragraph on the future plan.
+  - **Ask what breaks if the line is gone.** If the answer is "nothing, it just repeats the code", delete it.
+  - MR descriptions and Jira tickets are *not* held to this — a comment is read by whoever touches the line next,
+    a description is read once by a reviewer deciding to approve.
 
 ## Numbers in durable text — MUST FOLLOW
 Applies anywhere text outlives the moment it was written: code comments, READMEs and knowledge-base docs, Confluence

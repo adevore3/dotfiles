@@ -336,3 +336,16 @@ his own team's channel, no addressee.
 same cut as the 2026-08-17 and 2026-09-21 entries, now three sessions running. Nobody deciding whether to look at
 an MR needs to know which port Jetty bound. The evidence belongs in the MR description, which is where someone goes
 to challenge it. Say that it was verified and stop.
+
+## 2026-10-22 — Slack to a colleague who now owns a job: cut the self-deprecating tail
+
+Draft ended a hedged technical suggestion with ", happy to be wrong." Anton removed exactly that phrase and posted the
+rest verbatim.
+
+**An honest hedge is a qualifier on the claim, not an apology for making it.** "Both are guesses from the stack" already
+tells the reader how much to trust the two proposed fixes, so "happy to be wrong" adds no information and shifts
+register from peer-to-peer into asking permission to have offered an opinion. Core voice 6 asks for honest uncertainty;
+it does not ask for a closing concession.
+
+**The tell:** if the sentence before it already states the basis for the claim ("guesses from the stack", "I think",
+"my suspicion is"), a follow-on concession is duplicate hedging. Scrub it on the way out, same as an em-dash.

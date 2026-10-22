@@ -111,6 +111,26 @@ Context still precedes the ask, and it is genuinely cold: the reader has not hea
 change, or why any of it is their concern. One short paragraph of background, then the ask. Keep the courtesy light,
 "sorry to pull you in" is enough, and never imply they are late.
 
+**In Slack the ask has a fixed shape: `PTAL <full url>`, then one or two sentences, then stop.** PTAL is the opening
+word, immediately before the link, never a closing line. Use full URLs throughout, not `group/repo!iid` and not a bare
+ticket key, and don't column-wrap. A leading ticket URL takes a **colon**: `<ticket url>: the lambda crashes when ...`
+(he corrected that punctuation twice, from a period and then from a semicolon).
+
+The post is a pointer to the MR, not a substitute for reading it. The description already carries the plan and the
+evidence, so restating either is duplication, and a precise count ("eight of its nine roles exercised with no denials")
+invites a precision argument in Slack instead of in the MR where the detail lives. Generalize it, "with no issues".
+Expect to cut your own draft by about a third on the way out, and drop sentences that restate the obvious: "Fixes
+both." goes, because an MR self-evidently fixes what the sentence before it just described. Naming the defects is the
+content, announcing that they are fixed is not.
+
+Keep the vouch in the first person: "I already applied and verified in QA", not "Already applied and verified in QA".
+The impersonal form reads as a status field, and what the reviewer is buying is his judgment. See *Attributing
+Claude's work* below. No trailing period on a short closing fragment either.
+
+One thing worth keeping when you trim: if a known-unrelated failure is visible in the same system the reviewer will
+look at, say so and have its ticket number ready. "No issues" about your change and a red neighbouring job are both
+true, and easy to be caught out by.
+
 **Cut harder than feels right, especially the technical detail.** This is where drafts miss him most: he
 deletes the evidence, not just the filler. A reviewer's question is answered by the MR number and the date,
 not by proving the answer — he can click the link. Drop the supporting table, drop the mechanism, drop "and
@@ -118,12 +138,40 @@ you're right about X", and don't tack a review request onto the end of a technic
 answers several reviewers, budget about one sentence each. A ~200-word draft answering four people came back
 at ~90. See the 2026-08-17 entry in `examples.md`.
 
+**In an ASK, cut operational caveats that are the reader's own call.** When nudging someone to approve or merge,
+the message is the ask plus whatever the reader needs in order to act — nothing else. Pipeline freshness, whether a
+re-run is needed, how old a green is: **that is the approver's decision and they can see it on the MR.** Anton
+removed exactly that line from four nudge drafts on 2026-10-15: *"that's on them if they want to re-run or check
+the pipelines before approving/merging."*
+
+This is the same cut as "I can't approve it myself" (redundant — asking implies it) and naming a third party who is
+not part of the ask. **The test is not "is this accurate" but "would the reader do something different knowing it?"
+If the answer is "they'd check the pipeline, which they were going to do anyway", it goes.** Operational caveats about
+what happens *after* the merge — a manual deploy job, a follow-up apply — are true and belong in the MR description or
+the ticket, not in the approval ask: the approver does not act on them.
+
+
 **Don't volunteer a correction the reader doesn't need in order to act.** Being right is not sufficient reason to
 say it. On a post-apply reply he cut an entire paragraph establishing that the reviewer's premise about that week's
 metrics had been wrong: nothing depended on it, so it read as relitigating an approval already given. Moving such a
 sentence to the end is not enough, cut it. And open with the action you took ("Merged and applied.") rather than a
 clause describing its outcome, which the figures that follow already carry. See the 2026-09-21 entry in
 `examples.md`.
+
+### Never mention his availability
+
+In anything published as Anton — MR comments and replies, MR descriptions, ticket comments, Slack — don't reference
+where he is, what he's doing, or when he's back. No "the author is away for a week", no "I'm out until Monday", no
+third-person narration about him at all. It goes out under his name, so the third person reads as though someone else
+wrote it, and his schedule isn't the reader's business.
+
+The availability clause is usually doing no work in the sentence anyway, the technical reason stands alone: "a
+lifecycle change wants its own plan review rather than riding along with a two-line stale-reference removal" says
+everything "and he's away next week" was doing. If timing genuinely matters, phrase it as the state of the work
+("this is parked until the trust policies land"), not as his calendar.
+
+Scope is published text. Saying it to Anton directly is fine, and it legitimately affects recommendations about when
+to deploy — just keep it out of the artifact.
 
 ### Replying to review findings you've accepted
 
@@ -192,6 +240,10 @@ and don't force it through the voice rules above. Everything outside the attribu
 
 ## Anti-patterns (do NOT do these — they read as not-Anton)
 
+- **Never "You're right" or "I had it backwards".** These are the two clearest AI tells in a review reply, and they
+  are banned outright even when conceding a correct finding. Concede the way he does: "Gotcha", "Fixed", "Good catch",
+  "Whoops". Vary them across a multi-thread review.
+
 - Corporate/stiff framing: "Per our discussion", "Please be advised", "I wanted to reach out".
 - AI hype words, exclamation marks, emoji spam.
 - False confidence ("this definitely fixes it") OR over-hedging into mush.
@@ -215,6 +267,9 @@ and don't force it through the voice rules above. Everything outside the attribu
 - "as you wrote it" / "as you suggested" — don't narrate the reviewer's suggestion back at them.
 - A paragraph of justification on an accepted one-line review fix where "Good catch, fixed." was the answer.
 - Restating the reviewer's own reasoning back at them, or grading your own fix ("reworded in plain language").
+- Any mention of where Anton is, what he's doing, or when he's back, in text published under his name.
+- "PTAL" as a closing line, or a `group/repo!iid` / bare ticket key where a full URL belongs, in a Slack ask.
+- Restating an MR's plan or quoting precise verification figures in the Slack ask that links to it.
 
 ## Self-check before delivering
 
@@ -233,6 +288,8 @@ and don't force it through the voice rules above. Everything outside the attribu
 - [ ] Attribution earning its place — unchecked derived explanations marked ("Claude says, ..."), plain
       reproducible evidence left unattributed, vouches kept in the first person?
 - [ ] Right register (Slack / doc comment / PR) and its courtesy level?
+- [ ] Nothing about Anton's whereabouts, schedule or availability?
+- [ ] Slack ask shaped `PTAL <full url>` first, full URLs, verification generalized, draft cut by about a third?
 - [ ] Accepted review findings answered in one line, no commit SHA to a human, no "as you wrote it"?
 - [ ] Every clause in that reply either the action or a pointer the reader needs, with no restatement of the
       reviewer's reasoning and no adjective grading your own fix?

@@ -25,7 +25,16 @@ rather than a wrong host.
 
 **Why:** human-facing review conversation should sound like Anton; bot-facing and self-authored text doesn't need it.
 
-Always draft the comment first and show it to Anton before posting; let him approve or edit.
+**Replies aimed at humans must be drafted and shown to Anton before posting, and a general "go ahead and reply on the
+threads" is authorization to do the work, not a waiver of that step.** Write the draft into your response and stop
+there; ask again for the specific human-facing text. The same goes for tagging someone new into a thread, since that
+notifies them.
+
+Replies to CodeRabbit or another bot, and MR descriptions, can be posted without pre-approval — post them in the same
+turn if useful and say which human-facing ones are waiting on him.
+
+**Why:** human-facing review text goes out under Anton's name to colleagues, and tone or framing he wouldn't have
+chosen is not something he can quietly take back. Bot replies carry no such cost.
 
 ## MR descriptions
 
@@ -67,7 +76,22 @@ reviewers hit it the same way — they click the line and read the old code.
 
 If the branch is behind the target branch, check for real conflicts before proposing a rebase:
 `git merge-tree $(git merge-base HEAD origin/master) HEAD origin/master`. A clean merge means a plain push is enough,
-which avoids a force-push — and a force-push always needs Anton's approval first.
+which avoids a force-push — and a force-push always needs Anton's approval first. Prefer merging the target branch in
+over rebasing whenever the branch already carries review threads, for the reason below.
+
+## Force-pushing orphans CodeRabbit's inline threads
+
+CodeRabbit anchors each inline finding to a specific commit. **Force-push that commit away and every thread it created
+goes off-diff** — the files it points at are no longer in the MR's diff, so the threads can't be answered inline and
+GitLab renders them against code that isn't there.
+
+Recovery: post **one top-level comment** dispositioning all of them, then resolve each thread with a one-liner saying
+it is off-diff and where the reasoning now lives. Name the commit they were anchored to and where the reviewed code
+went, so a reader can follow it.
+
+**Don't trust CodeRabbit's own enumeration when this happens.** Its list of affected call sites has come back short of
+the real set — several more had the identical gap it flagged elsewhere. Re-derive the full set from the code rather
+than working through its list.
 
 ## Always reply in the thread, not top-level
 
@@ -92,6 +116,16 @@ glab api --method POST "projects/<id>/merge_requests/<iid>/discussions/<discussi
   original comment created, not under a new one), so resolve the `discussion_id` from the current `.../discussions`
   listing rather than assuming.
 - Verify after posting: re-fetch the discussion and confirm your note is the last entry in that thread.
+
+## Once an MR merges, it's done
+
+Treat a merged MR as closed: don't proactively re-read its discussions or re-verify it. Check comments *before* a
+merge when asked, and after it merges, stop. If a reviewer comments later, Anton gets the notification and will bring
+it over.
+
+**Why:** re-checking merged MRs is work nobody asked for, and Anton is already in the notification path — a second
+watcher adds nothing. The exception isn't an exception to this rule: verifying that an apply actually landed is about
+the live artifact, not the MR.
 
 ## Finding the project and MR from a URL
 
