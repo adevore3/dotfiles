@@ -349,3 +349,9 @@ it does not ask for a closing concession.
 
 **The tell:** if the sentence before it already states the basis for the claim ("guesses from the stack", "I think",
 "my suspicion is"), a follow-on concession is duplicate hedging. Scrub it on the way out, same as an em-dash.
+
+## 2026-10-26 — American spelling
+
+Draft to a colleague used "favour"; Anton changed it to "favor" and sent the rest as written. Use **American
+spelling** throughout: favor, color, behavior, analyze, canceled, license as a verb. Easy to slip into British forms
+when the surrounding technical prose is formal.
