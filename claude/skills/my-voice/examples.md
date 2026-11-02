@@ -271,7 +271,7 @@ A reviewer approved with "We will need to run them today once fixed - for weekly
 > Both run after the apply and both published. emr_metrics came out Total 152, Danger 1 at 0.66%; graviton Total
 > 160, Graviton 56.25%.
 >
-> One visible change: the account we can't reach now logs instead of being swallowed, 757663740574, where
+> One visible change: the account we can't reach now logs instead of being swallowed, 123456789012, where
 > Dpe-Account-Access-Role doesn't trust us. One cluster has been missing from the count all along.
 >
 > This week was never at risk either way, the scheduled run published on time at 12:01Z before the fix.
@@ -279,7 +279,7 @@ A reviewer approved with "We will need to run them today once fixed - for weekly
 Anton posted:
 
 > Merged and applied. emr_metrics came out Total 152, Danger 1 at 0.66%; graviton Total 160, Graviton 56.25%.
-> One account now logs instead of being swallowed, 757663740574, where Dpe-Account-Access-Role doesn't work. Only
+> One account now logs instead of being swallowed, 123456789012, where Dpe-Account-Access-Role doesn't work. Only
 > one cluster has been missing
 
 Six changes, and the numbers survived untouched — the data was the point, the framing around it was not.
