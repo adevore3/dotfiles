@@ -355,3 +355,14 @@ it does not ask for a closing concession.
 Draft to a colleague used "favour"; Anton changed it to "favor" and sent the rest as written. Use **American
 spelling** throughout: favor, color, behavior, analyze, canceled, license as a verb. Easy to slip into British forms
 when the surrounding technical prose is formal.
+
+## 2026-11-02 — Team-channel heads-up: "I'm" for his own work, and the bare question
+
+Draft announcing stage spooling tests said "we're going to test"; Anton changed it to "I'm going to test". He also cut
+the closing "Is anyone using 2b, or planning to in the next couple of weeks?" down to "Is anyone using 2b?"
+
+**Use "I" when he is the one doing the work.** "We" is right for a shared plan or a team decision; for a heads-up
+about work he owns, it blurs who to talk to. Don't default to "we" because the epic has more than one person on it.
+
+**Ask the minimal question.** The readers will mention future plans if they have them; widening the question with a
+time window just makes it longer.
