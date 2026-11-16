@@ -366,3 +366,13 @@ about work he owns, it blurs who to talk to. Don't default to "we" because the e
 
 **Ask the minimal question.** The readers will mention future plans if they have them; widening the question with a
 time window just makes it longer.
+
+## 2026-11-16 — Team heads-up: drop the process sentence the team already knows
+
+Draft announcing the switch of spooling tests to stage 2b ended with "Turning it on takes a stage rolling deploy, which
+restarts all three stage AZs, so I'll check timing here before I kick it off." Anton sent everything but that sentence:
+"I assume the team knows this part and if they don't will ask."
+
+**A heads-up to his own team states the change, not the mechanics they work with every day.** How stage rolls work is
+shared knowledge in that channel; explaining it, and promising to coordinate, reads as over-communicating. Same cut as
+the operational caveats in nudges: if the reader would ask when it matters, it doesn't go in.
